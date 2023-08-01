@@ -2,5 +2,5 @@ import App from './components/app/app';
 import './global.css';
 
 const app = new App();
-app.initHTML();
+// app.initHTML();
 app.start();
