@@ -10,4 +10,8 @@ final task | RSS JavaScript/Front-end 2023Q1
 
 ## scripts
 1. DEV enviroment: npm start 
-1. PROD enviroment: npm run build 
+2. PROD enviroment: npm run build 
+3. Eslint: npm run lint
+4. Pritter: npm run format
+5. Test: npm run test
+
