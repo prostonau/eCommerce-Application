@@ -1,0 +1,62 @@
+* Стилизуем форму */
+  .formEditor {
+    width: 100%;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  /* Стилизуем текстовое поле */
+  #myTextArea {
+    width: 99%;     
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 48px;
+    resize: none;
+    overflow-y: hidden;
+  }
+  /* Стилизуем кнопку */
+  button[type="submit"] {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #008CBA;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  button[type="submit"]:hover {
+    background-color: #00678e;
+  }
+  
+  /* Стилизуем label */
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .shake {
+    animation: shake 0.5s;
+  }
+  
+  @keyframes shake {
+    10%, 90% {
+      transform: translate(-1px, 0);
+    }
+    
+    20%, 80% {
+      transform: translate(2px, 0);
+    }
+  
+    30%, 50%, 70% {
+      transform: translate(-4px, 0);
+    }
+  
+    40%, 60% {
+      transform: translate(4px, 0);
+    }
+  }

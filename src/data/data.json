@@ -1,0 +1,162 @@
+[
+  {
+    "id": 1,
+    "flag": 0,
+    "helpTitle": "Select elements by their type",
+    "selectorName": "Type Selector",
+    "doThis": "Select the plates",
+    "selector": "plate",
+    "syntax": "Tag1",
+    "help": "Selects all elements of type <strong>A</strong>. Type refers to the type of tag, so <tag>div</tag>, <tag>p</tag> and <tag>ul</tag> are all different element types.",
+    "examples": [
+      "<strong>div</strong> selects all <tag>div</tag> elements.",
+      "<strong>p</strong> selects all <tag>p</tag> elements."
+    ],
+    "boardMarkup": "\t<plate/>\n\t<plate/>",
+    "AnimatedBoardMarkup": "<plate class='strobe'></plate>\n<plate class='strobe'></plate>"
+  },
+  {
+    "id": 2,
+    "flag": 0,
+    "doThis": "Select the colonna boxes",
+    "selector": "colonna",
+    "syntax": "Tag2",
+    "helpTitle": "Select elements by their type",
+    "selectorName": "Type Selector",
+    "help": "Selects all elements of type <strong>A</strong>. Type refers to the type of tag, so <tag>div</tag>, <tag>p</tag> and <tag>ul</tag> are all different element types.",
+    "examples": [
+      "<strong>div</strong> selects all <tag>div</tag> elements.",
+      "<strong>p</strong> selects all <tag>p</tag> elements.'"
+    ],
+    "boardMarkup": "\t<colonna/>\n\t<plate/>\n\t<colonna/>",
+    "AnimatedBoardMarkup": "<colonna class='strobe'></colonna><plate></plate><colonna class='strobe'></colonna>"
+  },
+  {
+    "id": 3,
+    "flag": 0,
+    "doThis": "Select left cube by ID",
+    "selector": "#leftCube",
+    "selectorName": "ID Selector",
+    "helpTitle": "Select elements with an ID",
+    "syntax": "#id1",
+    "help": "Selects the element with a specific <strong>id</strong>. You can also combine the ID selector with the type selector.",
+    "examples": [
+      "<strong>#cool</strong> selects any element with <strong>id='cool'</strong>",
+      "<strong>ul#long</strong> selects <tag>ul id='long'</tag>"
+    ],
+    "boardMarkup": "\t<cube id='leftCube'></cube>\n\t<cube></cube>\n\t<colonna></colonna>",
+    "AnimatedBoardMarkup": "<cube class='strobe' id='leftCube'1></cube><cube></cube><colonna></colonna>"
+  },
+  {
+    "id": 4,
+    "flag": 0,
+    "doThis": "Select right cube by ID",
+    "selector": "#rightCube",
+    "selectorName": "ID Selector",
+    "helpTitle": "Select elements with an ID",
+    "syntax": "#id2",
+    "help": "Selects the element with a specific <strong>id</strong>. You can also combine the ID selector with the type selector.",
+    "examples": [
+      "<strong>#cool</strong> selects any element with <strong>id='cool'</strong>",
+      "<strong>ul#long</strong> selects <tag>ul id='long'</tag>"
+    ],
+    "boardMarkup": "\t<cube></cube>\n\t<colonna></colonna>\n\t<cube id='rightCube'></cube>",
+    "AnimatedBoardMarkup": "<cube></cube><colonna></colonna><cube class='strobe' id='rightCube'></cube>"
+  },
+  {
+    "id": 5,
+    "flag": 0,
+    "doThis": "Select middle cube by ID",
+    "selector": "#middleCube",
+    "selectorName": "ID Selector",
+    "helpTitle": "Select elements with an ID",
+    "syntax": "#id3",
+    "help": "Selects the element with a specific <strong>id</strong>. You can also combine the ID selector with the type selector.",
+    "examples": [
+      "<strong>#cool</strong> selects any element with <strong>id='cool'</strong>",
+      "<strong>ul#long</strong> selects <tag>ul id='long'</tag>"
+    ],
+    "boardMarkup": "\t<cube></cube>\n\t<cube id='middleCube'></cube>\n\t<cube></cube>",
+    "AnimatedBoardMarkup": "<cube></cube><cube class='strobe' id='middleCube'></cube><cube></cube>"
+  },
+  {
+    "id": 6,
+    "flag": 0,
+    "doThis": "Select all cubes by Tag",
+    "selector": "cube",
+    "selectorName": "ID Selector",
+    "helpTitle": "Select elements with an ID",
+    "syntax": "Tag3",
+    "help": "Selects the element with a specific <strong>id</strong>. You can also combine the ID selector with the type selector.",
+    "examples": [
+      "<strong>#cool</strong> selects any element with <strong>id='cool'</strong>",
+      "<strong>ul#long</strong> selects <tag>ul id='long'</tag>"
+    ],
+    "boardMarkup": "\t<cube></cube>\n\t<cube></cube>\n\t<cube></cube>\n\t<cube></cube>",
+    "AnimatedBoardMarkup": "<cube class='strobe'></cube><cube class='strobe' id='middleCube'></cube><cube class='strobe'></cube><cube class='strobe'></cube>"
+  },
+  {
+    "id": 7,
+    "flag": 0,
+    "doThis": "Select all colonnas by Tag",
+    "selector": "colonna",
+    "selectorName": "ID Selector",
+    "helpTitle": "Select elements with an ID",
+    "syntax": "Tag4",
+    "help": "Selects the element with a specific <strong>id</strong>. You can also combine the ID selector with the type selector.",
+    "examples": [
+      "<strong>#cool</strong> selects any element with <strong>id='cool'</strong>",
+      "<strong>ul#long</strong> selects <tag>ul id='long'</tag>"
+    ],
+    "boardMarkup": "\t<colonna></colonna>\n\t<colonna></colonna>\n\t<colonna></colonna>\n\t<colonna></colonna>\n\t<colonna></colonna>\n\t<colonna></colonna>",
+    "AnimatedBoardMarkup": "<colonna class='strobe'></colonna><colonna class='strobe' id='middlecolonna'></colonna><colonna class='strobe'></colonna><colonna class='strobe'></colonna></colonna><colonna class='strobe'></colonna></colonna><colonna class='strobe'></colonna>"
+  },
+  {
+    "id": 8,
+    "flag": 0,
+    "doThis": "Select flag by Tag",
+    "selector": "flag",
+    "selectorName": "ID Selector",
+    "helpTitle": "Select elements with an ID",
+    "syntax": "Tag5",
+    "help": "Selects the element with a specific <strong>id</strong>. You can also combine the ID selector with the type selector.",
+    "examples": [
+      "<strong>#cool</strong> selects any element with <strong>id='cool'</strong>",
+      "<strong>ul#long</strong> selects <tag>ul id='long'</tag>"
+    ],
+    "boardMarkup": "\t<flag></flag>\n\t<hexagon></hexagon>\n\t<triangle></triangle>",
+    "AnimatedBoardMarkup": "<flag class='strobe'></flag><hexagon></hexagon><triangle></triangle>"
+  },
+  {
+    "id": 9,
+    "flag": 0,
+    "doThis": "Select moon by Tag",
+    "selector": "moon",
+    "selectorName": "ID Selector",
+    "helpTitle": "Select elements with an ID",
+    "syntax": "Tag6",
+    "help": "Selects the element with a specific <strong>id</strong>. You can also combine the ID selector with the type selector.",
+    "examples": [
+      "<strong>#cool</strong> selects any element with <strong>id='cool'</strong>",
+      "<strong>ul#long</strong> selects <tag>ul id='long'</tag>"
+    ],
+    "boardMarkup": "\t<hexagon></hexagon>\n\t<triangle></triangle>\n\t<moon></moon>",
+    "AnimatedBoardMarkup": "<flag></flag><hexagon></hexagon><moon class='strobe'></moon>"
+  },
+  {
+    "id": 10,
+    "flag": 0,
+    "doThis": "Select all tulpans",
+    "selector": "tulpan",
+    "selectorName": "ID Selector",
+    "helpTitle": "Select elements with an ID",
+    "syntax": "Tag7",
+    "help": "Selects the element with a specific <strong>id</strong>. You can also combine the ID selector with the type selector.",
+    "examples": [
+      "<strong>#cool</strong> selects any element with <strong>id='cool'</strong>",
+      "<strong>ul#long</strong> selects <tag>ul id='long'</tag>"
+    ],
+    "boardMarkup": "\t<tulpan></tulpan>\n\t<tulpan></tulpan>\n\t<tulpan></tulpan>",
+    "AnimatedBoardMarkup": "<tulpan class='strobe'></tulpan><tulpan class='strobe'></tulpan><tulpan class='strobe'></tulpan>"
+  }
+]
