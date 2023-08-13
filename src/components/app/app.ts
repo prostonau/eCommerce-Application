@@ -13,7 +13,7 @@ class App {
   view: AppView;
   constructor() {
     this.controller = new AppController();
-    this.API = new AppAPI('http://localhost:3000'); //'http://127.0.0.1:3000');
+    this.API = new AppAPI();
     this.view = new AppView();
   }
 
@@ -23,6 +23,16 @@ class App {
 
   public start(): void {
     console.log('Start eCommerce-Application...');
+
+    console.log('Test API...');
+    this.API.clientCredentialsFlow().then((response) => {
+      console.log('response = ', response);
+      this.API.getCustomer('1', response.access_token);
+    });
+    this.API.passwordFlow('prostonau@mail.com', 'Qweasd%4');
+
+    // this.API.passwordFlow('samplecustomer.germany@example.com', 'Qweasd%4');
+
     // this.controller.data = this.API.getCars(this.controller.page, this.controller.limit).then((e) => {
     //     // console.log('e', e);
     //     this.view.tracks.drawTracks(e);

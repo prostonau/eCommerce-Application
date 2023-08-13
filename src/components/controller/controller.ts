@@ -1,8 +1,8 @@
 // import AppLoader from './appLoader';
 // import { RawSourceData } from '../../types/index';
-import { TrackData } from '../../types/index';
-import { intervalsData } from '../../types/index';
-import { carsReadyToRace } from '../../types/index';
+// import { TrackData } from '../../types/index';
+// import { intervalsData } from '../../types/index';
+// import { carsReadyToRace } from '../../types/index';
 
 // import AppAPI from '../controller/api';
 
@@ -13,36 +13,36 @@ import { carsReadyToRace } from '../../types/index';
 
 class AppController {
   // API: AppAPI;
-  data: Promise<Array<TrackData>>;
+  // data: Promise<Array<TrackData>>;
   activeTrackId: number;
   page: number;
   limit: number;
   flagLoadOneTime: boolean;
-  intervals: Array<intervalsData>;
-  isRace: boolean;
-  isWinner: boolean;
-  winnerPage: number;
-  winnerLimit: number;
-  countOfCarsReadyToRace: number;
-  countOfCarsFinishedRace: number;
-  carsReadyToRace: Array<carsReadyToRace>;
+  // intervals: Array<intervalsData>;
+  // isRace: boolean;
+  // isWinner: boolean;
+  // winnerPage: number;
+  // winnerLimit: number;
+  // countOfCarsReadyToRace: number;
+  // countOfCarsFinishedRace: number;
+  // carsReadyToRace: Array<carsReadyToRace>;
   sort: string;
   order: string;
   constructor() {
     // this.API = new AppAPI('http://127.0.0.1:3000');
-    this.data = new Promise<Array<TrackData>>((resolve) => resolve([]));
+    // this.data = new Promise<Array<TrackData>>((resolve) => resolve([]));
     this.activeTrackId = 1;
     this.page = 1;
     this.limit = 7;
     this.flagLoadOneTime = false;
-    this.intervals = [];
-    this.isRace = false;
-    this.isWinner = false;
-    this.winnerPage = 1;
-    this.winnerLimit = 10;
-    this.countOfCarsReadyToRace = 0;
-    this.countOfCarsFinishedRace = 0;
-    this.carsReadyToRace = [];
+    // this.intervals = [];
+    // this.isRace = false;
+    // this.isWinner = false;
+    // this.winnerPage = 1;
+    // this.winnerLimit = 10;
+    // this.countOfCarsReadyToRace = 0;
+    // this.countOfCarsFinishedRace = 0;
+    // this.carsReadyToRace = [];
     this.sort = 'id';
     this.order = 'ASC';
   }

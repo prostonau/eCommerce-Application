@@ -1,280 +1,125 @@
 // import AppLoader from './appLoader';
 // import { RawSourceData } from '../../types/index';
 // import { Level } from '../../types/index';
-import { TrackData } from '../../types/index';
-import { WinnerData } from '../../types/index';
-import { engineStart } from '../../types/index';
-import { driveMode } from '../../types/index';
+// import { TrackData } from '../../types/index';
+// import { WinnerData } from '../../types/index';
+// import { engineStart } from '../../types/index';
+// import { driveMode } from '../../types/index';
 
-// import { RawSourceNews } from '../../types/index';
+import { ClientCredentialsFlowResponse } from '../../types/index';
 
 // type GetSourcesCallback = (data: RawSourceData) => void;
 // type GetNewsCallback = (data: RawSourceNews) => void;
 
 class AppAPI {
-  baseUrl?: string = '';
-  carsCount: number;
-  winnersCount: number;
-  constructor(baseUrl?: string) {
-    this.baseUrl = baseUrl;
-    this.carsCount = 0;
-    this.winnersCount = 0;
+  bathUrl?: string = '';
+  authUrl?: string = '';
+  apiUrl: string = '';
+  projectKey: string = '';
+  secret: string = '';
+  scope: string = '';
+  constructor() {
+    this.bathUrl = 'europe-west1.gcp.commercetools.com';
+    this.authUrl = `https://auth.${this.bathUrl}`;
+    this.apiUrl = `https://api.${this.bathUrl}`;
+    this.projectKey = '611a116e-87f8-43a5-9c07-959851c6dff3';
+    this.secret = 'wiWXgK9Z2y_K8rx0FYLg1N-r';
+    this.scope = 'i9z0351m49c9fr3YGHU_CsVHk9Eh0hyP';
   }
 
-  async getCars(_page?: number, _limit?: number): Promise<Array<TrackData>> {
-    const page: string = _page ? _page.toString() : '';
-    const limit: string = _limit ? _limit.toString() : '';
-    let params = '';
-    if (page.length > 0 && limit.length > 0) params = `?_page=${page}&_limit=${limit}`;
-    if (page.length > 0 && limit.length === 0) params = `?_page=${page}`;
-    if (page.length === 0 && limit.length > 0) params = `?_limit=${limit}`;
-    // console.log('request = ', `${this.baseUrl}/garage/${params}`);
-    const response = await fetch(`${this.baseUrl}/garage/${params}`);
-    // console.log('response', response);
-    if (_limit) this.carsCount = Number(response.headers.get('X-Total-Count'));
-    // console.log('Number(response.headers.get(X-Total-Count)) = ', Number(response.headers.get('X-Total-Count')));
-    const data = await response.json();
-    // console.log('data', data);
-    return data;
-  }
+  // https://docs.commercetools.com/api/authorization#client-credentials-flow
+  clientCredentialsFlow = (): Promise<ClientCredentialsFlowResponse> => {
+    const grantType = 'client_credentials';
+    const scope = `manage_project:${this.projectKey}`;
 
-  updateCar = (id: number, name: string, color: string) => {
-    let apiUrl = '';
-    if (this.baseUrl) {
-      apiUrl = `${this.baseUrl}/garage/${id}`;
-    }
+    // Создаем объект с данными для POST-запроса
     const data = {
-      name: name,
-      color: color,
+      grant_type: grantType,
+      scope: scope,
     };
-    fetch(apiUrl, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      // .then((result) => {
-      //     console.log(result); // Обрабатывайте результат обновления, если это необходимо
-      // })
-      .catch((error) => {
-        console.error('Ошибка при обновлении машины: ', error);
-      });
-  };
 
-  createCar = (name: string, color: string) => {
-    let apiUrl = '';
-    if (this.baseUrl) {
-      apiUrl = `${this.baseUrl}/garage/`;
-    }
-    const data = {
-      name: name,
-      color: color,
-    };
-    fetch(apiUrl, {
+    // Создаем объект с настройками для запроса
+    const options = {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        Authorization: 'Basic ' + btoa(`${this.secret}:${this.scope}`),
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      // .then((result) => {
-      //     console.log(result); // Обрабатывайте результат обновления, если это необходимо
-      // })
-      .catch((error) => {
-        console.error('Ошибка при добавлении машины: ', error);
-      });
-  };
-
-  deleteCar = (id: number): Promise<void> => {
-    let apiUrl = '';
-    if (this.baseUrl) {
-      apiUrl = `${this.baseUrl}/garage/${id}`;
-    }
-    return fetch(apiUrl, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => response.json())
-      .catch((error) => {
-        console.error('Ошибка при удалени машины: ', error);
-      });
-  };
-
-  startEngine = (id: number): Promise<engineStart> => {
-    let apiUrl = '';
-    if (this.baseUrl) {
-      apiUrl = `${this.baseUrl}/engine?id=${Number(id)}&status=started`;
-    }
-    return fetch(apiUrl, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => response.json())
-      .then((result: engineStart) => {
-        console.log(result); // Обрабатывайте результат обновления, если это необходимо
-        return result;
-      })
-      .catch((error) => {
-        console.error('Ошибка при удалени машины: ', error);
-        throw error; // Выбрасывайте ошибку, чтобы сохранить тип "engineStart"
-      });
-  };
-
-  driveMode = (id: number): Promise<driveMode> => {
-    let apiUrl = '';
-    if (this.baseUrl) {
-      apiUrl = `${this.baseUrl}/engine?id=${Number(id)}&status=drive`;
-    }
-    return fetch(apiUrl, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => {
-        if (response.status === 500) {
-          //throw new Error('Internal Server Error');
-          return { success: false };
-        }
-        if (response.status === 429) {
-          //throw new Error('Internal Server Error');
-          return { success: false };
-        }
-        return response.json();
-      })
-      .then((result: driveMode) => {
-        console.log(result); // Обрабатывайте результат обновления, если это необходимо
-        return result;
-      })
-      .catch((error: driveMode) => {
-        console.error('Ошибка при запуске машины: ', error);
-        throw error; // Выбрасывайте ошибку, чтобы сохранить тип "engineStart"
-      });
-  };
-
-  stopEngine = (id: number): Promise<engineStart> => {
-    let apiUrl = '';
-    if (this.baseUrl) {
-      apiUrl = `${this.baseUrl}/engine?id=${Number(id)}&status=stopped`;
-    }
-    return fetch(apiUrl, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => response.json())
-      .then((result: engineStart) => {
-        console.log(result); // Обрабатывайте результат обновления, если это необходимо
-        return result;
-      })
-      .catch((error) => {
-        console.error('Ошибка при удалени машины: ', error);
-        throw error; // Выбрасывайте ошибку, чтобы сохранить тип "engineStart"
-      });
-  };
-
-  async getWinners(_page?: number, _limit?: number, _sort?: string, _order?: string): Promise<Array<WinnerData>> {
-    const page: string = _page ? _page.toString() : '';
-    const limit: string = _limit ? _limit.toString() : '';
-    const sort: string = _sort ? _sort.toString() : '';
-    const order: string = _order ? _order.toString() : '';
-    let params = '';
-    params = `?_page=${page}&_limit=${limit}&_sort=${sort}&_order=${order}`;
-    const response = await fetch(`${this.baseUrl}/winners/${params}`);
-    // console.log('response', response);
-    this.winnersCount = Number(response.headers.get('X-Total-Count'));
-    // console.log('Number(response.headers.get(X-Total-Count)) = ', Number(response.headers.get('X-Total-Count')));
-    const data = await response.json();
-    // console.log('data', data);
-    return data;
-  }
-
-  async getAllWinner(): Promise<Array<WinnerData>> {
-    const response = await fetch(`${this.baseUrl}/winners`);
-    const data = await response.json();
-    console.log('data', data);
-    return data;
-  }
-
-  addWinner = (id: number, wins: number, time: number) => {
-    let apiUrl = '';
-    if (this.baseUrl) {
-      apiUrl = `${this.baseUrl}/winners/`;
-    }
-    const data = {
-      id: id,
-      wins: wins,
-      time: time,
+      body: new URLSearchParams(data),
     };
-    fetch(apiUrl, {
+
+    // Выполняем запрос
+    return fetch(`${this.authUrl}/oauth/token`, options)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('clientCredentialsFlow = ', data);
+        return data;
+      })
+      .catch((error) => {
+        console.error(error);
+        return Promise.reject({
+          access_token: '',
+          expires_in: 0,
+          scope: '',
+          token_type: '',
+        });
+      });
+  };
+
+  // https://docs.commercetools.com/api/authorization#password-flow
+  // Password flow for global Customers
+  passwordFlow = (password: string, email: string) => {
+    const grantType = 'password';
+    const userName = email;
+    const pass = password;
+    const scope = `manage_project:${this.projectKey}`;
+
+    // Создаем объект с данными для POST-запроса
+    const data = {
+      grant_type: grantType,
+      username: userName,
+      password: pass,
+      scope: scope,
+    };
+
+    // Создаем объект с настройками для запроса
+    const options = {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        Authorization: 'Basic ' + btoa(`${this.secret}:${this.scope}`),
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      // .then((result) => {
-      //     console.log(result); // Обрабатывайте результат обновления, если это необходимо
-      // })
-      .catch((error) => {
-        console.error('Ошибка при добавлении винера: ', error);
-      });
-  };
-
-  updateWinner = (id: number, wins: number, time: number) => {
-    let apiUrl = '';
-    if (this.baseUrl) {
-      apiUrl = `${this.baseUrl}/winners/${id}`;
-    }
-    const data = {
-      wins: wins,
-      time: time,
+      body: new URLSearchParams(data),
     };
-    fetch(apiUrl, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
+
+    // Выполняем запрос
+    fetch(`${this.authUrl}/oauth/${this.projectKey}/customers/token`, options)
       .then((response) => response.json())
-      // .then((result) => {
-      //     console.log(result); // Обрабатывайте результат обновления, если это необходимо
-      // })
-      .catch((error) => {
-        console.error('Ошибка при добавлении винера: ', error);
-      });
+      .then((data) => {
+        console.log('passwordFlow = ', data);
+        return data;
+      })
+      .catch((error) => console.error(error));
   };
 
-  deleteWinner = (id: number): Promise<void> => {
-    let apiUrl = '';
-    if (this.baseUrl) {
-      apiUrl = `${this.baseUrl}/winners/${id}`;
-    }
-    return (
-      fetch(apiUrl, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+  //https://docs.commercetools.com/api/projects/customers#get-customer
+  getCustomer = (id: string, BEARER_TOKEN: string) => {
+    // Создаем объект с настройками для запроса
+    const options = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${BEARER_TOKEN}`,
+      },
+    };
+
+    // Выполняем запрос
+    fetch(`${this.apiUrl}/${this.projectKey}/customers/${id}`, options)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('getCustomer = ', data);
+        return data;
       })
-        .then((response) => response.json())
-        // .then((result) => {
-        //     console.log(result); // Обрабатывайте результат обновления, если это необходимо
-        // })
-        .catch((error) => {
-          console.error('Ошибка при удалении винера: ', error);
-        })
-    );
+      .catch((error) => console.error(error));
   };
 }
 

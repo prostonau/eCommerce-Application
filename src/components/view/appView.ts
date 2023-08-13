@@ -1,13 +1,13 @@
 import Tracks from './tracks/tracks';
-import Table from './table/table';
+// import Table from './table/table';
 
 export class AppView {
   tracks: Tracks;
-  table: Table;
+  // table: Table;
   // html: Html;
   constructor() {
     this.tracks = new Tracks();
-    this.table = new Table();
+    // this.table = new Table();
     // this.html = new Html();
   }
 
