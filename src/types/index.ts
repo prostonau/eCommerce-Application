@@ -5,6 +5,13 @@ export interface ClientCredentialsFlowResponse {
   token_type: string;
 }
 
+export interface Customer {
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+}
+
 // export interface WinnerData {
 //   id: number;
 //   wins: number;

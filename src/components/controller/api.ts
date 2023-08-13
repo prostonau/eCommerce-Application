@@ -7,6 +7,7 @@
 // import { driveMode } from '../../types/index';
 
 import { ClientCredentialsFlowResponse } from '../../types/index';
+import { Customer } from '../../types/index';
 
 // type GetSourcesCallback = (data: RawSourceData) => void;
 // type GetNewsCallback = (data: RawSourceNews) => void;
@@ -121,6 +122,70 @@ class AppAPI {
       })
       .catch((error) => console.error(error));
   };
+
+  //https://docs.commercetools.com/api/projects/customers#get-customer
+  getAllCustomers = (BEARER_TOKEN: string) => {
+    // Создаем объект с настройками для запроса
+    const options = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${BEARER_TOKEN}`,
+      },
+    };
+
+    // Выполняем запрос
+    fetch(`${this.apiUrl}/${this.projectKey}/customers/`, options)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('getAllCustomers = ', data);
+        return data;
+      })
+      .catch((error) => console.error(error));
+  };
+
+  createCustomer = (BEARER_TOKEN: string, customer: Customer) => {
+    // Создаем объект с настройками для запроса
+    const options = {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${BEARER_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(customer),
+    };
+
+    // Выполняем запрос
+    fetch(`${this.apiUrl}/${this.projectKey}/customers`, options)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('createCustomer = ', data);
+        return data;
+      })
+      .catch((error) => console.error(error));
+  };
+
+  //https://docs.commercetools.com/api/projects/customers#create-sign-up-customer
+
+  // //https://docs.commercetools.com/api/projects/customers#email-verification-of-customer
+  // createEmailTokenForCustomer = (email: string, BEARER_TOKEN: string) => {
+  //   // Создаем объект с настройками для запроса
+  //   const options = {
+  //     method: 'POST',
+  //     headers: {
+  //       Authorization: `Bearer ${BEARER_TOKEN}`,
+  //       'Content-Type': 'application/json',
+  //     },
+  //   };
+
+  //   // Выполняем запрос
+  //   fetch(`${this.apiUrl}/${this.projectKey}/customers/email-token`, options)
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log('getCustomer = ', data);
+  //       return data;
+  //     })
+  //     .catch((error) => console.error(error));
+  // };
 }
 
 export default AppAPI;

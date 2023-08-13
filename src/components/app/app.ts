@@ -21,15 +21,24 @@ class App {
   //     this.view.drawBody();
   // }
 
+  testCustomer = {
+    email: 'johndo13e@example.com',
+    firstName: 'John',
+    lastName: 'Doe2',
+    password: 'secret123',
+  };
+
   public start(): void {
     console.log('Start eCommerce-Application...');
-
     console.log('Test API...');
     this.API.clientCredentialsFlow().then((response) => {
       console.log('response = ', response);
-      this.API.getCustomer('1', response.access_token);
+      this.API.getCustomer('39fd2612-1d14-4484-b6ac-1f4631a22f91', response.access_token);
+      this.API.getAllCustomers(response.access_token);
+      // this.API.createCustomer(response.access_token, this.testCustomer);
     });
-    this.API.passwordFlow('prostonau@mail.com', 'Qweasd%4');
+
+    this.API.passwordFlow('johndo13e@example.com', 'secret123');
 
     // this.API.passwordFlow('samplecustomer.germany@example.com', 'Qweasd%4');
 
