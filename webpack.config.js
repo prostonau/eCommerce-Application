@@ -11,35 +11,24 @@ const baseConfig = {
   module: {
     rules: [
       { test: /\.ts$/i, use: 'ts-loader' },
-      {
-        test: /\.s[ac]ss$/i,
-        use: [
-          'style-loader',
-          'css-loader',
-          'sass-loader',
-          {
-            loader: 'sass-resources-loader',
-            options: {
-              resources: ['src/**/*.scss'],
-            },
-          },
-        ],
-      },
+      // {
+      //   test: /\.s[ac]ss$/i,
+      //   use: [
+      //     'style-loader',
+      //     'css-loader',
+      //     'sass-loader',
+      //     {
+      //       loader: 'sass-resources-loader',
+      //       options: {
+      //         resources: ['src/**/*.scss'],
+      //       },
+      //     },
+      //   ],
+      // },
       {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
-      },
-      {
-        test: /\.(jpg|png|svg|jpeg|gif)$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 8192,
-            name: '[name].[ext]',
-            outputPath: 'images',
-          },
-        },
-      },
+      },      
       {
         test: /\.(jpg|png|svg|jpeg|gif)$/,
         use: {

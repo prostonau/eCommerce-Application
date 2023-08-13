@@ -143,6 +143,7 @@ class AppAPI {
       .catch((error) => console.error(error));
   };
 
+  //https://docs.commercetools.com/api/projects/customers#create-sign-up-customer
   createCustomer = (BEARER_TOKEN: string, customer: Customer) => {
     // Создаем объект с настройками для запроса
     const options = {
@@ -163,8 +164,6 @@ class AppAPI {
       })
       .catch((error) => console.error(error));
   };
-
-  //https://docs.commercetools.com/api/projects/customers#create-sign-up-customer
 
   // //https://docs.commercetools.com/api/projects/customers#email-verification-of-customer
   // createEmailTokenForCustomer = (email: string, BEARER_TOKEN: string) => {
