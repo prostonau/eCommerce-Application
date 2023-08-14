@@ -69,7 +69,7 @@ class AppAPI {
 
   // https://docs.commercetools.com/api/authorization#password-flow
   // Password flow for global Customers
-  passwordFlow = (password: string, email: string) => {
+  passwordFlow = (email: string, password: string) => {
     const grantType = 'password';
     const userName = email;
     const pass = password;
