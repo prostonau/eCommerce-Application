@@ -3,6 +3,8 @@ import Page from '../view/core/templates/page';
 import LoginPage from '../view/login';
 import RegistrationPage from '../view/registration';
 import Header from '../view/core/components/header';
+import ErrorPage from '../view/error';
+import { errorTypes } from '../view/error';
 
 export const enum PageIds {
   MainPage = 'main-page',
@@ -39,6 +41,8 @@ class AppController {
       page = new RegistrationPage(idPage);
     } else if (idPage === PageIds.LoginPage) {
       page = new LoginPage(idPage);
+    } else {
+      page = new ErrorPage(idPage, errorTypes.Error_404);
     }
 
     if (page) {
