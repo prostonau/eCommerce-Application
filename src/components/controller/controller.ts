@@ -12,7 +12,7 @@ export const enum PageIds {
 
 class AppController {
   initialPage: MainPage;
-  defaulyPageId: string = 'current-page';
+  defaultPageId: string = 'current-page';
   container: HTMLElement = document.body;
   private header: Header;
 
@@ -26,7 +26,7 @@ class AppController {
   }
 
   renderPageContent(idPage: string) {
-    const currentPageHTML = document.querySelector(`#${this.defaulyPageId}`);
+    const currentPageHTML = document.querySelector(`#${this.defaultPageId}`);
     if (currentPageHTML) {
       currentPageHTML.remove();
     }
@@ -43,7 +43,7 @@ class AppController {
 
     if (page) {
       const pageHTML = page.render();
-      pageHTML.id = this.defaulyPageId;
+      pageHTML.id = this.defaultPageId;
       this.container.append(pageHTML);
     }
   }
