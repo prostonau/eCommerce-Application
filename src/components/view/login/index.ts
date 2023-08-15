@@ -1,6 +1,7 @@
 // import { WinnerData } from '../../../types/index';
 import './style.css';
 import Page from '../core/templates/page';
+import Form from '../core/components/form';
 
 class LoginPage extends Page {
   static TextObject = {
@@ -13,7 +14,16 @@ class LoginPage extends Page {
 
   render() {
     const title = this.createHeaderTitle(LoginPage.TextObject.MainTitle);
+    // TODO генерация формы
+
+    const form = new Form('form', 'form__inner');
+    form.generateLoginForm();
+
+    // TODO функции валидации
+
+    // TODO запрос на сервер
     this.container.append(title);
+    this.container.append(form.render());
     return this.container;
   }
 }
