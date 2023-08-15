@@ -10,6 +10,15 @@ header {
     min-width: 450px;
 }
 
+.header div {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.header a {
+    color:#4CAF50;
+}
+
 main {   
     display: flex; 
     flex-direction: column;  
