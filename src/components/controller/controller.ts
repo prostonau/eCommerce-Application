@@ -10,13 +10,14 @@ export const enum PageIds {
   MainPage = 'main-page',
   RegistrationPage = 'registration-page',
   LoginPage = 'login-page',
+  LogOutPage = 'logout-page',
 }
 
 class AppController {
   initialPage: MainPage;
   defaultPageId: string = 'current-page';
   container: HTMLElement = document.body;
-  private header: Header;
+  header: Header;
 
   constructor() {
     this.initialPage = new MainPage('main-page');
@@ -42,6 +43,8 @@ class AppController {
       page = new RegistrationPage(idPage);
     } else if (idPage === PageIds.LoginPage) {
       page = new LoginPage(idPage);
+    } else if (idPage === PageIds.LogOutPage) {
+      page = new MainPage(PageIds.MainPage);
     } else {
       page = new ErrorPage(idPage, errorTypes.Error_404);
     }
