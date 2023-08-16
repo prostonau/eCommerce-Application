@@ -12,11 +12,6 @@ export interface Customer {
   password: string;
 }
 
-export interface ResponseData {
-  status: 'string';
-  [key: string]: string;
-}
-
 // export interface WinnerData {
 //   id: number;
 //   wins: number;
