@@ -21,6 +21,13 @@ class InputBox extends Component {
   render() {
     return this.container;
   }
+
+  getValue() {
+    if (this.container instanceof HTMLInputElement) {
+      return this.container.value;
+    }
+    return '';
+  }
 }
 
 export default InputBox;
