@@ -35,7 +35,8 @@ class AppController {
 
     let page: Page | null = null;
 
-    if (idPage === PageIds.MainPage) {
+    console.log('idPage = ', idPage);
+    if (idPage === PageIds.MainPage || idPage === '') {
       page = new MainPage(idPage);
     } else if (idPage === PageIds.RegistrationPage) {
       page = new RegistrationPage(idPage);
