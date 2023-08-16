@@ -31,11 +31,9 @@ class Form extends Component {
     submitBtn.classList.add('form__button');
     submitBtn.id = 'login';
     submitBtn.type = 'submit';
-    submitBtn.innerHTML = 'Log in';
+    submitBtn.textContent = 'Log in';
 
-    form.append(loginField);
-    form.append(passwordField);
-    form.append(submitBtn);
+    form.append(loginField, passwordField, submitBtn);
 
     this.container.append(form);
   }
@@ -70,12 +68,22 @@ class Form extends Component {
 
     const birthDateInput = new InputBox('input', 'form__input', 'text', 'birth-date__input', 'date', true);
     const birthMonthInput = new InputBox('input', 'form__input', 'text', 'birth-month__input', 'month', true);
-    const birthYearInput = new InputBox('input', 'form__input', 'text', 'birth-year__input', 'month', true);
+    const birthYearInput = new InputBox('input', 'form__input', 'text', 'birth-year__input', 'year', true);
+
+    const regBtn = document.createElement('button');
+    regBtn.classList.add('form__button');
+    regBtn.id = 'login';
+    regBtn.type = 'submit';
+    regBtn.textContent = 'Register';
 
     nameField.append(nameInput.render(), nameLabel.render());
     lastNameField.append(lastNameInput.render(), lastNameLabel.render());
     mailField.append(mailInput.render(), mailLabel.render());
     birthField.append(birthDateInput.render(), birthMonthInput.render(), birthYearInput.render());
+
+    form.append(nameField, lastNameField, mailField, birthField, regBtn);
+
+    this.container.append(form);
   }
 
   render() {
