@@ -4,15 +4,19 @@ import { PageIds } from '../../../../controller/controller';
 const Buttons = [
   {
     id: PageIds.MainPage,
-    text: 'Go Main page',
+    text: 'Main page',
   },
   {
     id: PageIds.RegistrationPage,
-    text: 'Go Registration',
+    text: 'Registration',
   },
   {
     id: PageIds.LoginPage,
-    text: 'Go Login',
+    text: 'Login',
+  },
+  {
+    id: PageIds.LogOutPage,
+    text: 'LogOut',
   },
 ];
 
@@ -24,10 +28,27 @@ class Header extends Component {
   renderPageButtons() {
     const pageButtons = document.createElement('div');
     Buttons.forEach((button) => {
-      const buttonHTML = document.createElement('a');
-      buttonHTML.href = `#${button.id}`;
-      buttonHTML.innerHTML = button.text;
-      pageButtons.append(buttonHTML);
+      if (button.id !== 'logout-page') {
+        const buttonHTML = document.createElement('a');
+        buttonHTML.href = `#${button.id}`;
+        buttonHTML.innerHTML = button.text;
+        pageButtons.append(buttonHTML);
+        //console.log('pageButtons = ', pageButtons);
+      }
+    });
+    this.container.append(pageButtons);
+  }
+
+  renderPageButtonsForLogOutMenu() {
+    const pageButtons = document.createElement('div');
+    Buttons.forEach((button) => {
+      if (button.id === 'main-page' || button.id === 'logout-page') {
+        const buttonHTML = document.createElement('a');
+        buttonHTML.href = `#${button.id}`;
+        buttonHTML.innerHTML = button.text;
+        if (button.id === 'logout-page') buttonHTML.className = 'logout';
+        pageButtons.append(buttonHTML);
+      }
       // console.log('pageButtons = ', pageButtons);
     });
     this.container.append(pageButtons);
@@ -37,6 +58,33 @@ class Header extends Component {
     this.renderPageButtons();
     console.log('this.container = ', this.container);
     return this.container;
+  }
+
+  renderLogoutMenu() {
+    const header = document.querySelector('.header');
+    if (header) {
+      header.innerHTML = '';
+      this.renderPageButtonsForLogOutMenu();
+      console.log('header = ', header);
+      console.log('this.container = ', this.container);
+      console.log('this.container.firstChild = ', this.container.firstChild);
+      console.log('typeof header = ', typeof header);
+      if (this.container.firstChild) header.append(this.container.firstChild);
+    }
+
+    const logout = document.querySelector('.logout');
+    logout?.addEventListener('click', () => {
+      this.renderDefaultMenu();
+    });
+  }
+
+  renderDefaultMenu() {
+    const header = document.querySelector('.header');
+    if (header) {
+      header.innerHTML = '';
+      this.renderPageButtons();
+      if (this.container.firstChild) header.append(this.container.firstChild);
+    }
   }
 }
 
