@@ -70,37 +70,39 @@ class AppAPI {
   // https://docs.commercetools.com/api/authorization#password-flow
   // Password flow for global Customers
   passwordFlow = (email: string, password: string) => {
-    const grantType = 'password';
-    const userName = email;
-    const pass = password;
-    const scope = `manage_project:${this.projectKey}`;
+    return new Promise((resolve, reject) => {
+      const grantType = 'password';
+      const userName = email;
+      const pass = password;
+      const scope = `manage_project:${this.projectKey}`;
 
-    // Создаем объект с данными для POST-запроса
-    const data = {
-      grant_type: grantType,
-      username: userName,
-      password: pass,
-      scope: scope,
-    };
+      // Создаем объект с данными для POST-запроса
+      const data = {
+        grant_type: grantType,
+        username: userName,
+        password: pass,
+        scope: scope,
+      };
 
-    // Создаем объект с настройками для запроса
-    const options = {
-      method: 'POST',
-      headers: {
-        Authorization: 'Basic ' + btoa(`${this.secret}:${this.scope}`),
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams(data),
-    };
+      // Создаем объект с настройками для запроса
+      const options = {
+        method: 'POST',
+        headers: {
+          Authorization: 'Basic ' + btoa(`${this.secret}:${this.scope}`),
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams(data),
+      };
 
-    // Выполняем запрос
-    fetch(`${this.authUrl}/oauth/${this.projectKey}/customers/token`, options)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('passwordFlow = ', data);
-        return data;
-      })
-      .catch((error) => console.error(error));
+      // Выполняем запрос
+      fetch(`${this.authUrl}/oauth/${this.projectKey}/customers/token`, options)
+        .then((response) => response.json())
+        .then((data) => {
+          // console.log('passwordFlow = ', data);
+          resolve(data);
+        })
+        .catch((error) => reject(error));
+    });
   };
 
   //https://docs.commercetools.com/api/projects/customers#get-customer

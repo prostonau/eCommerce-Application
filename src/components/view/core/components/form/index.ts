@@ -3,43 +3,48 @@ import InputBox from './input';
 import Label from './label';
 
 class Form extends Component {
+  inputLogin: InputBox;
+  inputPassword: InputBox;
+  submitBtn: HTMLButtonElement;
+
   constructor(tagName: string, className: string) {
     super(tagName, className);
+    this.inputLogin = new InputBox('input', 'form__input', 'email', 'login__input', 'Login', true);
+    this.inputPassword = new InputBox('input', 'form__input', 'password', 'password__input', 'Password', true);
+    this.submitBtn = document.createElement('button');
   }
 
   generateLoginForm() {
-    const form = document.createElement('form');
+    const form = this.container;
     form.classList.add('login__form');
 
     const loginField = document.createElement('div');
     loginField.classList.add('form__field');
 
-    const inputLogin = new InputBox('input', 'form__input', 'email', 'login__input', 'Login', true);
+    this.inputLogin = new InputBox('input', 'form__input', 'email', 'login__input', 'Login', true);
     const inputLoginLabel = new Label('label', 'form__label', 'login__input', '', 'Your e-mail');
 
-    loginField.append(inputLogin.render(), inputLoginLabel.render());
+    loginField.append(this.inputLogin.render(), inputLoginLabel.render());
 
     const passwordField = document.createElement('div');
     passwordField.classList.add('form__field');
 
-    const inputPassword = new InputBox('input', 'form__input', 'password', 'password__input', 'Password', true);
     const inputPasswordLabel = new Label('label', 'form__label', 'password__input', '', 'Your password');
 
-    passwordField.append(inputPassword.render(), inputPasswordLabel.render());
 
-    const submitBtn = document.createElement('button');
-    submitBtn.classList.add('form__button');
-    submitBtn.id = 'login';
-    submitBtn.type = 'submit';
-    submitBtn.textContent = 'Log in';
+    passwordField.append(this.inputPassword.render(), inputPasswordLabel.render());
 
-    form.append(loginField, passwordField, submitBtn);
+    this.submitBtn.classList.add('form__button');
+    this.submitBtn.id = 'login';
+    this.submitBtn.type = 'submit';
+    this.submitBtn.innerHTML = 'Log in';
+    
+    form.append(loginField, passwordField, this.submitBtn);
 
-    this.container.append(form);
   }
 
   generateRegistrationForm() {
-    const form = document.createElement('form');
+    const form = this.container;
     form.classList.add('reg__form');
 
     const nameField = document.createElement('div');
@@ -88,6 +93,13 @@ class Form extends Component {
 
   render() {
     return this.container;
+  }
+
+  checkValidy(): boolean {
+    if (this.container instanceof HTMLFormElement) {
+      return this.container.checkValidity();
+    }
+    return false;
   }
 }
 

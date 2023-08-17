@@ -49,7 +49,7 @@ class App {
       //this.API.createCustomer(response.access_token, this.testCustomer);
     });
 
-    this.API.passwordFlow('johndo13e@example.com', 'secret123');
+    //this.API.passwordFlow('johndo13e@example.com', 'secret123');
   }
 }
 
