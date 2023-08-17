@@ -39,6 +39,7 @@ class Form extends Component {
 
     const inputPasswordLabel = new Label('label', 'form__label', 'password__input', '', 'Password');
 
+
     this.inputPassword.render().addEventListener('change', () => {
       this.checkValidyInput(this.inputPassword.render(), inputPasswordLabel.render());
     });
@@ -63,6 +64,9 @@ class Form extends Component {
         }
       }
     });
+
+    form.append(loginField, passwordField, this.submitBtn);
+
   }
 
   generateRegistrationForm() {
