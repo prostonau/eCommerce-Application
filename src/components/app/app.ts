@@ -37,6 +37,7 @@ class App {
       `${window.location.hash.slice(1).length > 0 ? window.location.hash.slice(1) : 'main-page'}`
     );
     // this.controller.header.renderLogoutMenu();
+    this.controller.header.renderDefaultMenu();
   }
 
   public testAPI(): void {
