@@ -33,7 +33,10 @@ class App {
     console.log('Start eCommerce-Application...');
     this.enableRouteChange();
     this.controller.renderHeader();
-    this.controller.renderPageContent('main-page');
+    this.controller.renderPageContent(
+      `${window.location.hash.slice(1).length > 0 ? window.location.hash.slice(1) : 'main-page'}`
+    );
+    // this.controller.header.renderLogoutMenu();
   }
 
   public testAPI(): void {
