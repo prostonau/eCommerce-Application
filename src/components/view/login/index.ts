@@ -18,7 +18,7 @@ class LoginPage extends Page {
     const title = this.createHeaderTitle(LoginPage.TextObject.MainTitle);
     // TODO генерация формы
 
-    const form = new Form('form', 'form__inner');
+    const form = new Form('div', 'form__container');
     form.generateLoginForm();
 
     // TODO функции валидации
