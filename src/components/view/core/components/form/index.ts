@@ -28,7 +28,7 @@ class Form extends Component {
     this.inputLogin = new InputBox('input', 'form__input', 'email', 'login__input', 'Login', true);
     const inputLoginLabel = new Label('label', 'form__label', 'login__input', '', 'E-mail');
 
-    this.inputLogin.render().addEventListener('change', () => {
+    this.inputLogin.render().addEventListener('input', () => {
       this.checkValidyInput(this.inputLogin.render(), inputLoginLabel.render());
     });
 
@@ -39,7 +39,7 @@ class Form extends Component {
 
     const inputPasswordLabel = new Label('label', 'form__label', 'password__input', '', 'Password');
 
-    this.inputPassword.render().addEventListener('change', () => {
+    this.inputPassword.render().addEventListener('input', () => {
       this.checkValidyInput(this.inputPassword.render(), inputPasswordLabel.render());
     });
 
