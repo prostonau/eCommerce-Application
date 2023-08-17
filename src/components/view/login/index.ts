@@ -1,5 +1,7 @@
 // import { WinnerData } from '../../../types/index';
 import './style.css';
+
+import './style.css';
 import Page from '../core/templates/page';
 import Form from '../core/components/form';
 import AppAPI from '../../controller/api';
@@ -18,7 +20,7 @@ class LoginPage extends Page {
     const title = this.createHeaderTitle(LoginPage.TextObject.MainTitle);
     // TODO генерация формы
 
-    const form = new Form('div', 'form__container');
+    const form = new Form('form', 'form__container');
     form.generateLoginForm();
 
     // TODO функции валидации

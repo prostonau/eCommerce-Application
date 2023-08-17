@@ -15,7 +15,7 @@ class RegistrationPage extends Page {
   render() {
     const title = this.createHeaderTitle(RegistrationPage.TextObject.MainTitle);
 
-    const form = new Form('div', 'form__container');
+    const form = new Form('form', 'form__container');
     form.generateRegistrationForm();
 
     this.container.append(title);

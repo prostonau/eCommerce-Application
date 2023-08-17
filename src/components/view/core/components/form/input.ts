@@ -15,6 +15,7 @@ class InputBox extends Component {
       this.container.placeholder = placeholder;
       this.container.type = type;
       this.container.required = isRequired;
+      this.container.autocomplete = 'true';
     }
   }
 

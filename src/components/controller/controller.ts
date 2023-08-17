@@ -52,6 +52,7 @@ class AppController {
     if (page) {
       const pageHTML = page.render();
       pageHTML.id = this.defaultPageId;
+      pageHTML.classList.add(idPage);
       this.container.append(pageHTML);
     }
   }
