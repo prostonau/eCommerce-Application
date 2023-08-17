@@ -31,16 +31,13 @@ class Form extends Component {
 
     const inputPasswordLabel = new Label('label', 'form__label', 'password__input', '', 'Your password');
 
-
     passwordField.append(this.inputPassword.render(), inputPasswordLabel.render());
 
     this.submitBtn.classList.add('form__button');
     this.submitBtn.id = 'login';
     this.submitBtn.type = 'submit';
     this.submitBtn.innerHTML = 'Log in';
-    
     form.append(loginField, passwordField, this.submitBtn);
-
   }
 
   generateRegistrationForm() {
@@ -87,8 +84,6 @@ class Form extends Component {
     birthField.append(birthDateInput.render(), birthMonthInput.render(), birthYearInput.render());
 
     form.append(nameField, lastNameField, mailField, birthField, regBtn);
-
-    this.container.append(form);
   }
 
   render() {
