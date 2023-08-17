@@ -12,13 +12,14 @@
     font-weight: 700;
     line-height: 2;
     color: #4CAF50;
+    margin-bottom: 15px;
   }
 
   .form__input {
     display: block;
-    width: 200px;
+    width: 250px;
     height: 35px;
-    margin: 4px 4px;
+    margin: 4px 4px 0;
     padding-left: 10px;
     font-size: 14px;
     letter-spacing: 0.15px;
@@ -32,12 +33,15 @@
   }
 
   .form__label {
+    width: 250px;
     display: block;
-    text-align: center;
-    margin: 5px auto 15px;
+    padding: 5px 14px 5px;
+    margin: 0 3px 15px ;
     font-family: "Montserrat", sans-serif;
     font-size: 15px;
     opacity: 0.9;
+    border-radius: 0 0 8px 8px;
+    transition: all 0.4s ease;
   }
   
   .form__button {
@@ -54,6 +58,11 @@
     box-shadow: 4px 4px 10px #b2cd90, -4px -4px 10px #b2cd90;
     border: none;
     outline: none;
+  }
+
+  .wrong__input {
+    color: #f9f9f9;
+    background-color: red;
   }
 }
 
