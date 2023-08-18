@@ -15,10 +15,10 @@ class App {
   }
 
   testCustomer = {
-    email: 'joh2ndo13e@example.com',
+    email: 'aaaa@example.com',
     firstName: 'John',
     lastName: 'Doe2',
-    password: 'secret123',
+    password: 'Secret%123',
   };
 
   private enableRouteChange() {
@@ -47,7 +47,7 @@ class App {
       console.log('response = ', response);
       this.API.getCustomer('39fd2612-1d14-4484-b6ac-1f4631a22f91', response.access_token);
       this.API.getAllCustomers(response.access_token);
-      //this.API.createCustomer(response.access_token, this.testCustomer);
+      this.API.createCustomer(response.access_token, this.testCustomer);
     });
 
     //this.API.passwordFlow('johndo13e@example.com', 'secret123');
