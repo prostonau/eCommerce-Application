@@ -9,6 +9,7 @@ abstract class Page {
 
   protected createHeaderTitle(text: string) {
     const headerTitle = document.createElement('h1');
+    headerTitle.classList.add('title');
     headerTitle.innerText = text;
     return headerTitle;
   }
