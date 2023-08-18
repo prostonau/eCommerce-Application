@@ -155,6 +155,7 @@ class Form extends Component {
       if (typeof data === 'object' && data !== null && 'statusCode' in data) {
         const status = data.statusCode;
         console.log('Неверный логин или пароль', status);
+        this.showNotification('Неверный логин или пароль. Просьба проверить данные.');
       }
 
       if (typeof data === 'object' && data !== null && 'access_token' in data) {
