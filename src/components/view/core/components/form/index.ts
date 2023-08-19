@@ -8,6 +8,7 @@ class Form extends Component {
   inputLogin: InputBox;
   inputPassword: InputBox;
   submitBtn: HTMLButtonElement;
+  regBtn: HTMLButtonElement;
   valid: boolean;
 
   constructor(tagName: string, className: string) {
@@ -15,6 +16,7 @@ class Form extends Component {
     this.inputLogin = new InputBox('input', 'form__input', 'email', 'login__input', 'Login', true);
     this.inputPassword = new InputBox('input', 'form__input', 'password', 'password__input', 'Password', true);
     this.submitBtn = document.createElement('button');
+    this.regBtn = document.createElement('button');
     this.valid = true;
   }
 
@@ -72,45 +74,109 @@ class Form extends Component {
     form.classList.add('reg__form');
 
     const nameField = document.createElement('div');
-    nameField.classList.add('form__field');
+    nameField.classList.add('form__field', 'name__field');
 
     const lastNameField = document.createElement('div');
-    lastNameField.classList.add('form__field');
+    lastNameField.classList.add('form__field', 'last-name__field');
 
     const mailField = document.createElement('div');
-    mailField.classList.add('form__field');
+    mailField.classList.add('form__field', 'email__field');
+
+    const passwordField = document.createElement('div');
+    passwordField.classList.add('form__field', 'password__field');
 
     const birthField = document.createElement('div');
-    birthField.classList.add('form__field');
+    birthField.classList.add('form__field', 'birth__field');
 
-    const adressField = document.createElement('div');
-    adressField.classList.add('form__field');
+    /* const genderField = document.createElement('div');
+    genderField.classList.add('form__field', 'gender__field'); */
 
-    const nameInput = new InputBox('input', 'form__input', 'text', 'name__input', 'First Name', true);
+    const streetField = document.createElement('div');
+    streetField.classList.add('form__field', 'street__field');
+
+    const postalField = document.createElement('div');
+    postalField.classList.add('form__field', 'postal__field');
+
+    const cityField = document.createElement('div');
+    cityField.classList.add('form__field', 'city__field');
+
+    const countryField = document.createElement('div');
+    countryField.classList.add('form__field', 'country__field');
+
+    const nameInput = new InputBox('input', 'form__input', 'text', 'name__input', '', true);
     const nameLabel = new Label('label', 'form__label', 'name__input', '', 'First Name');
 
-    const lastNameInput = new InputBox('input', 'form__input', 'text', 'last-name__input', 'Last Name', true);
+    const lastNameInput = new InputBox('input', 'form__input', 'text', 'last-name__input', '', true);
     const lastNameLabel = new Label('label', 'form__label', 'last-name__input', '', 'Last Name');
 
-    const mailInput = new InputBox('input', 'form__input', 'email', 'mail__input', 'E-mail', true);
-    const mailLabel = new Label('label', 'form__label', 'mail__input', '', 'Last Name');
+    const mailInput = new InputBox('input', 'form__input', 'email', 'mail__input', '', true);
+    const mailLabel = new Label('label', 'form__label', 'mail__input', '', 'E-mail');
 
-    const birthDateInput = new InputBox('input', 'form__input', 'text', 'birth-date__input', 'date', true);
-    const birthMonthInput = new InputBox('input', 'form__input', 'text', 'birth-month__input', 'month', true);
-    const birthYearInput = new InputBox('input', 'form__input', 'text', 'birth-year__input', 'year', true);
+    const passwordInput = new InputBox('input', 'form__input', 'password', 'password__input', '', true);
+    const passwordLabel = new Label('label', 'form__label', 'password__input', '', 'Password');
 
-    const regBtn = document.createElement('button');
-    regBtn.classList.add('form__button');
-    regBtn.id = 'login';
-    regBtn.type = 'submit';
-    regBtn.textContent = 'Register';
+    const birthInput = new InputBox('input', 'form__input', 'date', 'birth-date__input', 'dd/mm/yyyy', true);
+    const birthLabel = new Label('label', 'form__label', 'birth-date__input', '', 'Birthdate');
 
-    nameField.append(nameInput.render(), nameLabel.render());
-    lastNameField.append(lastNameInput.render(), lastNameLabel.render());
-    mailField.append(mailInput.render(), mailLabel.render());
-    birthField.append(birthDateInput.render(), birthMonthInput.render(), birthYearInput.render());
+    /* const genderInput = new InputBox('input', 'form__input', 'text', 'gender__input', '', true);
+    const genderLabel = new Label('label', 'form__label', 'gender__input', '', 'Gender'); */
 
-    form.append(nameField, lastNameField, mailField, birthField, regBtn);
+    const streetInput = new InputBox('input', 'form__input', 'text', 'street__input', '', true);
+    const streetLabel = new Label('label', 'form__label', 'street__input', '', 'Street address and number');
+
+    const cityInput = new InputBox('input', 'form__input', 'text', 'city__input', '', true);
+    const cityLabel = new Label('label', 'form__label', 'city__input', '', 'City');
+
+    const postalInput = new InputBox('input', 'form__input', 'text', 'street__input', '', true);
+    const postalLabel = new Label('label', 'form__label', 'street__input', '', 'Postal code');
+
+    const countryInput = new InputBox('input', 'form__input', 'text', 'country__input', '', true);
+    const countryLabel = new Label('label', 'form__label', 'country__input', '', 'Country');
+
+    this.regBtn.classList.add('form__button');
+    this.regBtn.id = 'login';
+    this.regBtn.type = 'submit';
+    this.regBtn.innerHTML = 'Register';
+
+    const personalHeader = document.createElement('h3');
+    personalHeader.classList.add('field-group__header');
+    personalHeader.textContent = 'Personal';
+
+    const shipHeader = document.createElement('h3');
+    shipHeader.classList.add('field-group__header');
+    shipHeader.textContent = 'Shipping address';
+
+    const credentialsHeader = document.createElement('h3');
+    credentialsHeader.classList.add('field-group__header');
+    credentialsHeader.textContent = 'Credentials';
+
+    nameField.append(nameLabel.render(), nameInput.render());
+    lastNameField.append(lastNameLabel.render(), lastNameInput.render());
+    birthField.append(birthLabel.render(), birthInput.render());
+    // genderField.append(genderLabel.render(), genderInput.render());
+    mailField.append(mailLabel.render(), mailInput.render());
+    passwordField.append(passwordLabel.render(), passwordInput.render());
+    streetField.append(streetLabel.render(), streetInput.render());
+    postalField.append(postalLabel.render(), postalInput.render());
+    cityField.append(cityLabel.render(), cityInput.render());
+    countryField.append(countryLabel.render(), countryInput.render());
+
+    form.append(
+      personalHeader,
+      nameField,
+      lastNameField,
+      birthField,
+      // genderField,
+      shipHeader,
+      streetField,
+      postalField,
+      cityField,
+      countryField,
+      credentialsHeader,
+      mailField,
+      passwordField,
+      this.regBtn
+    );
   }
 
   render() {
