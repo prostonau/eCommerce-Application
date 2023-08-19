@@ -46,7 +46,10 @@ class Header extends Component {
         const buttonHTML = document.createElement('a');
         buttonHTML.href = `#${button.id}`;
         buttonHTML.innerHTML = button.text;
-        if (button.id === 'logout-page') buttonHTML.className = 'logout';
+        if (button.id === 'logout-page') {
+          buttonHTML.className = 'logout';
+          buttonHTML.href = `#${PageIds.LoginPage}`;
+        }
         pageButtons.append(buttonHTML);
       }
       // console.log('pageButtons = ', pageButtons);
@@ -56,7 +59,7 @@ class Header extends Component {
 
   render() {
     this.renderPageButtons();
-    console.log('this.container = ', this.container);
+    // console.log('this.container = ', this.container);
     return this.container;
   }
 
@@ -65,10 +68,10 @@ class Header extends Component {
     if (header) {
       header.innerHTML = '';
       this.renderPageButtonsForLogOutMenu();
-      console.log('header = ', header);
-      console.log('this.container = ', this.container);
-      console.log('this.container.firstChild = ', this.container.firstChild);
-      console.log('typeof header = ', typeof header);
+      // console.log('header = ', header);
+      // console.log('this.container = ', this.container);
+      // console.log('this.container.firstChild = ', this.container.firstChild);
+      // console.log('typeof header = ', typeof header);
       if (this.container.firstChild) header.append(this.container.firstChild);
     }
 

@@ -52,6 +52,7 @@ class AppController {
         window.location.hash = PageIds.MainPage;
       }
     } else if (idPage === PageIds.LogOutPage) {
+      // window.location.hash = PageIds.LoginPage;
       page = new MainPage(PageIds.MainPage);
     } else {
       page = new ErrorPage(idPage, errorTypes.Error_404);
