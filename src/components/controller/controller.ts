@@ -42,7 +42,11 @@ class AppController {
     } else if (idPage === PageIds.RegistrationPage) {
       page = new RegistrationPage(idPage);
     } else if (idPage === PageIds.LoginPage) {
-      page = new LoginPage(idPage);
+      if (!localStorage.getItem('token')) {
+        page = new LoginPage(idPage);
+      } else {
+        window.location.hash = PageIds.MainPage;
+      }
     } else if (idPage === PageIds.LogOutPage) {
       page = new MainPage(PageIds.MainPage);
     } else {
