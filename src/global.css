@@ -44,5 +44,46 @@ header h1 {
   border: 1px solid #ddd;
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  z-index: 9999;  
+  z-index: 9999;
 }
+
+#current-page {
+  animation: comeIn 1.5s ease-in-out;
+}
+
+#dissapear {
+  animation: comeOut 1.5s ease-in-out;
+}
+
+@keyframes comeIn {
+  0% {
+    transform: translateY(-150%);
+  }
+
+  45% {
+    transform: translateY(4%);
+  }
+
+  80% {
+    transform: translateY(-2%);
+  }
+
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes comeOut {
+  0% {
+    transform: translateY(0%);
+  }
+
+  33% {
+    transform: translateY(10%);
+  }
+
+  100% {
+    transform: translateY(-150%);
+  }
+}
+

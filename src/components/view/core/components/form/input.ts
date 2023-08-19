@@ -23,11 +23,24 @@ class InputBox extends Component {
     return this.container;
   }
 
+  getType() {
+    if (this.container instanceof HTMLInputElement) {
+      return this.container.type;
+    }
+    return '';
+  }
+
   getValue() {
     if (this.container instanceof HTMLInputElement) {
       return this.container.value;
     }
     return '';
+  }
+
+  setType(typeText: string) {
+    if (this.container instanceof HTMLInputElement) {
+      this.container.type = typeText;
+    }
   }
 }
 
