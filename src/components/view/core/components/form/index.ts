@@ -32,6 +32,7 @@ class Form extends Component {
     this.inputPassword = new InputBox('input', 'form__input', 'password', 'password__input', 'Password', true);
 
     this.swithVisibilityPassword = document.createElement('button');
+    this.swithVisibilityPassword.type = 'button';
     this.swithVisibilityPassword.classList.add('switch-visibility__btn');
     this.swithVisibilityPassword.innerHTML = openEye;
 
