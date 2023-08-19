@@ -162,11 +162,12 @@ class Form extends Component {
         const token: string = typeof data.access_token === 'string' ? data.access_token : '';
         localStorage.setItem('token', token);
         localStorage.setItem('userData', JSON.stringify(data));
-
+        this.showNotification('Вы успешно вошли.');
         console.log('sucsess');
         window.location.hash = PageIds.MainPage;
       }
     } catch (error) {
+      this.showNotification('Произошла ошибка, попробуйте еще раз.');
       console.error('Произошла ошибка, попробуйте еще раз', error);
     }
   }
