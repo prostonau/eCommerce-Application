@@ -55,6 +55,9 @@ class AppController {
       pageHTML.classList.add(idPage);
       this.container.append(pageHTML);
     }
+
+    // render actual view for menu
+    localStorage.getItem('token') ? this.header.renderLogoutMenu() : this.header.renderDefaultMenu();
   }
 }
 

@@ -74,6 +74,7 @@ class Header extends Component {
 
     const logout = document.querySelector('.logout');
     logout?.addEventListener('click', () => {
+      localStorage.clear();
       this.renderDefaultMenu();
     });
   }
