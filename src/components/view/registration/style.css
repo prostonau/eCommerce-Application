@@ -52,7 +52,6 @@
 
   .form__label {
     display: block;
-    /* margin: 0 3px 15px ; */
     margin-bottom: 3px;
     font-family: "Montserrat", sans-serif;
     font-size: 15px;
@@ -65,7 +64,7 @@
     font-size: 15px;
     height: 20px;
     margin-top: 3px;
-    white-space: nowrap;
+    /* white-space: nowrap; */
   }
   
   .form__button {

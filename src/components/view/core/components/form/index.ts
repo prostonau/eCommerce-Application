@@ -3,6 +3,7 @@ import { PageIds } from '../../../../controller/controller';
 import Component from '../../templates/components';
 import InputBox from './input';
 import Label from './label';
+import SelectBox from './select';
 
 const openEye = `<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 width="15px" height="15px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
@@ -25,6 +26,10 @@ class Form extends Component {
   nameInput: InputBox;
   lastNameInput: InputBox;
   birthInput: InputBox;
+  streetInput: InputBox;
+  cityInput: InputBox;
+  postalInput: InputBox;
+  countrySelect: SelectBox;
   submitBtn: HTMLButtonElement;
   regBtn: HTMLButtonElement;
   valid: boolean;
@@ -37,6 +42,10 @@ class Form extends Component {
     this.nameInput = new InputBox('input', 'form__input', 'text', 'name__input', '', true);
     this.lastNameInput = new InputBox('input', 'form__input', 'text', 'last-name__input', '', true);
     this.birthInput = new InputBox('input', 'form__input', 'date', 'birth-date__input', 'dd/mm/yyyy', true);
+    this.streetInput = new InputBox('input', 'form__input', 'text', 'street__input', '', true);
+    this.cityInput = new InputBox('input', 'form__input', 'text', 'city__input', '', true);
+    this.postalInput = new InputBox('input', 'form__input', 'text', 'street__input', '', true);
+    this.countrySelect = new SelectBox('select', 'form__input', 'country__select', true);
 
     this.swithVisibilityPassword = document.createElement('button');
     this.swithVisibilityPassword.type = 'button';
@@ -139,47 +148,41 @@ class Form extends Component {
     const countryField = document.createElement('div');
     countryField.classList.add('form__field', 'country__field');
 
-    // const nameInput = new InputBox('input', 'form__input', 'text', 'name__input', '', true);
     const nameLabel = new Label('label', 'form__label', 'name__input', '', 'First Name');
     const nameValBox = document.createElement('p');
     nameValBox.classList.add('validity__block');
 
-    // const lastNameInput = new InputBox('input', 'form__input', 'text', 'last-name__input', '', true);
     const lastNameLabel = new Label('label', 'form__label', 'last-name__input', '', 'Last Name');
     const lastNameValBox = document.createElement('p');
     lastNameValBox.classList.add('validity__block');
 
-    // const mailInput = new InputBox('input', 'form__input', 'email', 'mail__input', '', true);
     const mailLabel = new Label('label', 'form__label', 'mail__input', '', 'E-mail');
     const mailValBox = document.createElement('p');
     mailValBox.classList.add('validity__block');
 
-    // const passwordInput = new InputBox('input', 'form__input', 'password', 'password__input', '', true);
     const passwordLabel = new Label('label', 'form__label', 'password__input', '', 'Password');
     const passwordValBox = document.createElement('p');
     passwordValBox.classList.add('validity__block');
 
-    // const birthInput = new InputBox('input', 'form__input', 'date', 'birth-date__input', 'dd/mm/yyyy', true);
     const birthLabel = new Label('label', 'form__label', 'birth-date__input', '', 'Birthdate');
     const birthValBox = document.createElement('p');
     birthValBox.classList.add('validity__block');
 
-    const streetInput = new InputBox('input', 'form__input', 'text', 'street__input', '', true);
     const streetLabel = new Label('label', 'form__label', 'street__input', '', 'Street address and number');
     const streetValBox = document.createElement('p');
     streetValBox.classList.add('validity__block');
 
-    const cityInput = new InputBox('input', 'form__input', 'text', 'city__input', '', true);
     const cityLabel = new Label('label', 'form__label', 'city__input', '', 'City');
     const cityValBox = document.createElement('p');
     cityValBox.classList.add('validity__block');
 
-    const postalInput = new InputBox('input', 'form__input', 'text', 'street__input', '', true);
     const postalLabel = new Label('label', 'form__label', 'street__input', '', 'Postal code');
     const postalValBox = document.createElement('p');
     postalValBox.classList.add('validity__block');
 
-    const countryInput = new InputBox('input', 'form__input', 'text', 'country__input', '', true);
+    const countrySelectWrapper = document.createElement('div');
+    countrySelectWrapper.classList.add('select-wrapper');
+    this.countrySelect.addOptions('Poland', 'Belarus', 'Lithuania');
     const countryLabel = new Label('label', 'form__label', 'country__input', '', 'Country');
     const countryValBox = document.createElement('p');
     countryValBox.classList.add('validity__block');
@@ -221,13 +224,21 @@ class Form extends Component {
       this.checkValidyInput(this.birthInput.render(), birthValBox);
     });
 
+    this.streetInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.streetInput.render(), streetValBox);
+    });
+
+    this.cityInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.cityInput.render(), cityValBox);
+    });
+
     nameField.append(nameLabel.render(), this.nameInput.render(), nameValBox);
     lastNameField.append(lastNameLabel.render(), this.lastNameInput.render(), lastNameValBox);
     birthField.append(birthLabel.render(), this.birthInput.render(), birthValBox);
-    streetField.append(streetLabel.render(), streetInput.render(), streetValBox);
-    postalField.append(postalLabel.render(), postalInput.render(), postalValBox);
-    cityField.append(cityLabel.render(), cityInput.render(), cityValBox);
-    countryField.append(countryLabel.render(), countryInput.render(), countryValBox);
+    streetField.append(streetLabel.render(), this.streetInput.render(), streetValBox);
+    countryField.append(countryLabel.render(), this.countrySelect.render(), countryValBox);
+    cityField.append(cityLabel.render(), this.cityInput.render(), cityValBox);
+    postalField.append(postalLabel.render(), this.postalInput.render(), postalValBox);
     mailField.append(mailLabel.render(), this.inputLogin.render(), mailValBox);
     passwordField.append(
       passwordLabel.render(),
@@ -243,9 +254,9 @@ class Form extends Component {
       birthField,
       shipHeader,
       streetField,
-      postalField,
-      cityField,
       countryField,
+      cityField,
+      postalField,
       credentialsHeader,
       mailField,
       passwordField,
@@ -267,7 +278,7 @@ class Form extends Component {
   checkValidyInput(input: HTMLElement, box: HTMLElement): boolean {
     if (input instanceof HTMLInputElement) {
       if (input.value === '') {
-        box.innerText = 'Requaired field';
+        box.innerText = 'Required field';
         box.classList.add('wrong__input');
         return false;
       }
@@ -280,23 +291,27 @@ class Form extends Component {
         return checkValidyInputPassword(input, box);
       }
 
-      if (input.id === 'name__input' || input.id === 'last-name__input') {
+      if (input.id === 'name__input' || input.id === 'last-name__input' || input.id === 'city__input') {
         return this.checkValidityInputName(input, box);
       }
 
       if (input.type === 'date' || input.id === 'birth-date__input') {
         return this.checkValidityBirthDate(input, box);
       }
+
+      if (input.id === 'street__input') {
+        return this.checkValidityStreet(input, box);
+      }
     }
     box.classList.remove('wrong__input');
-    box.innerText = 'E-mail';
+    box.innerText = '';
     return true;
   }
 
   private checkValidityInputName(input: HTMLInputElement, box: HTMLElement): boolean {
     const name = input.value;
-    if (/^\s*/.test(name)) {
-      box.innerText = 'The field must not contain at trailing whitespaces';
+    if (/^\s*$/.test(name)) {
+      box.innerText = 'The field must contain at least one character';
       box.classList.add('wrong__input');
       return false;
     } else if (/[-!$%^&*()_+|~=`{}[\]:/;<>?,.@#]/.test(name)) {
@@ -319,6 +334,18 @@ class Form extends Component {
     thirteenYearsAgo.setFullYear(thirteenYearsAgo.getFullYear() - 13);
     if (birthDate >= thirteenYearsAgo) {
       box.innerText = 'You should be at least 13 y.o.';
+      box.classList.add('wrong__input');
+      return false;
+    }
+    box.classList.remove('wrong__input');
+    box.innerText = '';
+    return true;
+  }
+
+  private checkValidityStreet(input: HTMLInputElement, box: HTMLElement): boolean {
+    const street = input.value;
+    if (/^\s*$/.test(street)) {
+      box.innerText = 'The field must contain at least one character';
       box.classList.add('wrong__input');
       return false;
     }
