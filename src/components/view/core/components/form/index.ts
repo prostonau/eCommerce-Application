@@ -206,7 +206,7 @@ class Form extends Component {
   }
 }
 
-function checkValidyInputEmail(input: HTMLInputElement, label: HTMLElement): boolean {
+export function checkValidyInputEmail(input: HTMLInputElement, label: HTMLElement): boolean {
   const dotIndex = input.value.indexOf('.');
   if (!input.value.includes('@')) {
     label.innerText = 'E-mail must contain "@"';
@@ -230,7 +230,7 @@ function checkValidyInputEmail(input: HTMLInputElement, label: HTMLElement): boo
   return true;
 }
 
-function checkValidyInputPassword(input: HTMLInputElement, label: HTMLElement): boolean {
+export function checkValidyInputPassword(input: HTMLInputElement, label: HTMLElement): boolean {
   const password = input.value;
 
   if (password.length < 8) {
