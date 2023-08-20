@@ -60,7 +60,7 @@ class Form extends Component {
     const loginField = document.createElement('div');
     loginField.classList.add('form__field');
 
-    this.inputLogin = new InputBox('input', 'form__input', 'email', 'login__input', 'Login', true);
+    // this.inputLogin = new InputBox('input', 'form__input', 'email', 'login__input', 'Login', true);
     const inputLoginLabel = new Label('label', 'form__label', 'login__input', '', 'E-mail');
 
     this.inputLogin.render().addEventListener('input', () => {
@@ -121,9 +121,6 @@ class Form extends Component {
     const birthField = document.createElement('div');
     birthField.classList.add('form__field', 'birth__field');
 
-    /* const genderField = document.createElement('div');
-    genderField.classList.add('form__field', 'gender__field'); */
-
     const streetField = document.createElement('div');
     streetField.classList.add('form__field', 'street__field');
 
@@ -138,33 +135,48 @@ class Form extends Component {
 
     const nameInput = new InputBox('input', 'form__input', 'text', 'name__input', '', true);
     const nameLabel = new Label('label', 'form__label', 'name__input', '', 'First Name');
+    const nameValBox = document.createElement('p');
+    nameValBox.classList.add('validity__block');
 
     const lastNameInput = new InputBox('input', 'form__input', 'text', 'last-name__input', '', true);
     const lastNameLabel = new Label('label', 'form__label', 'last-name__input', '', 'Last Name');
+    const lastNameValBox = document.createElement('p');
+    lastNameValBox.classList.add('validity__block');
 
-    const mailInput = new InputBox('input', 'form__input', 'email', 'mail__input', '', true);
+    // const mailInput = new InputBox('input', 'form__input', 'email', 'mail__input', '', true);
     const mailLabel = new Label('label', 'form__label', 'mail__input', '', 'E-mail');
+    const mailValBox = document.createElement('p');
+    mailValBox.classList.add('validity__block');
 
-    const passwordInput = new InputBox('input', 'form__input', 'password', 'password__input', '', true);
+    // const passwordInput = new InputBox('input', 'form__input', 'password', 'password__input', '', true);
     const passwordLabel = new Label('label', 'form__label', 'password__input', '', 'Password');
+    const passwordValBox = document.createElement('p');
+    passwordValBox.classList.add('validity__block');
 
     const birthInput = new InputBox('input', 'form__input', 'date', 'birth-date__input', 'dd/mm/yyyy', true);
     const birthLabel = new Label('label', 'form__label', 'birth-date__input', '', 'Birthdate');
-
-    /* const genderInput = new InputBox('input', 'form__input', 'text', 'gender__input', '', true);
-    const genderLabel = new Label('label', 'form__label', 'gender__input', '', 'Gender'); */
+    const birthValBox = document.createElement('p');
+    birthValBox.classList.add('validity__block');
 
     const streetInput = new InputBox('input', 'form__input', 'text', 'street__input', '', true);
     const streetLabel = new Label('label', 'form__label', 'street__input', '', 'Street address and number');
+    const streetValBox = document.createElement('p');
+    streetValBox.classList.add('validity__block');
 
     const cityInput = new InputBox('input', 'form__input', 'text', 'city__input', '', true);
     const cityLabel = new Label('label', 'form__label', 'city__input', '', 'City');
+    const cityValBox = document.createElement('p');
+    cityValBox.classList.add('validity__block');
 
     const postalInput = new InputBox('input', 'form__input', 'text', 'street__input', '', true);
     const postalLabel = new Label('label', 'form__label', 'street__input', '', 'Postal code');
+    const postalValBox = document.createElement('p');
+    postalValBox.classList.add('validity__block');
 
     const countryInput = new InputBox('input', 'form__input', 'text', 'country__input', '', true);
     const countryLabel = new Label('label', 'form__label', 'country__input', '', 'Country');
+    const countryValBox = document.createElement('p');
+    countryValBox.classList.add('validity__block');
 
     this.regBtn.classList.add('form__button');
     this.regBtn.id = 'login';
@@ -183,23 +195,34 @@ class Form extends Component {
     credentialsHeader.classList.add('field-group__header');
     credentialsHeader.textContent = 'Credentials';
 
-    nameField.append(nameLabel.render(), nameInput.render());
-    lastNameField.append(lastNameLabel.render(), lastNameInput.render());
-    birthField.append(birthLabel.render(), birthInput.render());
-    // genderField.append(genderLabel.render(), genderInput.render());
-    mailField.append(mailLabel.render(), mailInput.render());
-    passwordField.append(passwordLabel.render(), passwordInput.render());
-    streetField.append(streetLabel.render(), streetInput.render());
-    postalField.append(postalLabel.render(), postalInput.render());
-    cityField.append(cityLabel.render(), cityInput.render());
-    countryField.append(countryLabel.render(), countryInput.render());
+    this.inputLogin.render().addEventListener('input', () => {
+      this.checkValidyInput(this.inputLogin.render(), mailValBox);
+    });
+
+    this.inputPassword.render().addEventListener('input', () => {
+      this.checkValidyInput(this.inputPassword.render(), passwordValBox);
+    });
+
+    nameField.append(nameLabel.render(), nameInput.render(), nameValBox);
+    lastNameField.append(lastNameLabel.render(), lastNameInput.render(), lastNameValBox);
+    birthField.append(birthLabel.render(), birthInput.render(), birthValBox);
+    streetField.append(streetLabel.render(), streetInput.render(), streetValBox);
+    postalField.append(postalLabel.render(), postalInput.render(), postalValBox);
+    cityField.append(cityLabel.render(), cityInput.render(), cityValBox);
+    countryField.append(countryLabel.render(), countryInput.render(), countryValBox);
+    mailField.append(mailLabel.render(), this.inputLogin.render(), mailValBox);
+    passwordField.append(
+      passwordLabel.render(),
+      this.inputPassword.render(),
+      this.swithVisibilityPassword,
+      passwordValBox
+    );
 
     form.append(
       personalHeader,
       nameField,
       lastNameField,
       birthField,
-      // genderField,
       shipHeader,
       streetField,
       postalField,
@@ -325,7 +348,7 @@ function checkValidyInputPassword(input: HTMLInputElement, label: HTMLElement): 
     return false;
   }
   label.classList.remove('wrong__input');
-  label.innerText = 'Password';
+  label.innerText = '';
   return true;
 }
 
