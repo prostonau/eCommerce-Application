@@ -22,6 +22,9 @@ const closeEye = `<svg width="15px" height="15px" style="fill-rule:evenodd;clip-
 class Form extends Component {
   inputLogin: InputBox;
   inputPassword: InputBox;
+  nameInput: InputBox;
+  lastNameInput: InputBox;
+  birthInput: InputBox;
   submitBtn: HTMLButtonElement;
   regBtn: HTMLButtonElement;
   valid: boolean;
@@ -31,6 +34,9 @@ class Form extends Component {
     super(tagName, className);
     this.inputLogin = new InputBox('input', 'form__input', 'email', 'login__input', 'Login', true);
     this.inputPassword = new InputBox('input', 'form__input', 'password', 'password__input', 'Password', true);
+    this.nameInput = new InputBox('input', 'form__input', 'text', 'name__input', '', true);
+    this.lastNameInput = new InputBox('input', 'form__input', 'text', 'last-name__input', '', true);
+    this.birthInput = new InputBox('input', 'form__input', 'date', 'birth-date__input', 'dd/mm/yyyy', true);
 
     this.swithVisibilityPassword = document.createElement('button');
     this.swithVisibilityPassword.type = 'button';
@@ -133,12 +139,12 @@ class Form extends Component {
     const countryField = document.createElement('div');
     countryField.classList.add('form__field', 'country__field');
 
-    const nameInput = new InputBox('input', 'form__input', 'text', 'name__input', '', true);
+    // const nameInput = new InputBox('input', 'form__input', 'text', 'name__input', '', true);
     const nameLabel = new Label('label', 'form__label', 'name__input', '', 'First Name');
     const nameValBox = document.createElement('p');
     nameValBox.classList.add('validity__block');
 
-    const lastNameInput = new InputBox('input', 'form__input', 'text', 'last-name__input', '', true);
+    // const lastNameInput = new InputBox('input', 'form__input', 'text', 'last-name__input', '', true);
     const lastNameLabel = new Label('label', 'form__label', 'last-name__input', '', 'Last Name');
     const lastNameValBox = document.createElement('p');
     lastNameValBox.classList.add('validity__block');
@@ -153,7 +159,7 @@ class Form extends Component {
     const passwordValBox = document.createElement('p');
     passwordValBox.classList.add('validity__block');
 
-    const birthInput = new InputBox('input', 'form__input', 'date', 'birth-date__input', 'dd/mm/yyyy', true);
+    // const birthInput = new InputBox('input', 'form__input', 'date', 'birth-date__input', 'dd/mm/yyyy', true);
     const birthLabel = new Label('label', 'form__label', 'birth-date__input', '', 'Birthdate');
     const birthValBox = document.createElement('p');
     birthValBox.classList.add('validity__block');
@@ -203,9 +209,21 @@ class Form extends Component {
       this.checkValidyInput(this.inputPassword.render(), passwordValBox);
     });
 
-    nameField.append(nameLabel.render(), nameInput.render(), nameValBox);
-    lastNameField.append(lastNameLabel.render(), lastNameInput.render(), lastNameValBox);
-    birthField.append(birthLabel.render(), birthInput.render(), birthValBox);
+    this.nameInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.nameInput.render(), nameValBox);
+    });
+
+    this.lastNameInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.lastNameInput.render(), lastNameValBox);
+    });
+
+    this.birthInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.birthInput.render(), birthValBox);
+    });
+
+    nameField.append(nameLabel.render(), this.nameInput.render(), nameValBox);
+    lastNameField.append(lastNameLabel.render(), this.lastNameInput.render(), lastNameValBox);
+    birthField.append(birthLabel.render(), this.birthInput.render(), birthValBox);
     streetField.append(streetLabel.render(), streetInput.render(), streetValBox);
     postalField.append(postalLabel.render(), postalInput.render(), postalValBox);
     cityField.append(cityLabel.render(), cityInput.render(), cityValBox);
@@ -246,24 +264,66 @@ class Form extends Component {
     return false;
   }
 
-  checkValidyInput(input: HTMLElement, label: HTMLElement): boolean {
+  checkValidyInput(input: HTMLElement, box: HTMLElement): boolean {
     if (input instanceof HTMLInputElement) {
       if (input.value === '') {
-        label.innerText = 'Requaired field';
-        label.classList.add('wrong__input');
+        box.innerText = 'Requaired field';
+        box.classList.add('wrong__input');
         return false;
       }
 
       if (input.type === 'email') {
-        return checkValidyInputEmail(input, label);
+        return checkValidyInputEmail(input, box);
       }
 
       if (input.type === 'password' || input.id === 'password__input') {
-        return checkValidyInputPassword(input, label);
+        return checkValidyInputPassword(input, box);
+      }
+
+      if (input.id === 'name__input' || input.id === 'last-name__input') {
+        return this.checkValidityInputName(input, box);
+      }
+
+      if (input.type === 'date' || input.id === 'birth-date__input') {
+        return this.checkValidityBirthDate(input, box);
       }
     }
-    label.classList.remove('wrong__input');
-    label.innerText = 'E-mail';
+    box.classList.remove('wrong__input');
+    box.innerText = 'E-mail';
+    return true;
+  }
+
+  private checkValidityInputName(input: HTMLInputElement, box: HTMLElement): boolean {
+    const name = input.value;
+    if (/^\s*/.test(name)) {
+      box.innerText = 'The field must not contain at trailing whitespaces';
+      box.classList.add('wrong__input');
+      return false;
+    } else if (/[-!$%^&*()_+|~=`{}[\]:/;<>?,.@#]/.test(name)) {
+      box.innerText = 'The field must not contain special characters';
+      box.classList.add('wrong__input');
+      return false;
+    } else if (/\d/.test(name)) {
+      box.innerText = 'The field must not contain digits (0-9)';
+      box.classList.add('wrong__input');
+      return false;
+    }
+    box.classList.remove('wrong__input');
+    box.innerText = '';
+    return true;
+  }
+
+  private checkValidityBirthDate(input: HTMLInputElement, box: HTMLElement): boolean {
+    const birthDate = new Date(input.value.replace(/(..)\/(..)\/(....)/, '$3-$2-$1'));
+    const thirteenYearsAgo = new Date();
+    thirteenYearsAgo.setFullYear(thirteenYearsAgo.getFullYear() - 13);
+    if (birthDate >= thirteenYearsAgo) {
+      box.innerText = 'You should be at least 13 y.o.';
+      box.classList.add('wrong__input');
+      return false;
+    }
+    box.classList.remove('wrong__input');
+    box.innerText = '';
     return true;
   }
 
@@ -295,60 +355,59 @@ class Form extends Component {
   }
 }
 
-function checkValidyInputEmail(input: HTMLInputElement, label: HTMLElement): boolean {
+function checkValidyInputEmail(input: HTMLInputElement, box: HTMLElement): boolean {
   const dotIndex = input.value.indexOf('.');
   if (!input.value.includes('@')) {
-    label.innerText = 'E-mail must contain "@"';
-    label.classList.add('wrong__input');
+    box.innerText = 'E-mail must contain "@"';
+    box.classList.add('wrong__input');
     return false;
   } else if (input.value.includes(' ')) {
-    label.innerText = "E-mail can't contain spaces";
-    label.classList.add('wrong__input');
+    box.innerText = "E-mail can't contain spaces";
+    box.classList.add('wrong__input');
     return false;
   } else if (input.value.indexOf('@') === input.value.length - 1) {
-    label.innerText = 'E-mail must have domain';
-    label.classList.add('wrong__input');
+    box.innerText = 'E-mail must have domain';
+    box.classList.add('wrong__input');
     return false;
   } else if (dotIndex === -1 || dotIndex < input.value.indexOf('@') || dotIndex === input.value.length - 1) {
-    label.innerText = 'E-mail must have domain';
-    label.classList.add('wrong__input');
+    box.innerText = 'E-mail must have domain';
+    box.classList.add('wrong__input');
     return false;
   }
-  label.classList.remove('wrong__input');
-  label.innerText = 'E-mail';
+  box.classList.remove('wrong__input');
+  box.innerText = '';
   return true;
 }
 
-function checkValidyInputPassword(input: HTMLInputElement, label: HTMLElement): boolean {
+function checkValidyInputPassword(input: HTMLInputElement, box: HTMLElement): boolean {
   const password = input.value;
-
   if (password.length < 8) {
-    label.innerText = 'Password must be 8+ characters';
-    label.classList.add('wrong__input');
+    box.innerText = 'Password must be 8+ characters';
+    box.classList.add('wrong__input');
     return false;
   } else if (password.includes(' ')) {
-    label.innerText = "Password can't contain spaces";
-    label.classList.add('wrong__input');
+    box.innerText = "Password can't contain spaces";
+    box.classList.add('wrong__input');
     return false;
   } else if (!/[A-Z]/.test(password)) {
-    label.innerText = 'Password must contain at least one uppercase letter (A-Z)';
-    label.classList.add('wrong__input');
+    box.innerText = 'Password must contain at least one uppercase letter (A-Z)';
+    box.classList.add('wrong__input');
     return false;
   } else if (!/[a-z]/.test(password)) {
-    label.innerText = 'Password must contain at least one lowercase letter (a-z)';
-    label.classList.add('wrong__input');
+    box.innerText = 'Password must contain at least one lowercase letter (a-z)';
+    box.classList.add('wrong__input');
     return false;
   } else if (!/\d/.test(password)) {
-    label.innerText = 'Password must contain at least one digit (0-9)';
-    label.classList.add('wrong__input');
+    box.innerText = 'Password must contain at least one digit (0-9)';
+    box.classList.add('wrong__input');
     return false;
   } else if (!/[!@#$%^&*]/.test(password)) {
-    label.innerText = 'Password must contain at least one special character (e.g., !@#$%^&*)';
-    label.classList.add('wrong__input');
+    box.innerText = 'Password must contain at least one special character (e.g., !@#$%^&*)';
+    box.classList.add('wrong__input');
     return false;
   }
-  label.classList.remove('wrong__input');
-  label.innerText = '';
+  box.classList.remove('wrong__input');
+  box.innerText = '';
   return true;
 }
 

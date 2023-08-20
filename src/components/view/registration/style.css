@@ -12,7 +12,7 @@
 
   .reg__form {
     display: grid;
-    width: 400px;
+    width: 420px;
     grid-template-columns: 1fr 1fr;
     column-gap: 16px;
     row-gap: 9px;
@@ -65,6 +65,7 @@
     font-size: 15px;
     height: 20px;
     margin-top: 3px;
+    white-space: nowrap;
   }
   
   .form__button {
@@ -81,6 +82,10 @@
     box-shadow: 4px 4px 10px #b2cd90, -4px -4px 10px #b2cd90;
     border: none;
     outline: none;
+  }
+
+  #birth-date__input {
+    padding-right: 8px;
   }
 
   .wrong__input {
