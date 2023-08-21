@@ -3,6 +3,7 @@ import { PageIds } from '../../../../controller/controller';
 import Component from '../../templates/components';
 import InputBox from './input';
 import Label from './label';
+import SelectBox from './select';
 
 const openEye = `<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 width="15px" height="15px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
@@ -22,7 +23,15 @@ const closeEye = `<svg width="15px" height="15px" style="fill-rule:evenodd;clip-
 class Form extends Component {
   inputLogin: InputBox;
   inputPassword: InputBox;
+  nameInput: InputBox;
+  lastNameInput: InputBox;
+  birthInput: InputBox;
+  streetInput: InputBox;
+  cityInput: InputBox;
+  postalInput: InputBox;
+  countrySelect: SelectBox;
   submitBtn: HTMLButtonElement;
+  regBtn: HTMLButtonElement;
   valid: boolean;
   private swithVisibilityPassword: HTMLButtonElement;
 
@@ -30,6 +39,13 @@ class Form extends Component {
     super(tagName, className);
     this.inputLogin = new InputBox('input', 'form__input', 'email', 'login__input', 'Login', true);
     this.inputPassword = new InputBox('input', 'form__input', 'password', 'password__input', 'Password', true);
+    this.nameInput = new InputBox('input', 'form__input', 'text', 'name__input', '', true);
+    this.lastNameInput = new InputBox('input', 'form__input', 'text', 'last-name__input', '', true);
+    this.birthInput = new InputBox('input', 'form__input', 'date', 'birth-date__input', 'dd/mm/yyyy', true);
+    this.streetInput = new InputBox('input', 'form__input', 'text', 'street__input', '', true);
+    this.cityInput = new InputBox('input', 'form__input', 'text', 'city__input', '', true);
+    this.postalInput = new InputBox('input', 'form__input', 'text', 'postal__input', '', true);
+    this.countrySelect = new SelectBox('select', 'form__input', 'country__select', true);
 
     this.swithVisibilityPassword = document.createElement('button');
     this.swithVisibilityPassword.type = 'button';
@@ -48,6 +64,7 @@ class Form extends Component {
     });
 
     this.submitBtn = document.createElement('button');
+    this.regBtn = document.createElement('button');
     this.valid = true;
   }
 
@@ -58,7 +75,7 @@ class Form extends Component {
     const loginField = document.createElement('div');
     loginField.classList.add('form__field');
 
-    this.inputLogin = new InputBox('input', 'form__input', 'email', 'login__input', 'Login', true);
+    // this.inputLogin = new InputBox('input', 'form__input', 'email', 'login__input', 'Login', true);
     const inputLoginLabel = new Label('label', 'form__label', 'login__input', '', 'E-mail');
 
     this.inputLogin.render().addEventListener('input', () => {
@@ -105,45 +122,167 @@ class Form extends Component {
     form.classList.add('reg__form');
 
     const nameField = document.createElement('div');
-    nameField.classList.add('form__field');
+    nameField.classList.add('form__field', 'name__field');
 
     const lastNameField = document.createElement('div');
-    lastNameField.classList.add('form__field');
+    lastNameField.classList.add('form__field', 'last-name__field');
 
     const mailField = document.createElement('div');
-    mailField.classList.add('form__field');
+    mailField.classList.add('form__field', 'email__field');
+
+    const passwordField = document.createElement('div');
+    passwordField.classList.add('form__field', 'password__field');
 
     const birthField = document.createElement('div');
-    birthField.classList.add('form__field');
+    birthField.classList.add('form__field', 'birth__field');
 
-    const adressField = document.createElement('div');
-    adressField.classList.add('form__field');
+    const streetField = document.createElement('div');
+    streetField.classList.add('form__field', 'street__field');
 
-    const nameInput = new InputBox('input', 'form__input', 'text', 'name__input', 'First Name', true);
+    const postalField = document.createElement('div');
+    postalField.classList.add('form__field', 'postal__field');
+
+    const cityField = document.createElement('div');
+    cityField.classList.add('form__field', 'city__field');
+
+    const countryField = document.createElement('div');
+    countryField.classList.add('form__field', 'country__field');
+
     const nameLabel = new Label('label', 'form__label', 'name__input', '', 'First Name');
+    const nameValBox = document.createElement('p');
+    nameValBox.classList.add('validity__block');
 
-    const lastNameInput = new InputBox('input', 'form__input', 'text', 'last-name__input', 'Last Name', true);
     const lastNameLabel = new Label('label', 'form__label', 'last-name__input', '', 'Last Name');
+    const lastNameValBox = document.createElement('p');
+    lastNameValBox.classList.add('validity__block');
 
-    const mailInput = new InputBox('input', 'form__input', 'email', 'mail__input', 'E-mail', true);
-    const mailLabel = new Label('label', 'form__label', 'mail__input', '', 'Last Name');
+    const mailLabel = new Label('label', 'form__label', 'mail__input', '', 'E-mail');
+    const mailValBox = document.createElement('p');
+    mailValBox.classList.add('validity__block');
 
-    const birthDateInput = new InputBox('input', 'form__input', 'text', 'birth-date__input', 'date', true);
-    const birthMonthInput = new InputBox('input', 'form__input', 'text', 'birth-month__input', 'month', true);
-    const birthYearInput = new InputBox('input', 'form__input', 'text', 'birth-year__input', 'year', true);
+    const passwordLabel = new Label('label', 'form__label', 'password__input', '', 'Password');
+    const passwordValBox = document.createElement('p');
+    passwordValBox.classList.add('validity__block');
 
-    const regBtn = document.createElement('button');
-    regBtn.classList.add('form__button');
-    regBtn.id = 'login';
-    regBtn.type = 'submit';
-    regBtn.textContent = 'Register';
+    const birthLabel = new Label('label', 'form__label', 'birth-date__input', '', 'Birthdate');
+    const birthValBox = document.createElement('p');
+    birthValBox.classList.add('validity__block');
 
-    nameField.append(nameInput.render(), nameLabel.render());
-    lastNameField.append(lastNameInput.render(), lastNameLabel.render());
-    mailField.append(mailInput.render(), mailLabel.render());
-    birthField.append(birthDateInput.render(), birthMonthInput.render(), birthYearInput.render());
+    const streetLabel = new Label('label', 'form__label', 'street__input', '', 'Street address and number');
+    const streetValBox = document.createElement('p');
+    streetValBox.classList.add('validity__block');
 
-    form.append(nameField, lastNameField, mailField, birthField, regBtn);
+    const cityLabel = new Label('label', 'form__label', 'city__input', '', 'City');
+    const cityValBox = document.createElement('p');
+    cityValBox.classList.add('validity__block');
+
+    const postalLabel = new Label('label', 'form__label', 'postal__input', '', 'Postal code');
+    const postalValBox = document.createElement('p');
+    postalValBox.classList.add('validity__block');
+
+    /* const countrySelectWrapper = document.createElement('div');
+    countrySelectWrapper.classList.add('select-wrapper'); */
+    this.countrySelect.addOptions('Poland', 'Belarus', 'Lithuania');
+    const countryLabel = new Label('label', 'form__label', 'country__input', '', 'Country');
+    const countryValBox = document.createElement('p');
+    countryValBox.classList.add('validity__block');
+
+    this.regBtn.classList.add('form__button');
+    this.regBtn.id = 'login';
+    this.regBtn.type = 'submit';
+    this.regBtn.innerHTML = 'Register';
+
+    const personalHeader = document.createElement('h3');
+    personalHeader.classList.add('field-group__header');
+    personalHeader.textContent = 'Personal';
+
+    const shipHeader = document.createElement('h3');
+    shipHeader.classList.add('field-group__header');
+    shipHeader.textContent = 'Shipping address';
+
+    const credentialsHeader = document.createElement('h3');
+    credentialsHeader.classList.add('field-group__header');
+    credentialsHeader.textContent = 'Credentials';
+
+    this.inputLogin.render().addEventListener('input', () => {
+      this.checkValidyInput(this.inputLogin.render(), mailValBox);
+    });
+
+    this.inputPassword.render().addEventListener('input', () => {
+      this.checkValidyInput(this.inputPassword.render(), passwordValBox);
+    });
+
+    this.nameInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.nameInput.render(), nameValBox);
+    });
+
+    this.lastNameInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.lastNameInput.render(), lastNameValBox);
+    });
+
+    this.birthInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.birthInput.render(), birthValBox);
+    });
+
+    this.streetInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.streetInput.render(), streetValBox);
+    });
+
+    this.cityInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.cityInput.render(), cityValBox);
+    });
+
+    this.postalInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.postalInput.render(), postalValBox);
+    });
+
+    this.countrySelect.render().addEventListener('change', () => {
+      this.checkValidyInput(this.postalInput.render(), postalValBox);
+      this.checkValiditySelect(this.countrySelect.render(), countryValBox);
+    });
+
+    this.regBtn.addEventListener('click', () => {
+      this.checkValidyInput(this.inputLogin.render(), mailValBox);
+      this.checkValidyInput(this.inputPassword.render(), passwordValBox);
+      this.checkValidyInput(this.nameInput.render(), nameValBox);
+      this.checkValidyInput(this.lastNameInput.render(), lastNameValBox);
+      this.checkValidyInput(this.birthInput.render(), birthValBox);
+      this.checkValidyInput(this.streetInput.render(), streetValBox);
+      this.checkValidyInput(this.cityInput.render(), cityValBox);
+      this.checkValidyInput(this.postalInput.render(), postalValBox);
+      this.checkValiditySelect(this.countrySelect.render(), countryValBox);
+    });
+
+    nameField.append(nameLabel.render(), this.nameInput.render(), nameValBox);
+    lastNameField.append(lastNameLabel.render(), this.lastNameInput.render(), lastNameValBox);
+    birthField.append(birthLabel.render(), this.birthInput.render(), birthValBox);
+    streetField.append(streetLabel.render(), this.streetInput.render(), streetValBox);
+    countryField.append(countryLabel.render(), this.countrySelect.render(), countryValBox);
+    cityField.append(cityLabel.render(), this.cityInput.render(), cityValBox);
+    postalField.append(postalLabel.render(), this.postalInput.render(), postalValBox);
+    mailField.append(mailLabel.render(), this.inputLogin.render(), mailValBox);
+    passwordField.append(
+      passwordLabel.render(),
+      this.inputPassword.render(),
+      this.swithVisibilityPassword,
+      passwordValBox
+    );
+
+    form.append(
+      personalHeader,
+      nameField,
+      lastNameField,
+      birthField,
+      shipHeader,
+      streetField,
+      countryField,
+      cityField,
+      postalField,
+      credentialsHeader,
+      mailField,
+      passwordField,
+      this.regBtn
+    );
   }
 
   render() {
@@ -157,24 +296,120 @@ class Form extends Component {
     return false;
   }
 
-  checkValidyInput(input: HTMLElement, label: HTMLElement): boolean {
+  checkValidyInput(input: HTMLElement, box: HTMLElement): boolean {
     if (input instanceof HTMLInputElement) {
       if (input.value === '') {
-        label.innerText = 'Requaired field';
-        label.classList.add('wrong__input');
+        box.innerText = 'Required field';
+        box.classList.add('wrong__input');
         return false;
       }
 
       if (input.type === 'email') {
-        return checkValidyInputEmail(input, label);
+        return checkValidyInputEmail(input, box);
       }
 
       if (input.type === 'password' || input.id === 'password__input') {
-        return checkValidyInputPassword(input, label);
+        return checkValidyInputPassword(input, box);
+      }
+
+      if (input.id === 'name__input' || input.id === 'last-name__input' || input.id === 'city__input') {
+        return this.checkValidityInputName(input, box);
+      }
+
+      if (input.type === 'date' || input.id === 'birth-date__input') {
+        return this.checkValidityInputBirthDate(input, box);
+      }
+
+      if (input.id === 'street__input') {
+        return this.checkValidityInputStreet(input, box);
+      }
+
+      if (input.id === 'postal__input') {
+        return this.checkValidityInputPostalCode(input, box);
       }
     }
-    label.classList.remove('wrong__input');
-    label.innerText = 'E-mail';
+    box.classList.remove('wrong__input');
+    box.innerText = '';
+    return true;
+  }
+
+  checkValiditySelect(select: HTMLElement, box: HTMLElement): boolean {
+    if (select instanceof HTMLSelectElement) {
+      if (select.value === 'Country') {
+        box.innerText = 'Required field';
+        box.classList.add('wrong__input');
+        return false;
+      }
+    }
+    box.classList.remove('wrong__input');
+    box.innerText = '';
+    return true;
+  }
+
+  private checkValidityInputName(input: HTMLInputElement, box: HTMLElement): boolean {
+    const name = input.value;
+    if (/^\s*$/.test(name)) {
+      box.innerText = 'The field must contain at least one character';
+      box.classList.add('wrong__input');
+      return false;
+    } else if (/[-!$%^&*()_+|~=`{}[\]:/;<>?,.@#]/.test(name)) {
+      box.innerText = 'The field must not contain special characters';
+      box.classList.add('wrong__input');
+      return false;
+    } else if (/\d/.test(name)) {
+      box.innerText = 'The field must not contain digits (0-9)';
+      box.classList.add('wrong__input');
+      return false;
+    }
+    box.classList.remove('wrong__input');
+    box.innerText = '';
+    return true;
+  }
+
+  private checkValidityInputBirthDate(input: HTMLInputElement, box: HTMLElement): boolean {
+    const birthDate = new Date(input.value.replace(/(..)\/(..)\/(....)/, '$3-$2-$1'));
+    const thirteenYearsAgo = new Date();
+    thirteenYearsAgo.setFullYear(thirteenYearsAgo.getFullYear() - 13);
+    if (birthDate >= thirteenYearsAgo) {
+      box.innerText = 'You should be at least 13 y.o.';
+      box.classList.add('wrong__input');
+      return false;
+    }
+    box.classList.remove('wrong__input');
+    box.innerText = '';
+    return true;
+  }
+
+  private checkValidityInputStreet(input: HTMLInputElement, box: HTMLElement): boolean {
+    const street = input.value;
+    if (/^\s*$/.test(street)) {
+      box.innerText = 'The field must contain at least one character';
+      box.classList.add('wrong__input');
+      return false;
+    }
+    box.classList.remove('wrong__input');
+    box.innerText = '';
+    return true;
+  }
+
+  private checkValidityInputPostalCode(input: HTMLInputElement, box: HTMLElement): boolean {
+    const code = input.value;
+    const selectedCountry = this.countrySelect.getValue();
+    if (selectedCountry === 'Belarus' && !/^2\d{5}$/.test(code)) {
+      box.innerText = 'Invalid postal code format for Belarus';
+      box.classList.add('wrong__input');
+      return false;
+    } else if (selectedCountry === 'Poland' && !/^\d{2}-\d{3}$/.test(code)) {
+      box.innerText = 'Invalid postal code format for Poland';
+      box.classList.add('wrong__input');
+      return false;
+    } else if (selectedCountry === 'Lithuania' && !/^(LT-)?\d{5}$/.test(code)) {
+      box.innerText = 'Invalid postal code format for Lithuania';
+      box.classList.add('wrong__input');
+      return false;
+    }
+    box.classList.remove('wrong__input');
+    box.innerText = '';
     return true;
   }
 
@@ -206,60 +441,59 @@ class Form extends Component {
   }
 }
 
-function checkValidyInputEmail(input: HTMLInputElement, label: HTMLElement): boolean {
+function checkValidyInputEmail(input: HTMLInputElement, box: HTMLElement): boolean {
   const dotIndex = input.value.indexOf('.');
   if (!input.value.includes('@')) {
-    label.innerText = 'E-mail must contain "@"';
-    label.classList.add('wrong__input');
+    box.innerText = 'E-mail must contain "@"';
+    box.classList.add('wrong__input');
     return false;
   } else if (input.value.includes(' ')) {
-    label.innerText = "E-mail can't contain spaces";
-    label.classList.add('wrong__input');
+    box.innerText = "E-mail can't contain spaces";
+    box.classList.add('wrong__input');
     return false;
   } else if (input.value.indexOf('@') === input.value.length - 1) {
-    label.innerText = 'E-mail must have domain';
-    label.classList.add('wrong__input');
+    box.innerText = 'E-mail must have domain';
+    box.classList.add('wrong__input');
     return false;
   } else if (dotIndex === -1 || dotIndex < input.value.indexOf('@') || dotIndex === input.value.length - 1) {
-    label.innerText = 'E-mail must have domain';
-    label.classList.add('wrong__input');
+    box.innerText = 'E-mail must have domain';
+    box.classList.add('wrong__input');
     return false;
   }
-  label.classList.remove('wrong__input');
-  label.innerText = 'E-mail';
+  box.classList.remove('wrong__input');
+  box.innerText = '';
   return true;
 }
 
-function checkValidyInputPassword(input: HTMLInputElement, label: HTMLElement): boolean {
+function checkValidyInputPassword(input: HTMLInputElement, box: HTMLElement): boolean {
   const password = input.value;
-
   if (password.length < 8) {
-    label.innerText = 'Password must be 8+ characters';
-    label.classList.add('wrong__input');
+    box.innerText = 'Password must be 8+ characters';
+    box.classList.add('wrong__input');
     return false;
   } else if (password.includes(' ')) {
-    label.innerText = "Password can't contain spaces";
-    label.classList.add('wrong__input');
+    box.innerText = "Password can't contain spaces";
+    box.classList.add('wrong__input');
     return false;
   } else if (!/[A-Z]/.test(password)) {
-    label.innerText = 'Password must contain at least one uppercase letter (A-Z)';
-    label.classList.add('wrong__input');
+    box.innerText = 'Password must contain at least one uppercase letter (A-Z)';
+    box.classList.add('wrong__input');
     return false;
   } else if (!/[a-z]/.test(password)) {
-    label.innerText = 'Password must contain at least one lowercase letter (a-z)';
-    label.classList.add('wrong__input');
+    box.innerText = 'Password must contain at least one lowercase letter (a-z)';
+    box.classList.add('wrong__input');
     return false;
   } else if (!/\d/.test(password)) {
-    label.innerText = 'Password must contain at least one digit (0-9)';
-    label.classList.add('wrong__input');
+    box.innerText = 'Password must contain at least one digit (0-9)';
+    box.classList.add('wrong__input');
     return false;
   } else if (!/[!@#$%^&*]/.test(password)) {
-    label.innerText = 'Password must contain at least one special character (e.g., !@#$%^&*)';
-    label.classList.add('wrong__input');
+    box.innerText = 'Password must contain at least one special character (e.g., !@#$%^&*)';
+    box.classList.add('wrong__input');
     return false;
   }
-  label.classList.remove('wrong__input');
-  label.innerText = 'Password';
+  box.classList.remove('wrong__input');
+  box.innerText = '';
   return true;
 }
 
