@@ -18,11 +18,14 @@
     margin-bottom: 15px;
   }
 
+  .form__field {
+    margin-bottom: 9px;
+  }
+
   .form__input {
     display: block;
     width: 250px;
     height: 34px;
-    margin: 4px 4px 0;
     padding-left: 10px;
     font-size: 14px;
     letter-spacing: 0.15px;
@@ -42,13 +45,22 @@
   .form__label {
     width: 250px;
     display: block;
-    padding: 5px 14px 5px;
-    margin: 0 3px 15px ;
+    /* padding: 5px 14px 5px;
+    margin: 0 3px 15px ; */
+    margin-bottom: 3px;
     font-family: "Montserrat", sans-serif;
     font-size: 15px;
     opacity: 0.9;
     border-radius: 0 0 8px 8px;
     transition: all 0.4s ease;
+  }
+
+  .validity__block {
+    font-size: 15px;
+    height: 20px;
+    width: 250px;
+    margin-top: 3px;
+    word-wrap: break-word;
   }
   
   .form__button {
@@ -56,7 +68,7 @@
     width: 130px;
     height: 35px;
     border-radius: 8px;
-    margin: 25px auto;
+    margin: 30px auto;
     font-weight: 700;
     font-size: 14px;
     letter-spacing: 1.15px;
@@ -69,8 +81,7 @@
   }
 
   .wrong__input {
-    color: #f9f9f9;
-    background-color: red;
+    color: rgb(224, 68, 68);
   }
 
   .form__field {
@@ -80,7 +91,7 @@
   .switch-visibility__btn {
     height: 20px;
     width: 20px;
-    top: 8px;
+    top: 30px;
     right: 10px;
     position: absolute;
     background-color: inherit;

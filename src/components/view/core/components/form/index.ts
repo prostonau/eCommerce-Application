@@ -40,8 +40,8 @@ class Form extends Component {
   constructor(tagName: string, className: string) {
     super(tagName, className);
     this.api = new AppAPI();
-    this.inputLogin = new InputBox('input', 'form__input', 'email', 'login__input', 'Login', true);
-    this.inputPassword = new InputBox('input', 'form__input', 'password', 'password__input', 'Password', true);
+    this.inputLogin = new InputBox('input', 'form__input', 'email', 'login__input', '', true);
+    this.inputPassword = new InputBox('input', 'form__input', 'password', 'password__input', '', true);
     this.nameInput = new InputBox('input', 'form__input', 'text', 'name__input', '', true);
     this.lastNameInput = new InputBox('input', 'form__input', 'text', 'last-name__input', '', true);
     this.birthInput = new InputBox('input', 'form__input', 'date', 'birth-date__input', 'dd/mm/yyyy', true);
@@ -78,25 +78,32 @@ class Form extends Component {
     const loginField = document.createElement('div');
     loginField.classList.add('form__field');
 
-    // this.inputLogin = new InputBox('input', 'form__input', 'email', 'login__input', 'Login', true);
-    const inputLoginLabel = new Label('label', 'form__label', 'login__input', '', 'E-mail');
-
-    this.inputLogin.render().addEventListener('input', () => {
-      this.checkValidyInput(this.inputLogin.render(), inputLoginLabel.render());
-    });
-
-    loginField.append(this.inputLogin.render(), inputLoginLabel.render());
-
     const passwordField = document.createElement('div');
     passwordField.classList.add('form__field');
 
-    const inputPasswordLabel = new Label('label', 'form__label', 'password__input', '', 'Password');
+    const inputLoginLabel = new Label('label', 'form__label', 'login__input', '', 'E-mail');
+    const inputLoginValBox = document.createElement('p');
+    inputLoginValBox.classList.add('validity__block');
 
-    this.inputPassword.render().addEventListener('input', () => {
-      this.checkValidyInput(this.inputPassword.render(), inputPasswordLabel.render());
+    const inputPasswordLabel = new Label('label', 'form__label', 'password__input', '', 'Password');
+    const inputPasswordValBox = document.createElement('p');
+    inputPasswordValBox.classList.add('validity__block');
+
+    loginField.append(inputLoginLabel.render(), this.inputLogin.render(), inputLoginValBox);
+    passwordField.append(
+      inputPasswordLabel.render(),
+      this.inputPassword.render(),
+      this.swithVisibilityPassword,
+      inputPasswordValBox
+    );
+
+    this.inputLogin.render().addEventListener('input', () => {
+      this.checkValidyInput(this.inputLogin.render(), inputLoginValBox);
     });
 
-    passwordField.append(this.inputPassword.render(), this.swithVisibilityPassword, inputPasswordLabel.render());
+    this.inputPassword.render().addEventListener('input', () => {
+      this.checkValidyInput(this.inputPassword.render(), inputPasswordValBox);
+    });
 
     this.submitBtn.classList.add('form__button');
     this.submitBtn.id = 'login';
