@@ -18,6 +18,12 @@
     row-gap: 9px;
   }
 
+  @media (max-width: 480px) {
+    .reg__form {
+      width: 85vw;
+    }
+  }
+
   .name__field,
   .last-name__field,
   .email__field,
@@ -64,7 +70,6 @@
     font-size: 15px;
     height: 20px;
     margin-top: 3px;
-    /* white-space: nowrap; */
   }
   
   .form__button {
