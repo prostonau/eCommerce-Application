@@ -47,6 +47,19 @@ header h1 {
   z-index: 9999;
 }
 
+.notificationTop {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px;
+  background-color: #0a0a0a;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+}
+
 #current-page {
   animation: comeIn 1.5s ease-in-out;
 }

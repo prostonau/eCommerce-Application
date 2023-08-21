@@ -10,10 +10,14 @@ abstract class Component {
     return this.container;
   }
 
-  showNotification(text: string) {
+  showNotification(text: string, top: boolean = false) {
     // Создаем элемент для уведомления
     const notification = document.createElement('div');
-    notification.className = 'notification';
+    if (top) {
+      notification.className = 'notificationTop';
+    } else {
+      notification.className = 'notification';
+    }
     notification.textContent = text;
 
     // Добавляем уведомление внизу экрана
