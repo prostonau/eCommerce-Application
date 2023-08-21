@@ -22,6 +22,11 @@ class SelectBox extends Component {
   }
 
   addOptions(...options: string[]) {
+    const holder = document.createElement('option');
+    holder.setAttribute('selected', '');
+    holder.setAttribute('disabled', '');
+    holder.textContent = 'Country';
+    this.container.append(holder);
     for (const val of options) {
       const option = document.createElement('option');
       option.value = val;

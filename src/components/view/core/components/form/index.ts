@@ -44,7 +44,7 @@ class Form extends Component {
     this.birthInput = new InputBox('input', 'form__input', 'date', 'birth-date__input', 'dd/mm/yyyy', true);
     this.streetInput = new InputBox('input', 'form__input', 'text', 'street__input', '', true);
     this.cityInput = new InputBox('input', 'form__input', 'text', 'city__input', '', true);
-    this.postalInput = new InputBox('input', 'form__input', 'text', 'street__input', '', true);
+    this.postalInput = new InputBox('input', 'form__input', 'text', 'postal__input', '', true);
     this.countrySelect = new SelectBox('select', 'form__input', 'country__select', true);
 
     this.swithVisibilityPassword = document.createElement('button');
@@ -176,12 +176,12 @@ class Form extends Component {
     const cityValBox = document.createElement('p');
     cityValBox.classList.add('validity__block');
 
-    const postalLabel = new Label('label', 'form__label', 'street__input', '', 'Postal code');
+    const postalLabel = new Label('label', 'form__label', 'postal__input', '', 'Postal code');
     const postalValBox = document.createElement('p');
     postalValBox.classList.add('validity__block');
 
-    const countrySelectWrapper = document.createElement('div');
-    countrySelectWrapper.classList.add('select-wrapper');
+    /* const countrySelectWrapper = document.createElement('div');
+    countrySelectWrapper.classList.add('select-wrapper'); */
     this.countrySelect.addOptions('Poland', 'Belarus', 'Lithuania');
     const countryLabel = new Label('label', 'form__label', 'country__input', '', 'Country');
     const countryValBox = document.createElement('p');
@@ -230,6 +230,27 @@ class Form extends Component {
 
     this.cityInput.render().addEventListener('input', () => {
       this.checkValidyInput(this.cityInput.render(), cityValBox);
+    });
+
+    this.postalInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.postalInput.render(), postalValBox);
+    });
+
+    this.countrySelect.render().addEventListener('change', () => {
+      this.checkValidyInput(this.postalInput.render(), postalValBox);
+      this.checkValiditySelect(this.countrySelect.render(), countryValBox);
+    });
+
+    this.regBtn.addEventListener('click', () => {
+      this.checkValidyInput(this.inputLogin.render(), mailValBox);
+      this.checkValidyInput(this.inputPassword.render(), passwordValBox);
+      this.checkValidyInput(this.nameInput.render(), nameValBox);
+      this.checkValidyInput(this.lastNameInput.render(), lastNameValBox);
+      this.checkValidyInput(this.birthInput.render(), birthValBox);
+      this.checkValidyInput(this.streetInput.render(), streetValBox);
+      this.checkValidyInput(this.cityInput.render(), cityValBox);
+      this.checkValidyInput(this.postalInput.render(), postalValBox);
+      this.checkValiditySelect(this.countrySelect.render(), countryValBox);
     });
 
     nameField.append(nameLabel.render(), this.nameInput.render(), nameValBox);
@@ -296,11 +317,28 @@ class Form extends Component {
       }
 
       if (input.type === 'date' || input.id === 'birth-date__input') {
-        return this.checkValidityBirthDate(input, box);
+        return this.checkValidityInputBirthDate(input, box);
       }
 
       if (input.id === 'street__input') {
-        return this.checkValidityStreet(input, box);
+        return this.checkValidityInputStreet(input, box);
+      }
+
+      if (input.id === 'postal__input') {
+        return this.checkValidityInputPostalCode(input, box);
+      }
+    }
+    box.classList.remove('wrong__input');
+    box.innerText = '';
+    return true;
+  }
+
+  checkValiditySelect(select: HTMLElement, box: HTMLElement): boolean {
+    if (select instanceof HTMLSelectElement) {
+      if (select.value === 'Country') {
+        box.innerText = 'Required field';
+        box.classList.add('wrong__input');
+        return false;
       }
     }
     box.classList.remove('wrong__input');
@@ -328,7 +366,7 @@ class Form extends Component {
     return true;
   }
 
-  private checkValidityBirthDate(input: HTMLInputElement, box: HTMLElement): boolean {
+  private checkValidityInputBirthDate(input: HTMLInputElement, box: HTMLElement): boolean {
     const birthDate = new Date(input.value.replace(/(..)\/(..)\/(....)/, '$3-$2-$1'));
     const thirteenYearsAgo = new Date();
     thirteenYearsAgo.setFullYear(thirteenYearsAgo.getFullYear() - 13);
@@ -342,10 +380,31 @@ class Form extends Component {
     return true;
   }
 
-  private checkValidityStreet(input: HTMLInputElement, box: HTMLElement): boolean {
+  private checkValidityInputStreet(input: HTMLInputElement, box: HTMLElement): boolean {
     const street = input.value;
     if (/^\s*$/.test(street)) {
       box.innerText = 'The field must contain at least one character';
+      box.classList.add('wrong__input');
+      return false;
+    }
+    box.classList.remove('wrong__input');
+    box.innerText = '';
+    return true;
+  }
+
+  private checkValidityInputPostalCode(input: HTMLInputElement, box: HTMLElement): boolean {
+    const code = input.value;
+    const selectedCountry = this.countrySelect.getValue();
+    if (selectedCountry === 'Belarus' && !/^2\d{5}$/.test(code)) {
+      box.innerText = 'Invalid postal code format for Belarus';
+      box.classList.add('wrong__input');
+      return false;
+    } else if (selectedCountry === 'Poland' && !/^\d{2}-\d{3}$/.test(code)) {
+      box.innerText = 'Invalid postal code format for Poland';
+      box.classList.add('wrong__input');
+      return false;
+    } else if (selectedCountry === 'Lithuania' && !/^(LT-)?\d{5}$/.test(code)) {
+      box.innerText = 'Invalid postal code format for Lithuania';
       box.classList.add('wrong__input');
       return false;
     }
