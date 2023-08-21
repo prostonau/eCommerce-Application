@@ -10,6 +10,10 @@
     color: #4CAF50;
   }
 
+  .go-to-login-link {
+    color: #4CAF50;
+  }
+
   .reg__form {
     display: grid;
     width: 420px;
