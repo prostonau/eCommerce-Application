@@ -310,6 +310,8 @@ class Form extends Component {
                 this.requestApiLogin(email, password);
               });
             });
+          } else {
+            this.showNotification(`We already have user with this login = ${email}`);
           }
         });
       }
