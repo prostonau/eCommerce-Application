@@ -1,6 +1,3 @@
-// import { WinnerData } from '../../../types/index';
-import './style.css';
-
 import './style.css';
 import Page from '../core/templates/page';
 import Form from '../core/components/form';
