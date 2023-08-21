@@ -136,7 +136,7 @@ class AppAPI {
     };
 
     // Выполняем запрос
-    fetch(`${this.apiUrl}/${this.projectKey}/customers/`, options)
+    return fetch(`${this.apiUrl}/${this.projectKey}/customers/`, options)
       .then((response) => response.json())
       .then((data) => {
         console.log('getAllCustomers = ', data);
@@ -144,6 +144,21 @@ class AppAPI {
       })
       .catch((error) => console.error(error));
   };
+
+  async checkEmailbyAPI(email: string): Promise<boolean> {
+    return new Promise<boolean>((resolve) => {
+      this.clientCredentialsFlow().then(async (response) => {
+        const allCustomers = await this.getAllCustomers(response.access_token);
+        console.log('allCustomers = ', allCustomers);
+        console.log('email = ', email);
+        if (allCustomers.results.filter((e: Customer) => e.email === email).length > 0) {
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      });
+    });
+  }
 
   //https://docs.commercetools.com/api/projects/customers#create-sign-up-customer
   createCustomer = (BEARER_TOKEN: string, customer: Customer) => {
@@ -158,7 +173,7 @@ class AppAPI {
     };
 
     // Выполняем запрос
-    fetch(`${this.apiUrl}/${this.projectKey}/customers`, options)
+    return fetch(`${this.apiUrl}/${this.projectKey}/customers`, options)
       .then((response) => response.json())
       .then((data) => {
         console.log('createCustomer = ', data);
