@@ -247,6 +247,15 @@ class Form extends Component {
     this.regBtn.addEventListener('click', async (ev) => {
       console.log('Click reg Btn... ');
       ev.preventDefault();
+      this.checkValidyInput(this.inputLogin.render(), mailValBox);
+      this.checkValidyInput(this.inputPassword.render(), passwordValBox);
+      this.checkValidyInput(this.nameInput.render(), nameValBox);
+      this.checkValidyInput(this.lastNameInput.render(), lastNameValBox);
+      this.checkValidyInput(this.birthInput.render(), birthValBox);
+      this.checkValidyInput(this.streetInput.render(), streetValBox);
+      this.checkValidyInput(this.cityInput.render(), cityValBox);
+      this.checkValidyInput(this.postalInput.render(), postalValBox);
+      this.checkValiditySelect(this.countrySelect.render(), countryValBox);
       if (
         this.checkValidyInput(this.inputLogin.render(), mailValBox) &&
         this.checkValidyInput(this.inputPassword.render(), passwordValBox) &&
