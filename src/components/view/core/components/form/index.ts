@@ -252,8 +252,9 @@ class Form extends Component {
     });
 
     this.regBtn.addEventListener('click', async (ev) => {
-      console.log('Click reg Btn... ');
       ev.preventDefault();
+      console.log('Click reg Btn... ');
+
       this.checkValidyInput(this.inputLogin.render(), mailValBox);
       this.checkValidyInput(this.inputPassword.render(), passwordValBox);
       this.checkValidyInput(this.nameInput.render(), nameValBox);
@@ -281,25 +282,50 @@ class Form extends Component {
           console.log('email= ', email);
           console.log('response = ', response);
           if (response) {
-            const customer: Customer = {
-              email: 'aaaa@example.com',
-              firstName: 'John',
-              lastName: 'Doe2',
-              password: 'Secret%123',
-            };
-
             const email = (this.inputLogin.render() as HTMLInputElement).value;
             const password = (this.inputPassword.render() as HTMLInputElement).value;
 
-            customer.email = email;
-            customer.firstName = (this.nameInput.render() as HTMLInputElement).value;
-            customer.lastName = (this.nameInput.render() as HTMLInputElement).value;
-            customer.password = password;
+            const customer: Customer = {
+              email: email,
+              firstName: (this.nameInput.render() as HTMLInputElement).value,
+              lastName: (this.lastNameInput.render() as HTMLInputElement).value,
+              password: password,
+            };
+
+            //customer.email = email;
+            //customer.firstName = (this.nameInput.render() as HTMLInputElement).value;
+            //customer.lastName = (this.nameInput.render() as HTMLInputElement).value;
+            //customer.password = password;
 
             this.api.clientCredentialsFlow().then((response) => {
               console.log('response = ', response);
-              this.api.createCustomer(response.access_token, customer).then((e) => {
-                console.log('create customer feedback: ', e);
+              this.api.createCustomer(response.access_token, customer).then(async (userInfo) => {
+                const shortCountry = convertCountry((this.countrySelect.render() as HTMLInputElement).value);
+
+                if (userInfo.customer.id) {
+                  const actions = [
+                    {
+                      action: 'addAddress',
+                      address: {
+                        streetName: (this.streetInput.render() as HTMLInputElement).value,
+                        postalCode: (this.postalInput.render() as HTMLInputElement).value,
+                        city: (this.cityInput.render() as HTMLInputElement).value,
+                        country: shortCountry,
+                      },
+                    },
+                  ];
+
+                  const actions2 = [
+                    {
+                      action: 'setDateOfBirth',
+                      dateOfBirth: (this.birthInput.render() as HTMLInputElement).value,
+                    },
+                  ];
+
+                  await this.api.updateCustomer(response.access_token, userInfo.customer, actions);
+                  userInfo.customer.version++;
+                  await this.api.updateCustomer(response.access_token, userInfo.customer, actions2);
+                }
                 // по идеи нужны еще проверки что вернулся только статус 200
 
                 // Нужно еще сохоранить данные адреса и DOB
@@ -559,6 +585,19 @@ export function checkValidyInputPassword(input: HTMLInputElement, box: HTMLEleme
   box.classList.remove('wrong__input');
   box.innerText = '';
   return true;
+}
+
+export function convertCountry(country: string): string {
+  switch (country) {
+    case 'Poland':
+      return 'PL';
+    case 'Belarus':
+      return 'BY';
+    case 'Lithuania':
+      return 'LT';
+    default:
+      return 'PL';
+  }
 }
 
 export default Form;
