@@ -6,7 +6,7 @@
 // import { engineStart } from '../../types/index';
 // import { driveMode } from '../../types/index';
 
-import { ClientCredentialsFlowResponse } from '../../types/index';
+import { Actions, ClientCredentialsFlowResponse } from '../../types/index';
 import { Customer } from '../../types/index';
 
 // type GetSourcesCallback = (data: RawSourceData) => void;
@@ -116,7 +116,7 @@ class AppAPI {
     };
 
     // Выполняем запрос
-    fetch(`${this.apiUrl}/${this.projectKey}/customers/${id}`, options)
+    return fetch(`${this.apiUrl}/${this.projectKey}/customers/${id}`, options)
       .then((response) => response.json())
       .then((data) => {
         console.log('getCustomer = ', data);
@@ -177,6 +177,37 @@ class AppAPI {
       .then((response) => response.json())
       .then((data) => {
         console.log('createCustomer = ', data);
+        return data;
+      })
+      .catch((error) => console.error(error));
+  };
+
+  updateCustomer = async (BEARER_TOKEN: string, customer: Customer, actions: Actions[]) => {
+    // Создаем объект с настройками для запроса
+    const id = customer.id;
+    const version = customer.version ? customer.version : 1;
+    console.log('получаем это = ', customer);
+    console.log(actions);
+
+    const data = {
+      version: version,
+      actions: actions,
+    };
+
+    const options = {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${BEARER_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+
+    // Выполняем запрос
+    return fetch(`${this.apiUrl}/${this.projectKey}/customers/${id}`, options)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('updateCustomer = ', data);
         return data;
       })
       .catch((error) => console.error(error));

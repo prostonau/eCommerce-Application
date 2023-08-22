@@ -10,6 +10,17 @@ export interface Customer {
   firstName: string;
   lastName: string;
   password: string;
+  id?: string;
+  version?: number;
+}
+
+export interface Action {
+  [key: string]: string;
+}
+
+export interface Actions {
+  action: string;
+  adress?: Action;
 }
 
 // export interface WinnerData {
