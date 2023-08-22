@@ -34,7 +34,8 @@
   .password__field,
   .street__field,
   .form__button,
-  .field-group__header
+  .field-group__header,
+  .bill-street__field
   {
     grid-column: span 2;
   }

@@ -32,6 +32,12 @@ class Form extends Component {
   cityInput: InputBox;
   postalInput: InputBox;
   countrySelect: SelectBox;
+  billStreetInput: InputBox;
+  billCityInput: InputBox;
+  billPostalInput: InputBox;
+  shipToggle: InputBox;
+  billToggle: InputBox;
+  sameToggle: InputBox;
   submitBtn: HTMLButtonElement;
   regBtn: HTMLButtonElement;
   valid: boolean;
@@ -49,6 +55,12 @@ class Form extends Component {
     this.cityInput = new InputBox('input', 'form__input', 'text', 'city__input', '', true);
     this.postalInput = new InputBox('input', 'form__input', 'text', 'postal__input', '', true);
     this.countrySelect = new SelectBox('select', 'form__input', 'country__select', true);
+    this.billStreetInput = new InputBox('input', 'form__input', 'text', 'bill-street__input', '', true);
+    this.billCityInput = new InputBox('input', 'form__input', 'text', 'bill-city__input', '', true);
+    this.billPostalInput = new InputBox('input', 'form__input', 'text', 'bill-postal__input', '', true);
+    this.shipToggle = new InputBox('input', 'form__toggle', 'checkbox', 'ship__toggle', '', false);
+    this.billToggle = new InputBox('input', 'form__toggle', 'checkbox', 'bill__toggle', '', false);
+    this.sameToggle = new InputBox('input', 'form__toggle', 'checkbox', 'same__toggle', '', false);
 
     this.swithVisibilityPassword = document.createElement('button');
     this.swithVisibilityPassword.type = 'button';
@@ -158,6 +170,15 @@ class Form extends Component {
     const countryField = document.createElement('div');
     countryField.classList.add('form__field', 'country__field');
 
+    const billStreetField = document.createElement('div');
+    billStreetField.classList.add('form__field', 'bill-street__field');
+
+    const billPostalField = document.createElement('div');
+    billPostalField.classList.add('form__field', 'bill-postal__field');
+
+    const billCityField = document.createElement('div');
+    billCityField.classList.add('form__field', 'bill-city__field');
+
     const nameLabel = new Label('label', 'form__label', 'name__input', '', 'First Name');
     const nameValBox = document.createElement('p');
     nameValBox.classList.add('validity__block');
@@ -190,12 +211,40 @@ class Form extends Component {
     const postalValBox = document.createElement('p');
     postalValBox.classList.add('validity__block');
 
-    /* const countrySelectWrapper = document.createElement('div');
-    countrySelectWrapper.classList.add('select-wrapper'); */
     this.countrySelect.addOptions('Poland', 'Belarus', 'Lithuania');
     const countryLabel = new Label('label', 'form__label', 'country__input', '', 'Country');
     const countryValBox = document.createElement('p');
     countryValBox.classList.add('validity__block');
+
+    const billStreetLabel = new Label('label', 'form__label', 'bill-street__input', '', 'Street address and number');
+    const billStreetValBox = document.createElement('p');
+    billStreetValBox.classList.add('validity__block');
+
+    const billCityLabel = new Label('label', 'form__label', 'bill-city__input', '', 'City');
+    const billCityValBox = document.createElement('p');
+    billCityValBox.classList.add('validity__block');
+
+    const billPostalLabel = new Label('label', 'form__label', 'bill-postal__input', '', 'Postal code');
+    const billPostalValBox = document.createElement('p');
+    billPostalValBox.classList.add('validity__block');
+
+    //const shipToggleLabel = new Label('label', 'toggle__label', 'ship__toggle', '', 'Set as a default address');
+    //const billToggleLabel = new Label('label', 'toggle__label', 'bill__toggle', '', 'Set as a default address');
+
+    const shipToggleLabel = document.createElement('label');
+    shipToggleLabel.classList.add('toggle__label');
+    shipToggleLabel.setAttribute('for', 'ship__toggle');
+    shipToggleLabel.textContent = 'Set as a default address';
+
+    const billToggleLabel = document.createElement('label');
+    billToggleLabel.classList.add('toggle__label');
+    billToggleLabel.setAttribute('for', 'bill__toggle');
+    billToggleLabel.textContent = 'Set as a default address';
+
+    const sameToggleLabel = document.createElement('label');
+    sameToggleLabel.classList.add('toggle__label');
+    sameToggleLabel.setAttribute('for', 'same__toggle');
+    sameToggleLabel.textContent = 'Also use as a billing address';
 
     this.regBtn.classList.add('form__button');
     this.regBtn.id = 'login';
@@ -213,6 +262,10 @@ class Form extends Component {
     const credentialsHeader = document.createElement('h3');
     credentialsHeader.classList.add('field-group__header');
     credentialsHeader.textContent = 'Credentials';
+
+    const billHeader = document.createElement('h3');
+    billHeader.classList.add('field-group__header');
+    billHeader.textContent = 'Billing address';
 
     this.inputLogin.render().addEventListener('input', () => {
       this.checkValidyInput(this.inputLogin.render(), mailValBox);
@@ -251,6 +304,18 @@ class Form extends Component {
       this.checkValiditySelect(this.countrySelect.render(), countryValBox);
     });
 
+    this.billStreetInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.billStreetInput.render(), billStreetValBox);
+    });
+
+    this.billCityInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.billCityInput.render(), billCityValBox);
+    });
+
+    this.billPostalInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.billPostalInput.render(), billPostalValBox);
+    });
+
     this.regBtn.addEventListener('click', async (ev) => {
       ev.preventDefault();
       console.log('Click reg Btn... ');
@@ -264,6 +329,9 @@ class Form extends Component {
       this.checkValidyInput(this.cityInput.render(), cityValBox);
       this.checkValidyInput(this.postalInput.render(), postalValBox);
       this.checkValiditySelect(this.countrySelect.render(), countryValBox);
+      this.checkValidyInput(this.billStreetInput.render(), billStreetValBox);
+      this.checkValidyInput(this.billCityInput.render(), billCityValBox);
+      this.checkValidyInput(this.billPostalInput.render(), billPostalValBox);
       if (
         this.checkValidyInput(this.inputLogin.render(), mailValBox) &&
         this.checkValidyInput(this.inputPassword.render(), passwordValBox) &&
@@ -350,6 +418,12 @@ class Form extends Component {
     countryField.append(countryLabel.render(), this.countrySelect.render(), countryValBox);
     cityField.append(cityLabel.render(), this.cityInput.render(), cityValBox);
     postalField.append(postalLabel.render(), this.postalInput.render(), postalValBox);
+    shipToggleLabel.prepend(this.shipToggle.render());
+    sameToggleLabel.prepend(this.sameToggle.render());
+    billStreetField.append(billStreetLabel.render(), this.billStreetInput.render(), billStreetValBox);
+    billCityField.append(billCityLabel.render(), this.billCityInput.render(), billCityValBox);
+    billPostalField.append(billPostalLabel.render(), this.billPostalInput.render(), billPostalValBox);
+    billToggleLabel.prepend(this.billToggle.render());
     mailField.append(mailLabel.render(), this.inputLogin.render(), mailValBox);
     passwordField.append(
       passwordLabel.render(),
@@ -368,6 +442,13 @@ class Form extends Component {
       countryField,
       cityField,
       postalField,
+      shipToggleLabel,
+      sameToggleLabel,
+      billHeader,
+      billStreetField,
+      billCityField,
+      billPostalField,
+      billToggleLabel,
       credentialsHeader,
       mailField,
       passwordField,
@@ -402,7 +483,12 @@ class Form extends Component {
         return checkValidyInputPassword(input, box);
       }
 
-      if (input.id === 'name__input' || input.id === 'last-name__input' || input.id === 'city__input') {
+      if (
+        input.id === 'name__input' ||
+        input.id === 'last-name__input' ||
+        input.id === 'city__input' ||
+        input.id === 'bill-city__input'
+      ) {
         return this.checkValidityInputName(input, box);
       }
 
@@ -410,11 +496,11 @@ class Form extends Component {
         return this.checkValidityInputBirthDate(input, box);
       }
 
-      if (input.id === 'street__input') {
+      if (input.id === 'street__input' || input.id === 'bill-street__input') {
         return this.checkValidityInputStreet(input, box);
       }
 
-      if (input.id === 'postal__input') {
+      if (input.id === 'postal__input' || input.id === 'bill-postal__input') {
         return this.checkValidityInputPostalCode(input, box);
       }
     }
