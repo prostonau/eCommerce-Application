@@ -4,6 +4,7 @@ import Component from '../../templates/components';
 import InputBox from './input';
 import Label from './label';
 import SelectBox from './select';
+import CheckBox from './checkbox';
 import { Customer } from '../../../../../types/index';
 
 const openEye = `<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -32,6 +33,12 @@ class Form extends Component {
   cityInput: InputBox;
   postalInput: InputBox;
   countrySelect: SelectBox;
+  billStreetInput: InputBox;
+  billCityInput: InputBox;
+  billPostalInput: InputBox;
+  shipToggle: CheckBox;
+  billToggle: CheckBox;
+  sameToggle: CheckBox;
   submitBtn: HTMLButtonElement;
   regBtn: HTMLButtonElement;
   valid: boolean;
@@ -49,6 +56,12 @@ class Form extends Component {
     this.cityInput = new InputBox('input', 'form__input', 'text', 'city__input', '', true);
     this.postalInput = new InputBox('input', 'form__input', 'text', 'postal__input', '', true);
     this.countrySelect = new SelectBox('select', 'form__input', 'country__select', true);
+    this.billStreetInput = new InputBox('input', 'form__input', 'text', 'bill-street__input', '', true);
+    this.billCityInput = new InputBox('input', 'form__input', 'text', 'bill-city__input', '', true);
+    this.billPostalInput = new InputBox('input', 'form__input', 'text', 'bill-postal__input', '', true);
+    this.shipToggle = new CheckBox('input', 'form__toggle', 'ship__toggle', true);
+    this.billToggle = new CheckBox('input', 'form__toggle', 'bill__toggle', true);
+    this.sameToggle = new CheckBox('input', 'form__toggle', 'same__toggle', true);
 
     this.swithVisibilityPassword = document.createElement('button');
     this.swithVisibilityPassword.type = 'button';
@@ -158,6 +171,15 @@ class Form extends Component {
     const countryField = document.createElement('div');
     countryField.classList.add('form__field', 'country__field');
 
+    const billStreetField = document.createElement('div');
+    billStreetField.classList.add('form__field', 'bill-street__field', 'hidden');
+
+    const billPostalField = document.createElement('div');
+    billPostalField.classList.add('form__field', 'bill-postal__field', 'hidden');
+
+    const billCityField = document.createElement('div');
+    billCityField.classList.add('form__field', 'bill-city__field', 'hidden');
+
     const nameLabel = new Label('label', 'form__label', 'name__input', '', 'First Name');
     const nameValBox = document.createElement('p');
     nameValBox.classList.add('validity__block');
@@ -190,12 +212,40 @@ class Form extends Component {
     const postalValBox = document.createElement('p');
     postalValBox.classList.add('validity__block');
 
-    /* const countrySelectWrapper = document.createElement('div');
-    countrySelectWrapper.classList.add('select-wrapper'); */
     this.countrySelect.addOptions('Poland', 'Belarus', 'Lithuania');
     const countryLabel = new Label('label', 'form__label', 'country__input', '', 'Country');
     const countryValBox = document.createElement('p');
     countryValBox.classList.add('validity__block');
+
+    const billStreetLabel = new Label('label', 'form__label', 'bill-street__input', '', 'Street address and number');
+    const billStreetValBox = document.createElement('p');
+    billStreetValBox.classList.add('validity__block');
+
+    const billCityLabel = new Label('label', 'form__label', 'bill-city__input', '', 'City');
+    const billCityValBox = document.createElement('p');
+    billCityValBox.classList.add('validity__block');
+
+    const billPostalLabel = new Label('label', 'form__label', 'bill-postal__input', '', 'Postal code');
+    const billPostalValBox = document.createElement('p');
+    billPostalValBox.classList.add('validity__block');
+
+    //const shipToggleLabel = new Label('label', 'toggle__label', 'ship__toggle', '', 'Set as a default address');
+    //const billToggleLabel = new Label('label', 'toggle__label', 'bill__toggle', '', 'Set as a default address');
+
+    const shipToggleLabel = document.createElement('label');
+    shipToggleLabel.classList.add('toggle__label');
+    shipToggleLabel.setAttribute('for', 'ship__toggle');
+    shipToggleLabel.textContent = 'Set as a default address';
+
+    const billToggleLabel = document.createElement('label');
+    billToggleLabel.classList.add('toggle__label', 'hidden');
+    billToggleLabel.setAttribute('for', 'bill__toggle');
+    billToggleLabel.textContent = 'Set as a default address';
+
+    const sameToggleLabel = document.createElement('label');
+    sameToggleLabel.classList.add('toggle__label');
+    sameToggleLabel.setAttribute('for', 'same__toggle');
+    sameToggleLabel.textContent = 'Use as a billing address';
 
     this.regBtn.classList.add('form__button');
     this.regBtn.id = 'login';
@@ -213,6 +263,10 @@ class Form extends Component {
     const credentialsHeader = document.createElement('h3');
     credentialsHeader.classList.add('field-group__header');
     credentialsHeader.textContent = 'Credentials';
+
+    const billHeader = document.createElement('h3');
+    billHeader.classList.add('field-group__header', 'hidden');
+    billHeader.textContent = 'Billing address';
 
     this.inputLogin.render().addEventListener('input', () => {
       this.checkValidyInput(this.inputLogin.render(), mailValBox);
@@ -251,6 +305,34 @@ class Form extends Component {
       this.checkValiditySelect(this.countrySelect.render(), countryValBox);
     });
 
+    this.billStreetInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.billStreetInput.render(), billStreetValBox);
+    });
+
+    this.billCityInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.billCityInput.render(), billCityValBox);
+    });
+
+    this.billPostalInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.billPostalInput.render(), billPostalValBox);
+    });
+
+    this.sameToggle.render().addEventListener('input', () => {
+      if (this.sameToggle.isChecked()) {
+        billHeader.classList.add('hidden');
+        billStreetField.classList.add('hidden');
+        billCityField.classList.add('hidden');
+        billPostalField.classList.add('hidden');
+        billToggleLabel.classList.add('hidden');
+      } else {
+        billHeader.classList.remove('hidden');
+        billStreetField.classList.remove('hidden');
+        billCityField.classList.remove('hidden');
+        billPostalField.classList.remove('hidden');
+        billToggleLabel.classList.remove('hidden');
+      }
+    });
+
     this.regBtn.addEventListener('click', async (ev) => {
       ev.preventDefault();
       console.log('Click reg Btn... ');
@@ -264,6 +346,9 @@ class Form extends Component {
       this.checkValidyInput(this.cityInput.render(), cityValBox);
       this.checkValidyInput(this.postalInput.render(), postalValBox);
       this.checkValiditySelect(this.countrySelect.render(), countryValBox);
+      this.checkValidyInput(this.billStreetInput.render(), billStreetValBox);
+      this.checkValidyInput(this.billCityInput.render(), billCityValBox);
+      this.checkValidyInput(this.billPostalInput.render(), billPostalValBox);
       if (
         this.checkValidyInput(this.inputLogin.render(), mailValBox) &&
         this.checkValidyInput(this.inputPassword.render(), passwordValBox) &&
@@ -304,7 +389,8 @@ class Form extends Component {
                 console.log('userInfo = ', userInfo);
 
                 if (userInfo.customer.id) {
-                  const actions = [
+                  // 1.add address and get address ID
+                  const actions1 = [
                     {
                       action: 'addAddress',
                       address: {
@@ -316,11 +402,14 @@ class Form extends Component {
                     },
                   ];
 
-                  const answer1 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions);
+                  const answer1 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions1);
                   userInfo.customer.version++;
                   console.log('answer1 = ', answer1);
-                  const shippingAddressId = answer1.addresses.pop().id;
+                  const copy1 = { ...answer1 };
+                  const shippingAddressId = copy1.addresses.pop().id;
+                  console.log('shippingAddressId= ', shippingAddressId);
 
+                  // 2.DateOfBirth
                   const actions2 = [
                     {
                       action: 'setDateOfBirth',
@@ -332,6 +421,7 @@ class Form extends Component {
                   userInfo.customer.version++;
                   console.log('answer2 = ', answer2);
 
+                  // 3. add Shipping address
                   const actions3 = [
                     {
                       action: 'addShippingAddressId',
@@ -342,19 +432,99 @@ class Form extends Component {
                   userInfo.customer.version++;
                   console.log('answer3 = ', answer3);
 
-                  const actions4 = [
-                    {
-                      action: 'setDefaultShippingAddress',
-                      addressId: shippingAddressId,
-                    },
-                  ];
-                  const answer4 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions4);
-                  userInfo.customer.version++;
-                  console.log('answer4 = ', answer4);
-                }
-                // по идеи нужны еще проверки что вернулся только статус 200
+                  //4. setDefaultShippingAddress
+                  if (this.shipToggle.isChecked()) {
+                    const actions4 = [
+                      {
+                        action: 'setDefaultShippingAddress',
+                        addressId: shippingAddressId,
+                      },
+                    ];
+                    const answer4 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions4);
+                    userInfo.customer.version++;
+                    console.log('answer4 = ', answer4);
+                  }
 
-                // Нужно еще сохоранить данные адреса и DOB
+                  //5. If sameToggle = true
+                  if (this.sameToggle.isChecked()) {
+                    const actions5_1 = [
+                      {
+                        action: 'addBillingAddressId',
+                        addressId: shippingAddressId,
+                      },
+                    ];
+                    const answer5_1 = await this.api.updateCustomer(
+                      response.access_token,
+                      userInfo.customer,
+                      actions5_1
+                    );
+                    userInfo.customer.version++;
+                    console.log('answer5_1 = ', answer5_1);
+
+                    //5_2. setDefaultBillingAddress
+                    if (this.shipToggle.isChecked()) {
+                      const actions5_2 = [
+                        {
+                          action: 'setDefaultBillingAddress',
+                          addressId: shippingAddressId,
+                        },
+                      ];
+                      const answer5_2 = await this.api.updateCustomer(
+                        response.access_token,
+                        userInfo.customer,
+                        actions5_2
+                      );
+                      userInfo.customer.version++;
+                      console.log('answer5_2 = ', answer5_2);
+                    }
+                    // 6. Add custom billing address
+                  } else {
+                    const actions6 = [
+                      {
+                        action: 'addAddress',
+                        address: {
+                          streetName: (this.billStreetInput.render() as HTMLInputElement).value,
+                          postalCode: (this.billPostalInput.render() as HTMLInputElement).value,
+                          city: (this.billCityInput.render() as HTMLInputElement).value,
+                          country: shortCountry,
+                        },
+                      },
+                    ];
+
+                    const answer6 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions6);
+                    userInfo.customer.version++;
+                    console.log('answer6 = ', answer6);
+                    const copy6 = { ...answer6 };
+                    const billingAddressId = copy6.addresses.pop().id;
+                    console.log('billingAddressId = ', billingAddressId);
+
+                    // 7. setBillingAddressId
+                    const actions7 = [
+                      {
+                        action: 'addBillingAddressId',
+                        addressId: billingAddressId,
+                      },
+                    ];
+
+                    const answer7 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions7);
+                    userInfo.customer.version++;
+                    console.log('answer7 = ', answer7);
+
+                    // 8. setDefaultBillingAddress
+                    if (this.billToggle.isChecked()) {
+                      const actions8 = [
+                        {
+                          action: 'setDefaultBillingAddress',
+                          addressId: billingAddressId,
+                        },
+                      ];
+                      const answer8 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions8);
+                      userInfo.customer.version++;
+                      console.log('answer8 = ', answer8);
+                    }
+                  }
+                }
+                // в идеале по идеи нужны еще проверки что вернулся только статус 200
 
                 this.showNotification('Вы успешно зарегистрировались и вошли в систему.');
                 console.log('sucsess reg');
@@ -376,6 +546,12 @@ class Form extends Component {
     countryField.append(countryLabel.render(), this.countrySelect.render(), countryValBox);
     cityField.append(cityLabel.render(), this.cityInput.render(), cityValBox);
     postalField.append(postalLabel.render(), this.postalInput.render(), postalValBox);
+    shipToggleLabel.prepend(this.shipToggle.render());
+    sameToggleLabel.prepend(this.sameToggle.render());
+    billStreetField.append(billStreetLabel.render(), this.billStreetInput.render(), billStreetValBox);
+    billCityField.append(billCityLabel.render(), this.billCityInput.render(), billCityValBox);
+    billPostalField.append(billPostalLabel.render(), this.billPostalInput.render(), billPostalValBox);
+    billToggleLabel.prepend(this.billToggle.render());
     mailField.append(mailLabel.render(), this.inputLogin.render(), mailValBox);
     passwordField.append(
       passwordLabel.render(),
@@ -394,6 +570,13 @@ class Form extends Component {
       countryField,
       cityField,
       postalField,
+      shipToggleLabel,
+      sameToggleLabel,
+      billHeader,
+      billStreetField,
+      billCityField,
+      billPostalField,
+      billToggleLabel,
       credentialsHeader,
       mailField,
       passwordField,
@@ -428,7 +611,12 @@ class Form extends Component {
         return checkValidyInputPassword(input, box);
       }
 
-      if (input.id === 'name__input' || input.id === 'last-name__input' || input.id === 'city__input') {
+      if (
+        input.id === 'name__input' ||
+        input.id === 'last-name__input' ||
+        input.id === 'city__input' ||
+        input.id === 'bill-city__input'
+      ) {
         return this.checkValidityInputName(input, box);
       }
 
@@ -436,11 +624,11 @@ class Form extends Component {
         return this.checkValidityInputBirthDate(input, box);
       }
 
-      if (input.id === 'street__input') {
+      if (input.id === 'street__input' || input.id === 'bill-street__input') {
         return this.checkValidityInputStreet(input, box);
       }
 
-      if (input.id === 'postal__input') {
+      if (input.id === 'postal__input' || input.id === 'bill-postal__input') {
         return this.checkValidityInputPostalCode(input, box);
       }
     }

@@ -1,5 +1,5 @@
 // import { WinnerData } from '../../../types/index';
-import './style.css';
+import './style.scss';
 import Page from '../core/templates/page';
 import Header from '../core/components/header';
 

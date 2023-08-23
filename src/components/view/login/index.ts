@@ -1,4 +1,4 @@
-import './style.css';
+import './style.scss';
 import Page from '../core/templates/page';
 import Form from '../core/components/form';
 import { PageIds } from '../../controller/controller';

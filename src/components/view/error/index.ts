@@ -1,4 +1,4 @@
-import './style.css';
+import './style.scss';
 import Page from '../core/templates/page';
 
 export enum errorTypes {
