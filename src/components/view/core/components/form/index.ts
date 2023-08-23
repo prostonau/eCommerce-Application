@@ -301,6 +301,7 @@ class Form extends Component {
               console.log('response = ', response);
               this.api.createCustomer(response.access_token, customer).then(async (userInfo) => {
                 const shortCountry = convertCountry((this.countrySelect.render() as HTMLInputElement).value);
+                console.log('userInfo = ', userInfo);
 
                 if (userInfo.customer.id) {
                   const actions = [
@@ -315,6 +316,11 @@ class Form extends Component {
                     },
                   ];
 
+                  const answer1 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions);
+                  userInfo.customer.version++;
+                  console.log('answer1 = ', answer1);
+                  const shippingAddressId = answer1.addresses.pop().id;
+
                   const actions2 = [
                     {
                       action: 'setDateOfBirth',
@@ -322,9 +328,29 @@ class Form extends Component {
                     },
                   ];
 
-                  await this.api.updateCustomer(response.access_token, userInfo.customer, actions);
+                  const answer2 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions2);
                   userInfo.customer.version++;
-                  await this.api.updateCustomer(response.access_token, userInfo.customer, actions2);
+                  console.log('answer2 = ', answer2);
+
+                  const actions3 = [
+                    {
+                      action: 'addShippingAddressId',
+                      addressId: shippingAddressId,
+                    },
+                  ];
+                  const answer3 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions3);
+                  userInfo.customer.version++;
+                  console.log('answer3 = ', answer3);
+
+                  const actions4 = [
+                    {
+                      action: 'setDefaultShippingAddress',
+                      addressId: shippingAddressId,
+                    },
+                  ];
+                  const answer4 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions4);
+                  userInfo.customer.version++;
+                  console.log('answer4 = ', answer4);
                 }
                 // по идеи нужны еще проверки что вернулся только статус 200
 
