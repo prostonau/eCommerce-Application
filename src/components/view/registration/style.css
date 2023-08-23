@@ -2,6 +2,7 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+  font-size: 16px;
 
   .title {
     font-size: 34px;
@@ -35,9 +36,15 @@
   .street__field,
   .form__button,
   .field-group__header,
-  .bill-street__field
+  .bill-street__field,
+  .postal__field,
+  .toggle__label[for="bill__toggle"]
   {
     grid-column: span 2;
+  }
+
+  .postal__field {
+    width: calc(50% - 8px);
   }
 
   .field-group__header {
@@ -50,7 +57,7 @@
     width: 100%;
     height: 35px;
     padding-left: 10px;
-    font-size: 14px;
+    /* font-size: 18px; */
     letter-spacing: 0.15px;
     border: none;
     outline: none;
@@ -65,16 +72,30 @@
     display: block;
     margin-bottom: 3px;
     font-family: "Montserrat", sans-serif;
-    font-size: 15px;
+    /* font-size: 15px; */
     opacity: 0.9;
     border-radius: 0 0 8px 8px;
     transition: all 0.4s ease;
   }
 
   .validity__block {
-    font-size: 15px;
+    /* font-size: 15px; */
     height: 20px;
     margin-top: 3px;
+  }
+
+  .form__toggle {
+    accent-color: #4CAF50;
+    margin-right: 10px;
+    width: 16px;
+    height: 16px;
+    position: relative;
+    top: 2px;
+  }
+
+  .toggle__label {
+    opacity: 0.9;
+    margin-bottom: 20px;
   }
   
   .form__button {
@@ -114,5 +135,9 @@
     background-color: inherit;
     border: none;
     cursor: pointer;
+  }
+
+  .hidden {
+    display: none;
   }
 }

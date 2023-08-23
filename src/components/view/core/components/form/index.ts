@@ -4,6 +4,7 @@ import Component from '../../templates/components';
 import InputBox from './input';
 import Label from './label';
 import SelectBox from './select';
+import CheckBox from './checkbox';
 import { Customer } from '../../../../../types/index';
 
 const openEye = `<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -35,9 +36,9 @@ class Form extends Component {
   billStreetInput: InputBox;
   billCityInput: InputBox;
   billPostalInput: InputBox;
-  shipToggle: InputBox;
-  billToggle: InputBox;
-  sameToggle: InputBox;
+  shipToggle: CheckBox;
+  billToggle: CheckBox;
+  sameToggle: CheckBox;
   submitBtn: HTMLButtonElement;
   regBtn: HTMLButtonElement;
   valid: boolean;
@@ -58,9 +59,9 @@ class Form extends Component {
     this.billStreetInput = new InputBox('input', 'form__input', 'text', 'bill-street__input', '', true);
     this.billCityInput = new InputBox('input', 'form__input', 'text', 'bill-city__input', '', true);
     this.billPostalInput = new InputBox('input', 'form__input', 'text', 'bill-postal__input', '', true);
-    this.shipToggle = new InputBox('input', 'form__toggle', 'checkbox', 'ship__toggle', '', false);
-    this.billToggle = new InputBox('input', 'form__toggle', 'checkbox', 'bill__toggle', '', false);
-    this.sameToggle = new InputBox('input', 'form__toggle', 'checkbox', 'same__toggle', '', false);
+    this.shipToggle = new CheckBox('input', 'form__toggle', 'ship__toggle', true);
+    this.billToggle = new CheckBox('input', 'form__toggle', 'bill__toggle', true);
+    this.sameToggle = new CheckBox('input', 'form__toggle', 'same__toggle', true);
 
     this.swithVisibilityPassword = document.createElement('button');
     this.swithVisibilityPassword.type = 'button';
@@ -171,13 +172,13 @@ class Form extends Component {
     countryField.classList.add('form__field', 'country__field');
 
     const billStreetField = document.createElement('div');
-    billStreetField.classList.add('form__field', 'bill-street__field');
+    billStreetField.classList.add('form__field', 'bill-street__field', 'hidden');
 
     const billPostalField = document.createElement('div');
-    billPostalField.classList.add('form__field', 'bill-postal__field');
+    billPostalField.classList.add('form__field', 'bill-postal__field', 'hidden');
 
     const billCityField = document.createElement('div');
-    billCityField.classList.add('form__field', 'bill-city__field');
+    billCityField.classList.add('form__field', 'bill-city__field', 'hidden');
 
     const nameLabel = new Label('label', 'form__label', 'name__input', '', 'First Name');
     const nameValBox = document.createElement('p');
@@ -237,14 +238,14 @@ class Form extends Component {
     shipToggleLabel.textContent = 'Set as a default address';
 
     const billToggleLabel = document.createElement('label');
-    billToggleLabel.classList.add('toggle__label');
+    billToggleLabel.classList.add('toggle__label', 'hidden');
     billToggleLabel.setAttribute('for', 'bill__toggle');
     billToggleLabel.textContent = 'Set as a default address';
 
     const sameToggleLabel = document.createElement('label');
     sameToggleLabel.classList.add('toggle__label');
     sameToggleLabel.setAttribute('for', 'same__toggle');
-    sameToggleLabel.textContent = 'Also use as a billing address';
+    sameToggleLabel.textContent = 'Use as a billing address';
 
     this.regBtn.classList.add('form__button');
     this.regBtn.id = 'login';
@@ -264,7 +265,7 @@ class Form extends Component {
     credentialsHeader.textContent = 'Credentials';
 
     const billHeader = document.createElement('h3');
-    billHeader.classList.add('field-group__header');
+    billHeader.classList.add('field-group__header', 'hidden');
     billHeader.textContent = 'Billing address';
 
     this.inputLogin.render().addEventListener('input', () => {
@@ -314,6 +315,22 @@ class Form extends Component {
 
     this.billPostalInput.render().addEventListener('input', () => {
       this.checkValidyInput(this.billPostalInput.render(), billPostalValBox);
+    });
+
+    this.sameToggle.render().addEventListener('input', () => {
+      if (this.sameToggle.isChecked()) {
+        billHeader.classList.add('hidden');
+        billStreetField.classList.add('hidden');
+        billCityField.classList.add('hidden');
+        billPostalField.classList.add('hidden');
+        billToggleLabel.classList.add('hidden');
+      } else {
+        billHeader.classList.remove('hidden');
+        billStreetField.classList.remove('hidden');
+        billCityField.classList.remove('hidden');
+        billPostalField.classList.remove('hidden');
+        billToggleLabel.classList.remove('hidden');
+      }
     });
 
     this.regBtn.addEventListener('click', async (ev) => {
