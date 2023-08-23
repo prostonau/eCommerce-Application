@@ -389,7 +389,8 @@ class Form extends Component {
                 console.log('userInfo = ', userInfo);
 
                 if (userInfo.customer.id) {
-                  const actions = [
+                  // 1.add address and get address ID
+                  const actions1 = [
                     {
                       action: 'addAddress',
                       address: {
@@ -401,11 +402,14 @@ class Form extends Component {
                     },
                   ];
 
-                  const answer1 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions);
+                  const answer1 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions1);
                   userInfo.customer.version++;
                   console.log('answer1 = ', answer1);
-                  const shippingAddressId = answer1.addresses.pop().id;
+                  const copy1 = { ...answer1 };
+                  const shippingAddressId = copy1.addresses.pop().id;
+                  console.log('shippingAddressId= ', shippingAddressId);
 
+                  // 2.DateOfBirth
                   const actions2 = [
                     {
                       action: 'setDateOfBirth',
@@ -417,6 +421,7 @@ class Form extends Component {
                   userInfo.customer.version++;
                   console.log('answer2 = ', answer2);
 
+                  // 3. add Shipping address
                   const actions3 = [
                     {
                       action: 'addShippingAddressId',
@@ -427,19 +432,99 @@ class Form extends Component {
                   userInfo.customer.version++;
                   console.log('answer3 = ', answer3);
 
-                  const actions4 = [
-                    {
-                      action: 'setDefaultShippingAddress',
-                      addressId: shippingAddressId,
-                    },
-                  ];
-                  const answer4 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions4);
-                  userInfo.customer.version++;
-                  console.log('answer4 = ', answer4);
-                }
-                // по идеи нужны еще проверки что вернулся только статус 200
+                  //4. setDefaultShippingAddress
+                  if (this.shipToggle.isChecked()) {
+                    const actions4 = [
+                      {
+                        action: 'setDefaultShippingAddress',
+                        addressId: shippingAddressId,
+                      },
+                    ];
+                    const answer4 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions4);
+                    userInfo.customer.version++;
+                    console.log('answer4 = ', answer4);
+                  }
 
-                // Нужно еще сохоранить данные адреса и DOB
+                  //5. If sameToggle = true
+                  if (this.sameToggle.isChecked()) {
+                    const actions5_1 = [
+                      {
+                        action: 'addBillingAddressId',
+                        addressId: shippingAddressId,
+                      },
+                    ];
+                    const answer5_1 = await this.api.updateCustomer(
+                      response.access_token,
+                      userInfo.customer,
+                      actions5_1
+                    );
+                    userInfo.customer.version++;
+                    console.log('answer5_1 = ', answer5_1);
+
+                    //5_2. setDefaultBillingAddress
+                    if (this.shipToggle.isChecked()) {
+                      const actions5_2 = [
+                        {
+                          action: 'setDefaultBillingAddress',
+                          addressId: shippingAddressId,
+                        },
+                      ];
+                      const answer5_2 = await this.api.updateCustomer(
+                        response.access_token,
+                        userInfo.customer,
+                        actions5_2
+                      );
+                      userInfo.customer.version++;
+                      console.log('answer5_2 = ', answer5_2);
+                    }
+                    // 6. Add custom billing address
+                  } else {
+                    const actions6 = [
+                      {
+                        action: 'addAddress',
+                        address: {
+                          streetName: (this.billStreetInput.render() as HTMLInputElement).value,
+                          postalCode: (this.billPostalInput.render() as HTMLInputElement).value,
+                          city: (this.billCityInput.render() as HTMLInputElement).value,
+                          country: shortCountry,
+                        },
+                      },
+                    ];
+
+                    const answer6 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions6);
+                    userInfo.customer.version++;
+                    console.log('answer6 = ', answer6);
+                    const copy6 = { ...answer6 };
+                    const billingAddressId = copy6.addresses.pop().id;
+                    console.log('billingAddressId = ', billingAddressId);
+
+                    // 7. setBillingAddressId
+                    const actions7 = [
+                      {
+                        action: 'addBillingAddressId',
+                        addressId: billingAddressId,
+                      },
+                    ];
+
+                    const answer7 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions7);
+                    userInfo.customer.version++;
+                    console.log('answer7 = ', answer7);
+
+                    // 8. setDefaultBillingAddress
+                    if (this.billToggle.isChecked()) {
+                      const actions8 = [
+                        {
+                          action: 'setDefaultBillingAddress',
+                          addressId: billingAddressId,
+                        },
+                      ];
+                      const answer8 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions8);
+                      userInfo.customer.version++;
+                      console.log('answer8 = ', answer8);
+                    }
+                  }
+                }
+                // в идеале по идеи нужны еще проверки что вернулся только статус 200
 
                 this.showNotification('Вы успешно зарегистрировались и вошли в систему.');
                 console.log('sucsess reg');
