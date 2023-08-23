@@ -99,3 +99,14 @@ header h1 {
   }
 }
 
+.mainmenu{
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.mainmenu a{ 
+  color: green;
+}
+
+

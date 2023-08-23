@@ -182,6 +182,8 @@ class AppAPI {
       .catch((error) => console.error(error));
   };
 
+  // https://docs.commercetools.com/api/projects/customers#update-customer-by-id
+  // https://docs.commercetools.com/api/projects/customers#update-actions
   updateCustomer = async (BEARER_TOKEN: string, customer: Customer, actions: Actions[]) => {
     // Создаем объект с настройками для запроса
     const id = customer.id;
@@ -207,7 +209,7 @@ class AppAPI {
     return fetch(`${this.apiUrl}/${this.projectKey}/customers/${id}`, options)
       .then((response) => response.json())
       .then((data) => {
-        console.log('updateCustomer = ', data);
+        //console.log('updateCustomer = ', data);
         return data;
       })
       .catch((error) => console.error(error));
