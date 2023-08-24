@@ -47,7 +47,7 @@ class Form extends Component {
   constructor(tagName: string, className: string) {
     super(tagName, className);
     this.api = new AppAPI();
-    this.inputLogin = new InputBox('input', 'form__input', 'email', 'login__input', '', true);
+    this.inputLogin = new InputBox('input', 'form__input', 'text', 'login__input', '', true);
     this.inputPassword = new InputBox('input', 'form__input', 'password', 'password__input', '', true);
     this.nameInput = new InputBox('input', 'form__input', 'text', 'name__input', '', true);
     this.lastNameInput = new InputBox('input', 'form__input', 'text', 'last-name__input', '', true);
@@ -603,7 +603,7 @@ class Form extends Component {
         return false;
       }
 
-      if (input.type === 'email') {
+      if (input.id === 'login__input') {
         return checkValidyInputEmail(input, box);
       }
 
@@ -746,7 +746,7 @@ class Form extends Component {
 }
 
 export function checkValidyInputEmail(input: HTMLInputElement, box: HTMLElement): boolean {
-  const dotIndex = input.value.indexOf('.');
+  const dotIndex = input.value.lastIndexOf('.');
   if (!input.value.includes('@')) {
     box.innerText = 'E-mail must contain "@"';
     box.classList.add('wrong__input');
