@@ -136,7 +136,7 @@ class AppAPI {
     };
 
     // Выполняем запрос
-    return fetch(`${this.apiUrl}/${this.projectKey}/customers/`, options)
+    return fetch(`${this.apiUrl}/${this.projectKey}/customers?limit=500`, options)
       .then((response) => response.json())
       .then((data) => {
         console.log('getAllCustomers = ', data);
@@ -151,6 +151,10 @@ class AppAPI {
         const allCustomers = await this.getAllCustomers(response.access_token);
         console.log('allCustomers = ', allCustomers);
         console.log('email = ', email);
+        console.log(
+          'allCustomers.results.filter((e: Customer) => e.email === email).length = ',
+          allCustomers.results.filter((e: Customer) => e.email === email).length
+        );
         if (allCustomers.results.filter((e: Customer) => e.email === email).length > 0) {
           resolve(false);
         } else {
