@@ -39,6 +39,22 @@ class Header extends Component {
     this.container.append(pageButtons);
   }
 
+  renderPageButtonsForMainPage() {
+    const pageButtons = document.createElement('div');
+    Buttons.forEach((button) => {
+      if (button.id !== 'logout-page') {
+        const div = document.createElement('div');
+        const buttonHTML = document.createElement('a');
+        buttonHTML.href = `#${button.id}`;
+        buttonHTML.innerHTML = button.text;
+        div.append(buttonHTML);
+        pageButtons.append(div);
+        //console.log('pageButtons = ', pageButtons);
+      }
+    });
+    return pageButtons;
+  }
+
   renderPageButtonsForLogOutMenu() {
     const pageButtons = document.createElement('div');
     Buttons.forEach((button) => {

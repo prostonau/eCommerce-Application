@@ -22,6 +22,12 @@ class App {
   };
 
   private enableRouteChange() {
+    // window.addEventListener('popstate', () => {
+    //   console.log('URL changed');
+    //   // const hash = window.location.pathname.slice(1);
+    //   // this.controller.renderPageContent(hash);
+    // });
+
     window.addEventListener('hashchange', () => {
       console.log('hashchange');
       const hash = window.location.hash.slice(1);
