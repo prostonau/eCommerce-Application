@@ -25,21 +25,10 @@ const baseConfig = {
           },
         ],
       },
-      {
-        test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
-      },
-      {
-        test: /\.(jpg|png|svg|jpeg|gif)$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 8192,
-            name: '[name].[ext]',
-            outputPath: 'images',
-          },
-        },
-      },
+      // {
+      //   test: /\.css$/i,
+      //   use: ['style-loader', 'css-loader'],
+      // },      
       {
         test: /\.(jpg|png|svg|jpeg|gif)$/,
         use: {

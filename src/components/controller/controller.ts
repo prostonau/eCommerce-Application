@@ -1,109 +1,77 @@
-// import AppLoader from './appLoader';
-// import { RawSourceData } from '../../types/index';
-import { TrackData } from '../../types/index';
-import { intervalsData } from '../../types/index';
-import { carsReadyToRace } from '../../types/index';
+import MainPage from '../view/main/index';
+import Page from '../view/core/templates/page';
+import LoginPage from '../view/login';
+import RegistrationPage from '../view/registration';
+import CatalogPage from '../view/catalog/index';
+import Header from '../view/core/components/header';
+import ErrorPage from '../view/error';
+import { errorTypes } from '../view/error';
 
-// import AppAPI from '../controller/api';
-
-// import { RawSourceNews } from '../../types/index';
-
-// type GetSourcesCallback = (data: RawSourceData) => void;
-// type GetNewsCallback = (data: RawSourceNews) => void;
+export const enum PageIds {
+  MainPage = 'main-page',
+  RegistrationPage = 'registration-page',
+  LoginPage = 'login-page',
+  CatalogPage = 'catalog',
+  LogOutPage = 'logout-page',
+}
 
 class AppController {
-  // API: AppAPI;
-  data: Promise<Array<TrackData>>;
-  activeTrackId: number;
-  page: number;
-  limit: number;
-  flagLoadOneTime: boolean;
-  intervals: Array<intervalsData>;
-  isRace: boolean;
-  isWinner: boolean;
-  winnerPage: number;
-  winnerLimit: number;
-  countOfCarsReadyToRace: number;
-  countOfCarsFinishedRace: number;
-  carsReadyToRace: Array<carsReadyToRace>;
-  sort: string;
-  order: string;
+  initialPage: MainPage;
+  defaultPageId: string = 'current-page';
+  container: HTMLElement = document.body;
+  header: Header;
+
   constructor() {
-    // this.API = new AppAPI('http://127.0.0.1:3000');
-    this.data = new Promise<Array<TrackData>>((resolve) => resolve([]));
-    this.activeTrackId = 1;
-    this.page = 1;
-    this.limit = 7;
-    this.flagLoadOneTime = false;
-    this.intervals = [];
-    this.isRace = false;
-    this.isWinner = false;
-    this.winnerPage = 1;
-    this.winnerLimit = 10;
-    this.countOfCarsReadyToRace = 0;
-    this.countOfCarsFinishedRace = 0;
-    this.carsReadyToRace = [];
-    this.sort = 'id';
-    this.order = 'ASC';
+    this.initialPage = new MainPage('main-page');
+    this.header = new Header('header', 'header');
   }
 
-  // saveData() {
-  //     localStorage.setItem('data', JSON.stringify(this.data));
-  // }
+  renderHeader() {
+    this.container.append(this.header.render());
+  }
 
-  // loadData() {
-  //     const data = localStorage.getItem('data');
-  //     if (data) {
-  //         return JSON.parse(data);
-  //     } else {
-  //         return [];
-  //     }
-  // }
+  renderPageContent(idPage: string) {
+    const currentPageHTML = document.querySelector(`#${this.defaultPageId}`);
+    if (currentPageHTML) {
+      currentPageHTML.remove();
+    }
 
-  // checkLocalStorage() {
-  //     if (this.loadData().length > 0) {
-  //         this.data = this.loadData();
-  //         return true;
-  //     }
-  //     return false;
-  // }
+    let page: Page | null = null;
 
-  // removeDataFromLocalStorage() {
-  //     localStorage.removeItem('data');
-  // }
+    console.log('idPage = ', idPage);
+    if (idPage === PageIds.MainPage || idPage === '') {
+      page = new MainPage(idPage);
+    } else if (idPage === PageIds.RegistrationPage) {
+      if (!localStorage.getItem('token')) {
+        page = new RegistrationPage(idPage);
+      } else {
+        window.location.hash = PageIds.MainPage;
+      }
+    } else if (idPage === PageIds.LoginPage) {
+      if (!localStorage.getItem('token')) {
+        page = new LoginPage(idPage);
+      } else {
+        window.location.hash = PageIds.MainPage;
+      }
+    } else if (idPage === PageIds.LogOutPage) {
+      // window.location.hash = PageIds.LoginPage;
+      page = new MainPage(PageIds.MainPage);
+    } else if (idPage === PageIds.CatalogPage) {
+      page = new CatalogPage(PageIds.CatalogPage);
+    } else {
+      page = new ErrorPage(idPage, errorTypes.Error_404);
+    }
 
-  // setCurrentLevelId(): void {
-  //     if (this.data.filter((e) => e.flag === 1).length === 0) {
-  //         this.currentLevel = 1;
-  //     } else if (this.data.filter((e) => e.flag === 0).length === 0) {
-  //         this.currentLevel = 1;
-  //     } else {
-  //         this.currentLevel = this.data.filter((e) => e.flag === 0)[0].id;
-  //     }
-  // }
+    if (page) {
+      const pageHTML = page.render();
+      pageHTML.id = this.defaultPageId;
+      pageHTML.classList.add(idPage);
+      this.container.append(pageHTML);
+    }
 
-  // getCurrentLevelId(): number {
-  //     // console.log('getCurrentLevelId | this.currentLevel = ', this.currentLevel);
-  //     return this.currentLevel;
-  // }
-
-  // clearTable(): void {
-  //     const selector: string = this.data.filter((e) => e.id === this.currentLevel)[0].selector;
-  //     console.log('selector = ', selector);
-  //     document.querySelectorAll(`.table ${selector}`).forEach((e) => {
-  //         e.classList.add('remove');
-  //     });
-  // }
-
-  // findNextLevel(): boolean {
-  //     if (this.data.filter((e) => e.flag === 0).length === 0) {
-  //         return false;
-  //     }
-
-  //     this.currentLevel = this.data.filter((e) => e.flag === 0)[0].id;
-  //     console.log(`Next level id = ${this.currentLevel}`);
-  //     return true;
-  // }
+    // render actual view for menu
+    localStorage.getItem('token') ? this.header.renderLogoutMenu() : this.header.renderDefaultMenu();
+  }
 }
 
 export default AppController;
