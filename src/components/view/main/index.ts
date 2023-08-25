@@ -5,7 +5,7 @@ import Header from '../core/components/header';
 
 class MainPage extends Page {
   static TextObject = {
-    MainTitle: 'Main page 123',
+    MainTitle: 'Main Page',
   };
 
   header = new Header('div', 'mainmenu');
@@ -16,10 +16,10 @@ class MainPage extends Page {
   render() {
     const title = this.createHeaderTitle(MainPage.TextObject.MainTitle);
     this.container.append(title);
-    const elem = document.createElement('div');
-    elem.className = 'mainmenu';
-    elem.append(this.header.renderPageButtonsForMainPage());
-    this.container.append(elem);
+    const div = document.createElement('div');
+    div.className = 'mainmenu';
+    div.append(this.header.renderPageButtonsForMainPage());
+    this.container.append(div);
     return this.container;
   }
 }

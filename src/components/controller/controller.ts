@@ -2,6 +2,7 @@ import MainPage from '../view/main/index';
 import Page from '../view/core/templates/page';
 import LoginPage from '../view/login';
 import RegistrationPage from '../view/registration';
+import CatalogPage from '../view/catalog/index';
 import Header from '../view/core/components/header';
 import ErrorPage from '../view/error';
 import { errorTypes } from '../view/error';
@@ -10,6 +11,7 @@ export const enum PageIds {
   MainPage = 'main-page',
   RegistrationPage = 'registration-page',
   LoginPage = 'login-page',
+  CatalogPage = 'catalog',
   LogOutPage = 'logout-page',
 }
 
@@ -54,6 +56,8 @@ class AppController {
     } else if (idPage === PageIds.LogOutPage) {
       // window.location.hash = PageIds.LoginPage;
       page = new MainPage(PageIds.MainPage);
+    } else if (idPage === PageIds.CatalogPage) {
+      page = new CatalogPage(PageIds.CatalogPage);
     } else {
       page = new ErrorPage(idPage, errorTypes.Error_404);
     }
