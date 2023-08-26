@@ -1,9 +1,9 @@
 import './style.scss';
 import Page from '../core/templates/page';
 
-class CatalogPage extends Page {
+class ProfilePage extends Page {
   static TextObject = {
-    CatalogTitle: 'Catalog page',
+    ProfileTitle: 'Profile page',
   };
 
   constructor(id: string) {
@@ -11,10 +11,10 @@ class CatalogPage extends Page {
   }
 
   render() {
-    const title = this.createHeaderTitle(CatalogPage.TextObject.CatalogTitle);
+    const title = this.createHeaderTitle(ProfilePage.TextObject.ProfileTitle);
     this.container.append(title);
     return this.container;
   }
 }
 
-export default CatalogPage;
+export default ProfilePage;

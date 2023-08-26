@@ -3,6 +3,8 @@ import Page from '../view/core/templates/page';
 import LoginPage from '../view/login';
 import RegistrationPage from '../view/registration';
 import CatalogPage from '../view/catalog/index';
+import ProductPage from '../view/product/index';
+import ProfilePage from '../view/profile/index';
 import Header from '../view/core/components/header';
 import ErrorPage from '../view/error';
 import { errorTypes } from '../view/error';
@@ -12,6 +14,8 @@ export const enum PageIds {
   RegistrationPage = 'registration-page',
   LoginPage = 'login-page',
   CatalogPage = 'catalog',
+  ProductPage = 'product',
+  ProfilePage = 'profile',
   LogOutPage = 'logout-page',
 }
 
@@ -58,6 +62,10 @@ class AppController {
       page = new MainPage(PageIds.MainPage);
     } else if (idPage === PageIds.CatalogPage) {
       page = new CatalogPage(PageIds.CatalogPage);
+    } else if (idPage === PageIds.ProductPage) {
+      page = new ProductPage(PageIds.ProductPage);
+    } else if (idPage === PageIds.ProfilePage) {
+      page = new ProfilePage(PageIds.ProfilePage);
     } else {
       page = new ErrorPage(idPage, errorTypes.Error_404);
     }
