@@ -34,6 +34,8 @@ class AppController {
     this.container.append(this.header.render());
   }
 
+  getProductId = (idPage: string): string => idPage.split('product/')[1];
+
   renderPageContent(idPage: string) {
     const currentPageHTML = document.querySelector(`#${this.defaultPageId}`);
     if (currentPageHTML) {
@@ -62,8 +64,8 @@ class AppController {
       page = new MainPage(PageIds.MainPage);
     } else if (idPage === PageIds.CatalogPage) {
       page = new CatalogPage(PageIds.CatalogPage);
-    } else if (idPage === PageIds.ProductPage) {
-      page = new ProductPage(PageIds.ProductPage);
+    } else if (idPage.includes(PageIds.ProductPage)) {
+      page = new ProductPage(PageIds.ProductPage, this.getProductId(idPage));
     } else if (idPage === PageIds.ProfilePage) {
       page = new ProfilePage(PageIds.ProfilePage);
     } else {

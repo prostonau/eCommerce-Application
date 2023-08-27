@@ -14,6 +14,15 @@ export interface Customer {
   version?: number;
 }
 
+export interface ImageData {
+  url: string;
+  label: string;
+  dimensions: {
+    w: number;
+    h: number;
+  };
+}
+
 export interface Action {
   [key: string]: string;
 }
