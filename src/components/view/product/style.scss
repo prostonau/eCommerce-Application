@@ -1,11 +1,17 @@
-.winner-table {
-  width: 100%; /* Ширина таблицы */  
-  max-width: 700px;  
-  border-collapse: collapse; /* Слияние границ ячеек */
-  font-family: Arial, sans-serif; /* Шрифт таблицы */
+.product-wrapper{
+    padding: 10px;
 }
 
-.winner-table th, .winner-table td {
-border: 1px solid #1ad1c2; /* Границы ячеек */
-padding: 8px; /* Отступ внутри ячеек */
+.product-name {
+    padding-top:20px;
+    color: aqua;
+}
+
+.product-description{
+    padding-top:20px;
+    color:aquamarine;
+}
+
+.product-images{
+    padding-top: 20px;
 }
