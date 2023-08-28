@@ -3,5 +3,5 @@ import './global.scss';
 
 const app = new App();
 
-//app.testAPI();
+app.testAPI();
 app.start();
