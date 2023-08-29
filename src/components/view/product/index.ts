@@ -19,6 +19,8 @@ class ProductPage extends Page {
   name: string;
   description: string;
   images: Array<ImageData>;
+  price: string;
+  currency: string;
 
   constructor(id: string, productId: string) {
     super(id);
@@ -27,6 +29,8 @@ class ProductPage extends Page {
     this.name = '';
     this.description = '';
     this.images = [];
+    this.price = '';
+    this.currency = '';
   }
 
   async getMasterData(productId: string) {
@@ -37,6 +41,13 @@ class ProductPage extends Page {
         this.name = response.masterData.current.name['en-US'];
         this.description = response.masterData.current.description['en-US'];
         this.images = response.masterData.staged.masterVariant.images;
+        this.price = response.masterData.staged.masterVariant.prices[0].value.centAmount;
+        console.log(
+          'response.masterData.staged.masterVariant.prices[0].value.centAmount = ',
+          response.masterData.staged.masterVariant.prices[0].value.centAmount
+        );
+        this.price = (Number(this.price) / 100).toFixed(2);
+        this.currency = response.masterData.staged.masterVariant.prices[0].value.currencyCode;
       });
     });
   }
@@ -59,6 +70,16 @@ class ProductPage extends Page {
     productDescription.classList.add('product-description');
     productDescription.innerHTML = `<span>Description:</span> ${this.description}`;
     return productDescription;
+  };
+
+  createProductPrice = () => {
+    const productPrice = document.createElement('div');
+    productPrice.classList.add('product-price');
+    productPrice.innerHTML = `<span>Price:</span> ${Number(this.price).toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    })} ${this.currency}`;
+    return productPrice;
   };
 
   createProductImages = () => {
@@ -149,6 +170,7 @@ class ProductPage extends Page {
         wrapper.append(title);
         wrapper.append(this.createProductTitle());
         wrapper.append(this.createProductDescription());
+        wrapper.append(this.createProductPrice());
         // wrapper.append(this.createProductImages());
         wrapper.append(this.createProductImagesSliderContainer());
         this.container.append(wrapper);
