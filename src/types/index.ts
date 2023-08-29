@@ -32,26 +32,35 @@ export interface Actions {
   adress?: Action;
 }
 
+export interface PriceValue {
+  type: string;
+  currencyCode: string;
+  centAmount: number;
+  fractionDigits: number;
+}
+
+export interface Discount {
+  discount: {
+    typeId: string;
+    id: string;
+  };
+  value: PriceValue;
+}
 export interface Price {
   id: string;
-  value: {
-    type: string;
-    currencyCode: string;
-    centAmount: number;
-    fractionDigits: number;
-  };
+  value: PriceValue;
+  discounted?: Discount;
   country: string;
+}
+
+export interface ValueResp {
+  key: string;
+  label: string;
 }
 
 export interface Attribute {
   name: string;
-  value:
-    | boolean
-    | string
-    | {
-        key: string;
-        label: string;
-      };
+  value: boolean | string | ValueResp;
 }
 
 export interface Image {
