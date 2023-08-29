@@ -42,6 +42,7 @@ class CatalogPage extends Page {
   async generateProducts(): Promise<void> {
     const products = await this.getProducts();
     const productList = document.createElement('div');
+    productList.classList.add('catalog__list');
     if (products) {
       products.results.forEach((product) => {
         productList.append(this.generateProductCard(product));

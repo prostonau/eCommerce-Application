@@ -16,6 +16,11 @@ export class ProductCard {
     cardImg.classList.add('card__img');
     cardImg.src = this.product.masterVariant?.images[0]?.url || './images/not-found.png';
 
+    const cardImgContainer = document.createElement('div');
+    cardImgContainer.classList.add('card__img_container');
+
+    cardImgContainer.append(cardImg);
+
     const cardDescription = document.createElement('div');
     cardDescription.classList.add('card__description');
 
@@ -49,6 +54,9 @@ export class ProductCard {
     cardPrice.classList.add('card__description_price');
 
     cardPrice.innerHTML = this.getPrice('US'); //TODO language swith
+    if (this.getPrice('US').includes('<span>')) {
+      cardPrice.classList.add('card__price--discounted');
+    }
 
     const cardToCart = document.createElement('button');
     cardToCart.classList.add('card__button');
@@ -57,7 +65,7 @@ export class ProductCard {
     cardBody.append(cardPrice, cardToCart);
     cardDescription.append(cardTitle, cardBody);
 
-    this.container.append(cardImg, cardDescription);
+    this.container.append(cardImgContainer, cardDescription);
 
     return this.container;
   }
