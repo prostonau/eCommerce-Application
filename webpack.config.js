@@ -25,10 +25,10 @@ const baseConfig = {
           },
         ],
       },
-      // {
-      //   test: /\.css$/i,
-      //   use: ['style-loader', 'css-loader'],
-      // },      
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },      
       {
         test: /\.(jpg|png|svg|jpeg|gif)$/,
         use: {

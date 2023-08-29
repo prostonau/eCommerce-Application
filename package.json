@@ -52,6 +52,8 @@
     "webpack-merge": "^5.9.0"
   },
   "dependencies": {
-    "sass": "^1.66.1"
+    "css": "^3.0.0",
+    "sass": "^1.66.1",
+    "swiper": "^10.2.0"
   }
 }
