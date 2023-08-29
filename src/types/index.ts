@@ -73,31 +73,37 @@ export interface Variant {
 }
 
 export interface statusesOfProduct {
-  name: Record<string, string>;
-  categories: {
-    typeId: string;
-    id: string;
-  }[];
-  masterVariant: Variant; // Основной вариант продукта
   variants: Variant[];
 }
 
-export interface Product {
+export interface Categories {
   id: string;
-  version: number;
-  masterData: {
-    current?: statusesOfProduct;
-    staged?: statusesOfProduct;
-    published: boolean; // Флаг опубликованности продукта
-    hasStagedChanges: boolean;
-  };
+  typeID: string;
+}
 
+export interface Product {
+  categories: Categories[];
+  categoryOrderHints: unknown;
+  createdAt: string;
+  hasStagedChanges: boolean;
+  id: string;
   key: string;
+  lastModifiedAt: string;
+  masterVariant: Variant;
+  name: Record<string, string>;
+  productType: {
+    id: string;
+    typeId: string;
+  };
+  published: boolean;
+  searchKeywords: Record<string, string>;
+  slug: Record<string, string>;
   taxCategory: {
     typeId: string;
     id: string;
   };
-  lastVariantId: number;
+  variants: Variant[];
+  version: number;
 }
 
 export interface ProductResponse {
@@ -105,6 +111,7 @@ export interface ProductResponse {
   offset: number;
   count: number;
   total: number;
+  facets: unknown;
   results: Product[];
 }
 

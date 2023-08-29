@@ -1,11 +1,7 @@
-.winner-table {
-  width: 100%; /* Ширина таблицы */  
-  max-width: 700px;  
-  border-collapse: collapse; /* Слияние границ ячеек */
-  font-family: Arial, sans-serif; /* Шрифт таблицы */
-}
-
-.winner-table th, .winner-table td {
-border: 1px solid #1ad1c2; /* Границы ячеек */
-padding: 8px; /* Отступ внутри ячеек */
+.card {
+  &__img {
+    height: 200px;
+    width: 200px;
+    object-fit: contain;
+  }
 }

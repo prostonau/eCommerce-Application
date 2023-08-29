@@ -18,7 +18,7 @@ export class apiCatalog extends AppAPI {
     };
 
     // Выполняем запрос
-    return fetch(`${this.apiUrl}/${this.projectKey}/products?limit=2&offset=2`, options)
+    return fetch(`${this.apiUrl}/${this.projectKey}/product-projections/search?limit=10&offset=0`, options)
       .then((response) => response.json())
       .then((data: ProductResponse) => {
         console.log('getQueryProducts = ', data);
