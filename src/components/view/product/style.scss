@@ -26,8 +26,22 @@
     padding-top: 20px;
 }
 
+.product-price{
+  padding-top:20px;
+  color: rgb(230, 11, 11);
+}
+
+.product-price span{
+  color: rgb(255, 255, 255);
+}
+
+
+
+/*  Slider ----------------------------------------------------*/
+
 .swiper-container{
-    padding-top: 30px;
+  position: relative;
+    margin-top: 30px;
     width: 100%;
     height: 300px; /* замените на желаемую высоту */
 }
@@ -73,9 +87,12 @@
 
   .swiper-button-prev,
   .swiper-button-next {
+    // position: absolute;
+    // top: 50%;
+    //transform: translateY(-50%);
     position: absolute;
     top: 50%;
-    //transform: translateY(-50%);
+    transform: translateY(-50%);
     background-color: rgba(255, 255, 255, 0.1);
     color: #049942;
     padding: 5px;
