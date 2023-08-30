@@ -1,4 +1,5 @@
 import './style.scss';
+import './modal.scss';
 import Page from '../core/templates/page';
 import AppProductAPI from '../../controller/apiProduct';
 import { ImageData } from '../../../types';
@@ -21,6 +22,7 @@ class ProductPage extends Page {
   images: Array<ImageData>;
   price: string;
   currency: string;
+  myModalSwiper: Swiper | null;
 
   constructor(id: string, productId: string) {
     super(id);
@@ -31,6 +33,7 @@ class ProductPage extends Page {
     this.images = [];
     this.price = '';
     this.currency = '';
+    this.myModalSwiper = null;
   }
 
   async getMasterData(productId: string) {
@@ -95,9 +98,10 @@ class ProductPage extends Page {
     return productImages;
   };
 
-  createProductImagesSliderContainer = () => {
+  createProductImagesSliderContainer = (type: string) => {
+    const conteinerName = type === 'modal' ? 'swiper-container-modal' : 'swiper-container';
     const swiperContainer = document.createElement('div');
-    swiperContainer.classList.add('swiper-container');
+    swiperContainer.classList.add(conteinerName);
     const swiperWrapper = document.createElement('div');
     swiperWrapper.classList.add('swiper-wrapper');
     const swiperNext = document.createElement('div');
@@ -116,9 +120,61 @@ class ProductPage extends Page {
     return swiperContainer;
   };
 
-  createSlider() {
+  createSlider = () => {
     const images = this.images;
     const swiperWrapper = document.querySelector('.swiper-wrapper');
+
+    images.map((image, index) => {
+      const slide = document.createElement('div');
+      slide.classList.add('swiper-slide');
+
+      const img = document.createElement('img');
+      img.src = image.url;
+      img.alt = image.label;
+      img.width = image.dimensions.w;
+      img.height = image.dimensions.h;
+
+      img.addEventListener('click', () => {
+        this.openModal();
+        if (this.myModalSwiper) this.myModalSwiper.slideTo(index);
+      });
+
+      slide.appendChild(img);
+      if (swiperWrapper) {
+        swiperWrapper.appendChild(slide);
+      }
+    });
+
+    // Инициализация Swiper
+    const mySwiper = new Swiper('.swiper-container', {
+      modules: [Navigation, Pagination],
+      // Optional parameters
+      // direction: 'vertical',
+      loop: true,
+
+      // If we need pagination
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+
+      // Navigation arrows
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+
+      // scrollbar: {
+      //   el: '.swiper-scrollbar',
+      //   hide: true,
+      // },
+    });
+    console.log('mySwiper = ', mySwiper);
+  };
+
+  createSliderModal() {
+    const images = this.images;
+    const swiperWrapper = document.querySelector('.swiper-container-modal .swiper-wrapper');
 
     images.forEach(function (image) {
       const slide = document.createElement('div');
@@ -135,7 +191,7 @@ class ProductPage extends Page {
     });
 
     // Инициализация Swiper
-    const mySwiper = new Swiper('.swiper-container', {
+    const mySwiper = new Swiper('.swiper-container-modal', {
       modules: [Navigation, Pagination],
       // Optional parameters
       // direction: 'vertical',
@@ -144,6 +200,7 @@ class ProductPage extends Page {
       // If we need pagination
       pagination: {
         el: '.swiper-pagination',
+        clickable: true,
       },
 
       // Navigation arrows
@@ -157,7 +214,70 @@ class ProductPage extends Page {
       //   hide: true,
       // },
     });
-    console.log('mySwiper = ', mySwiper);
+    this.myModalSwiper = mySwiper;
+    console.log('mySwiperModal = ', mySwiper);
+  }
+
+  createModalWindow() {
+    const modal = document.createElement('div');
+    modal.innerHTML = `
+    <button id="openModalButton" style="display:none;">Открыть модальное окно</button>
+      <div id="modal" class="modal">
+        <span id="closeModal" class="close">X</span>
+        <div class="modal-content">
+        </div>
+      </div>
+      <div id="overlay" class="overlay"></div>`;
+    return modal;
+  }
+
+  // Получаем элементы модального окна и кнопки открытия
+  modal = document.getElementById('modal');
+  closeModal = document.getElementById('closeModal');
+  openModalButton = document.getElementById('openModalButton');
+  overlay = document.getElementById('overlay');
+
+  // Функция открытия модального окна
+  openModal() {
+    const modal = document.getElementById('modal');
+    const overlay = document.getElementById('overlay');
+    if (modal) modal.style.display = 'block';
+    if (overlay) overlay.style.display = 'block';
+  }
+
+  // Функция закрытия модального окна
+  closeModalFunction() {
+    const modal = document.getElementById('modal');
+    const overlay = document.getElementById('overlay');
+    if (modal) modal.style.display = 'none';
+    if (overlay) overlay.style.display = 'none';
+  }
+
+  addModalEventListener = () => {
+    const closeModal = document.getElementById('closeModal');
+    // Закрытие модального окна при клике на крестик
+    if (closeModal) closeModal.addEventListener('click', this.closeModalFunction);
+
+    // Закрытие модального окна при клике вне него
+    window.addEventListener('click', (event) => {
+      const overlay = document.getElementById('overlay');
+      if (event.target == overlay) {
+        this.closeModalFunction();
+      }
+    });
+
+    // const openModalButton = document.getElementById('openModalButton');
+    // // Открытие модального окна при клике на кнопку
+    // if (openModalButton) openModalButton.addEventListener('click', this.openModal);
+  };
+
+  addSwiperIntoModal() {
+    const modalContent = document.querySelector('.modal-content');
+    const modalSwiper = this.createProductImagesSliderContainer('modal');
+    console.log('modalContent = ', modalContent);
+    console.log('modalSwiper = ', modalSwiper);
+    modalContent?.append(modalSwiper);
+    console.log('modalContent = ', modalContent);
   }
 
   render(): HTMLElement {
@@ -172,9 +292,14 @@ class ProductPage extends Page {
         wrapper.append(this.createProductDescription());
         wrapper.append(this.createProductPrice());
         // wrapper.append(this.createProductImages());
-        wrapper.append(this.createProductImagesSliderContainer());
+        wrapper.append(this.createProductImagesSliderContainer('normal'));
+        wrapper.append(this.createModalWindow());
+
         this.container.append(wrapper);
 
+        this.addModalEventListener();
+        this.addSwiperIntoModal();
+        this.createSliderModal();
         this.createSlider();
       })
       .catch((error) => {
