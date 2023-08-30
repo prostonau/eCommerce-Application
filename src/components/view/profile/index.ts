@@ -26,13 +26,13 @@ class ProfilePage extends Page {
     this.billAddress = '';
   }
 
-  getUserData(userId: string) {
-    this.API.clientCredentialsFlow().then((response) => {
-      this.API.getCustomer(userId, response.access_token).then((response) => {
+  async getUserData(userId: string) {
+    await this.API.clientCredentialsFlow().then(async (response) => {
+      await this.API.getCustomer(userId, response.access_token).then((response) => {
         console.log('Content response = ', response);
         this.firstName = response.firstName;
         this.lastName = response.lastName;
-        this.birthDate = response.stores.toString();
+        this.birthDate = response.dateOfBirth;
         this.shipAddress = response.shippingAddressIds.toString();
         this.billAddress = response.billingAddressIds.toString();
       });
@@ -66,9 +66,44 @@ class ProfilePage extends Page {
     return lastName;
   }
 
+  createUserBirthDate() {
+    const birthDate = document.createElement('p');
+    birthDate.classList.add('proile__birthdate');
+    birthDate.textContent = this.birthDate;
+    return birthDate;
+  }
+
+  createShipAddress() {
+    const shipAddress = document.createElement('p');
+    shipAddress.classList.add('profile__ship-address');
+    shipAddress.textContent = this.shipAddress;
+    return shipAddress;
+  }
+
+  createBillAddress() {
+    const billAddress = document.createElement('p');
+    billAddress.classList.add('profile__ship-address');
+    billAddress.textContent = this.billAddress;
+    return billAddress;
+  }
+
   render(): HTMLElement {
-    const title = this.createHeaderTitle(ProfilePage.TextObject.ProfileTitle);
-    this.container.append(title);
+    this.getUserData(this.userId)
+      .then(() => {
+        const title = this.createHeaderTitle(ProfilePage.TextObject.ProfileTitle);
+        const wrapper = this.createUserInfoContainer();
+        wrapper.append(
+          this.createUserFirstName(),
+          this.createUserLastName(),
+          this.createUserBirthDate(),
+          this.createShipAddress(),
+          this.createBillAddress()
+        );
+        this.container.append(title, wrapper);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
     return this.container;
   }
 }
