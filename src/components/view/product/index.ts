@@ -231,12 +231,6 @@ class ProductPage extends Page {
     return modal;
   }
 
-  // Получаем элементы модального окна и кнопки открытия
-  modal = document.getElementById('modal');
-  closeModal = document.getElementById('closeModal');
-  openModalButton = document.getElementById('openModalButton');
-  overlay = document.getElementById('overlay');
-
   // Функция открытия модального окна
   openModal() {
     const modal = document.getElementById('modal');
