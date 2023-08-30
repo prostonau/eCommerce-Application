@@ -2,6 +2,7 @@ import AppController from '../controller/controller';
 import AppAPI from '../controller/api';
 import AppProductAPI from '../controller/apiProduct';
 import { AppView } from '../view/appView';
+import { apiCatalog } from '../controller/apiCatalog';
 
 class App {
   controller: AppController;
@@ -9,11 +10,14 @@ class App {
   ProductAPI: AppProductAPI;
   view: AppView;
   container: HTMLElement;
+  APICatalog: apiCatalog;
+
   constructor() {
     this.controller = new AppController();
     this.API = new AppAPI();
     this.ProductAPI = new AppProductAPI();
     this.view = new AppView();
+    this.APICatalog = new apiCatalog();
     this.container = document.body;
   }
 
@@ -51,13 +55,18 @@ class App {
 
   public testAPI(): void {
     console.log('Test API...');
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.APICatalog.queryProducts(token).then(async (response) => {
+        if (response) {
+          console.log('response = ', await response.results[0].variants[0].prices[0].value.centAmount);
+        }
 
-    this.API.clientCredentialsFlow().then((response) => {
-      console.log('response = ', response);
-      // this.API.getCustomer('39fd2612-1d14-4484-b6ac-1f4631a22f91', response.access_token);
-      // this.API.getAllCustomers(response.access_token);
-      // this.API.updateCustomer(response.access_token);
-    });
+        // this.API.getCustomer('39fd2612-1d14-4484-b6ac-1f4631a22f91', response.access_token);
+        // this.API.getAllCustomers(response.access_token);
+        // this.API.updateCustomer(response.access_token);
+      });
+    }
 
     //this.API.passwordFlow('johndo13e@example.com', 'secret123');
   }

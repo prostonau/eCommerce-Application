@@ -32,6 +32,98 @@ export interface Actions {
   adress?: Action;
 }
 
+export interface PriceValue {
+  type: string;
+  currencyCode: string;
+  centAmount: number;
+  fractionDigits: number;
+}
+
+export interface Discount {
+  discount: {
+    typeId: string;
+    id: string;
+  };
+  value: PriceValue;
+}
+export interface Price {
+  id: string;
+  value: PriceValue;
+  discounted?: Discount;
+  country: string;
+}
+
+export interface ValueResp {
+  key: string;
+  label: string;
+}
+
+export interface Attribute {
+  name: string;
+  value: boolean | string | ValueResp;
+}
+
+export interface Image {
+  url: string;
+  dimensions: {
+    w: number;
+    h: number;
+  };
+}
+
+export interface Variant {
+  id: number;
+  sku: string;
+  key: string;
+  prices: Price[];
+  images: Image[];
+  attributes: Attribute[];
+  assets?: unknown[];
+}
+
+export interface statusesOfProduct {
+  variants: Variant[];
+}
+
+export interface Categories {
+  id: string;
+  typeID: string;
+}
+
+export interface Product {
+  categories: Categories[];
+  categoryOrderHints: unknown;
+  createdAt: string;
+  hasStagedChanges: boolean;
+  id: string;
+  key: string;
+  lastModifiedAt: string;
+  masterVariant: Variant;
+  name: Record<string, string>;
+  productType: {
+    id: string;
+    typeId: string;
+  };
+  published: boolean;
+  searchKeywords: Record<string, string>;
+  slug: Record<string, string>;
+  taxCategory: {
+    typeId: string;
+    id: string;
+  };
+  variants: Variant[];
+  version: number;
+}
+
+export interface ProductResponse {
+  limit: number;
+  offset: number;
+  count: number;
+  total: number;
+  facets: unknown;
+  results: Product[];
+}
+
 // export interface WinnerData {
 //   id: number;
 //   wins: number;

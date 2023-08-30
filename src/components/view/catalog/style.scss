@@ -1,11 +1,68 @@
-.winner-table {
-  width: 100%; /* Ширина таблицы */  
-  max-width: 700px;  
-  border-collapse: collapse; /* Слияние границ ячеек */
-  font-family: Arial, sans-serif; /* Шрифт таблицы */
+.catalog {
+  max-width: 1200px;
+  margin: 35px auto;
 }
 
-.winner-table th, .winner-table td {
-border: 1px solid #1ad1c2; /* Границы ячеек */
-padding: 8px; /* Отступ внутри ячеек */
+.catalog__list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.card {
+  width: max(30%, 380px);
+  padding: 5px;
+  margin: 15px 10px;
+  display: flex;
+  height: 200px;
+  border-radius: 5px;
+  background-color: #121e13;
+  color: #daffaa;
+  box-shadow:
+    4px 4px 10px #3f4636,
+    -4px -4px 10px #444d3a;
+
+  &__img_container {
+    width: 200px;
+  }
+
+  &__img {
+    display: block;
+    width: 190px;
+    height: 190px;
+    object-fit: contain;
+    border-radius: 5px;
+    background-color: #fff;
+  }
+
+  &__description {
+    padding-left: 5px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  &__description_body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  &__description_body-properties {
+    flex-grow: 1;
+  }
+
+  &__description_title {
+    margin-bottom: 10px;
+  }
+
+  &__description_price {
+    margin: 5px auto;
+  }
+
+  .card__price--discounted {
+    color: red;
+  }
 }
