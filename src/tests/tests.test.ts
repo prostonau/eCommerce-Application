@@ -1,6 +1,6 @@
 import Form, { checkValidyInputEmail, checkValidyInputPassword } from '../components/view/core/components/form';
-import InputBox from '../components/view/core/components/form/input';
-import Label from '../components/view/core/components/form/label';
+import InputBox from '../components/view/core/templates/input';
+import Label from '../components/view/core/templates/label';
 
 describe('emptyTest', () => {
   it('tests is worling', () => {

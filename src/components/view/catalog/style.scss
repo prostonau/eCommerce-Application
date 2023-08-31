@@ -66,3 +66,43 @@
     color: red;
   }
 }
+
+.category__tree {
+  & ul {
+    list-style-type: none;
+    padding-left: 20px;
+  }
+  
+  & li {
+    position: relative;
+  }
+  
+  & li:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -15px;
+    border-left: 1px solid rgb(16, 103, 8);
+    height: 100%;
+  }
+  
+  & li:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -15px;
+    border-bottom: 1px solid rgb(4, 100, 17);
+    width: 13px;
+    height: 10px;
+  }
+  
+  & ul {
+    padding-left: 20px;
+    position: relative;
+  }
+
+  & li:last-child::before {
+    height: 9px;
+  }
+  
+}

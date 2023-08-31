@@ -1,5 +1,5 @@
 import { PriceValue, Product, ValueResp } from '../../../types';
-import Label from '../core/components/form/label';
+import Label from '../core/templates/label';
 
 export class ProductCard {
   container: HTMLDivElement;

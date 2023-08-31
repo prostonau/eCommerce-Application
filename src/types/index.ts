@@ -82,7 +82,7 @@ export interface Variant {
 }
 
 export interface statusesOfProduct {
-  variants: Variant[];
+  variants?: Variant[];
 }
 
 export interface Categories {
@@ -122,6 +122,43 @@ export interface ProductResponse {
   total: number;
   facets: unknown;
   results: Product[];
+}
+
+export interface Ancestor {
+  typeId: string;
+  id: string;
+}
+export interface Category {
+  ancestors: Ancestor[];
+  assets: unknown;
+  createdAt: string;
+  createdBy: {
+    isPlatformClient: boolean;
+    user: Ancestor;
+  };
+  description: Record<string, string>;
+  id: string;
+  key: string;
+  lastMessageSequenceNumber: number;
+  lastModifiedAt: string;
+  lastModifiedBy: {
+    isPlatformClient: boolean;
+    user: Ancestor;
+  };
+  name: Record<string, string>;
+  orderHint: string;
+  slug: Record<string, string>;
+  version: number;
+  versionModifiedAt: string;
+  parent?: Ancestor;
+}
+
+export interface CategoryResponce {
+  limit: number;
+  offset: number;
+  count: number;
+  total: number;
+  results: Category[];
 }
 
 // export interface WinnerData {

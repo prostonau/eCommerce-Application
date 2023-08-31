@@ -1,9 +1,9 @@
 import AppAPI from '../../../../controller/api';
 import { PageIds } from '../../../../controller/controller';
 import Component from '../../templates/components';
-import InputBox from './input';
-import Label from './label';
-import SelectBox from './select';
+import InputBox from '../../templates/input';
+import Label from '../../templates/label';
+import SelectBox from '../../templates/select';
 import CheckBox from './checkbox';
 import { Customer } from '../../../../../types/index';
 

@@ -1,7 +1,7 @@
 import './style.scss';
 import Page from '../core/templates/page';
 import { apiCatalog } from '../../controller/apiCatalog';
-import { Product, ProductResponse } from '../../../types';
+import { Category, Product, ProductResponse } from '../../../types';
 import { ProductCard } from './poductCard';
 
 class CatalogPage extends Page {
@@ -20,7 +20,9 @@ class CatalogPage extends Page {
   render() {
     const title = this.createHeaderTitle(CatalogPage.TextObject.CatalogTitle);
     this.container.append(title);
-    this.generateProducts();
+    this.generateCategoryTree().then(() => {
+      this.generateProducts();
+    });
     return this.container;
   }
 
@@ -44,12 +46,55 @@ class CatalogPage extends Page {
     const productList = document.createElement('div');
     productList.classList.add('catalog__list');
     if (products) {
-      products.results.forEach((product) => {
+      products.results?.forEach((product) => {
         productList.append(this.generateProductCard(product));
       });
     }
 
     this.container.append(productList);
+  }
+
+  async generateCategoryTree(): Promise<void> {
+    const categories = await this.api.queryCategories(this.token);
+    const categoryList = document.createElement('div');
+    categoryList.classList.add('category__tree');
+    document.createElement('ul');
+
+    if (categories) {
+      const tree = this.buildTree(categories, '', 0);
+      tree.forEach((ul) => categoryList.appendChild(ul));
+    }
+    this.container.append(categoryList);
+  }
+
+  buildTree(data: Category[], parentId: string, level: number) {
+    const ul = document.createElement('ul');
+    if (parentId === '') {
+      data
+        .filter((item) => item.ancestors.length == 0)
+        .forEach((item) => {
+          this.addLi(data, item, ul, level);
+        });
+    }
+
+    data
+      .filter((item) => item.parent && item.parent.id === parentId)
+      .forEach((item) => {
+        this.addLi(data, item, ul, level);
+      });
+    return [ul];
+  }
+
+  addLi(data: Category[], item: Category, ul: HTMLElement, level: number) {
+    const li = document.createElement('li');
+    li.textContent = item.name['en-US'];
+    li.setAttribute('data_category-id', item.id);
+    this.buildTree(data, item.id, level + 1).forEach((childUl) => {
+      if (childUl.hasChildNodes()) {
+        li.appendChild(childUl);
+      }
+    });
+    ul.append(li);
   }
 }
 
