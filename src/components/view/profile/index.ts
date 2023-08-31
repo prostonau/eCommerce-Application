@@ -13,14 +13,6 @@ class ProfilePage extends Page {
   firstName: string;
   lastName: string;
   birthDate: string;
-  /* shipCountry: string;
-  shipCity: string;
-  shipPostCode: string;
-  shipStreet: string;
-  billCountry: string;
-  billCity: string;
-  billPostCode: string;
-  billStreet: string; */
   addresses: CustomerAddress[];
 
   constructor(id: string, userId: string) {
@@ -30,14 +22,6 @@ class ProfilePage extends Page {
     this.firstName = '';
     this.lastName = '';
     this.birthDate = '';
-    /* this.shipCountry = '';
-    this.shipCity = '';
-    this.shipPostCode = '';
-    this.shipStreet = '';
-    this.billCountry = '';
-    this.billCity = '';
-    this.billPostCode = '';
-    this.billStreet = ''; */
     this.addresses = [];
   }
 
@@ -49,14 +33,6 @@ class ProfilePage extends Page {
         this.lastName = response.lastName;
         this.birthDate = response.dateOfBirth;
         this.addresses = response.addresses;
-        /* this.shipCountry = response.addresses[0].country;
-        this.shipCity = response.addresses[0].city;
-        this.shipPostCode = response.addresses[0].postalCode;
-        this.shipStreet = response.addresses[0].streetName;
-        this.billCountry = response.addresses[1].country;
-        this.billCity = response.addresses[1].city;
-        this.billPostCode = response.addresses[1].postalCode;
-        this.billStreet = response.addresses[1].streetName; */
       });
     });
   }
