@@ -153,3 +153,11 @@ export interface ProductResponse {
 //   id: number;
 //   intervalId: NodeJS.Timeout;
 // }
+
+export interface CustomerAddress {
+  city: string;
+  country: string;
+  id: string;
+  postalCode: string;
+  streetName: string;
+}
