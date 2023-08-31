@@ -1,6 +1,7 @@
 import './style.scss';
 import Page from '../core/templates/page';
 import AppAPI from '../../controller/api';
+import { CustomerAddress } from '../../../types';
 
 class ProfilePage extends Page {
   static TextObject = {
@@ -12,8 +13,15 @@ class ProfilePage extends Page {
   firstName: string;
   lastName: string;
   birthDate: string;
-  shipAddress: string;
-  billAddress: string;
+  /* shipCountry: string;
+  shipCity: string;
+  shipPostCode: string;
+  shipStreet: string;
+  billCountry: string;
+  billCity: string;
+  billPostCode: string;
+  billStreet: string; */
+  addresses: CustomerAddress[];
 
   constructor(id: string, userId: string) {
     super(id);
@@ -22,8 +30,15 @@ class ProfilePage extends Page {
     this.firstName = '';
     this.lastName = '';
     this.birthDate = '';
-    this.shipAddress = '';
-    this.billAddress = '';
+    /* this.shipCountry = '';
+    this.shipCity = '';
+    this.shipPostCode = '';
+    this.shipStreet = '';
+    this.billCountry = '';
+    this.billCity = '';
+    this.billPostCode = '';
+    this.billStreet = ''; */
+    this.addresses = [];
   }
 
   async getUserData(userId: string) {
@@ -33,8 +48,15 @@ class ProfilePage extends Page {
         this.firstName = response.firstName;
         this.lastName = response.lastName;
         this.birthDate = response.dateOfBirth;
-        this.shipAddress = response.shippingAddressIds.toString();
-        this.billAddress = response.billingAddressIds.toString();
+        this.addresses = response.addresses;
+        /* this.shipCountry = response.addresses[0].country;
+        this.shipCity = response.addresses[0].city;
+        this.shipPostCode = response.addresses[0].postalCode;
+        this.shipStreet = response.addresses[0].streetName;
+        this.billCountry = response.addresses[1].country;
+        this.billCity = response.addresses[1].city;
+        this.billPostCode = response.addresses[1].postalCode;
+        this.billStreet = response.addresses[1].streetName; */
       });
     });
   }
@@ -45,46 +67,46 @@ class ProfilePage extends Page {
     return userInfoContainer;
   }
 
-  createProfileTitle() {
-    const profileTitle = document.createElement('h2');
-    profileTitle.classList.add('profile-title');
-    profileTitle.textContent = 'About you';
-    return profileTitle;
-  }
+  createBioData() {
+    const fragment = document.createDocumentFragment();
 
-  createUserFirstName() {
     const firstName = document.createElement('p');
     firstName.classList.add('profile__first-name');
     firstName.textContent = this.firstName;
-    return firstName;
-  }
 
-  createUserLastName() {
     const lastName = document.createElement('p');
     lastName.classList.add('profile__last-name');
     lastName.textContent = this.lastName;
-    return lastName;
-  }
 
-  createUserBirthDate() {
     const birthDate = document.createElement('p');
     birthDate.classList.add('proile__birthdate');
     birthDate.textContent = this.birthDate;
-    return birthDate;
+
+    fragment.append(firstName, lastName, birthDate);
+    return fragment;
   }
 
-  createShipAddress() {
-    const shipAddress = document.createElement('p');
-    shipAddress.classList.add('profile__ship-address');
-    shipAddress.textContent = this.shipAddress;
-    return shipAddress;
-  }
+  createAddresses(i: number) {
+    const fragment = document.createDocumentFragment();
 
-  createBillAddress() {
-    const billAddress = document.createElement('p');
-    billAddress.classList.add('profile__ship-address');
-    billAddress.textContent = this.billAddress;
-    return billAddress;
+    const country = document.createElement('p');
+    country.classList.add('profile__country');
+    country.textContent = this.addresses[i].country;
+
+    const city = document.createElement('p');
+    city.classList.add('profile__city');
+    city.textContent = this.addresses[i].city;
+
+    const street = document.createElement('p');
+    street.classList.add('profile__street');
+    street.textContent = this.addresses[i].streetName;
+
+    const postCode = document.createElement('p');
+    postCode.classList.add('profile__post');
+    postCode.textContent = this.addresses[i].postalCode;
+
+    fragment.append(country, city, street, postCode);
+    return fragment;
   }
 
   render(): HTMLElement {
@@ -92,13 +114,10 @@ class ProfilePage extends Page {
       .then(() => {
         const title = this.createHeaderTitle(ProfilePage.TextObject.ProfileTitle);
         const wrapper = this.createUserInfoContainer();
-        wrapper.append(
-          this.createUserFirstName(),
-          this.createUserLastName(),
-          this.createUserBirthDate(),
-          this.createShipAddress(),
-          this.createBillAddress()
-        );
+        wrapper.append(this.createBioData(), this.createAddresses(0));
+        if (this.addresses[1]) {
+          wrapper.append(this.createAddresses(1));
+        }
         this.container.append(title, wrapper);
       })
       .catch((error) => {
