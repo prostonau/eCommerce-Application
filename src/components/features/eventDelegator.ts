@@ -3,13 +3,19 @@ export class EventDelegator {
   static delegatedListeners: { event: string; selector: HTMLElement; callback: (event?: Event) => void }[] = [];
 
   static addDelegatedListener(event: string, selector: HTMLElement, callback: (event?: Event) => void) {
-    const delegatedListener = {
-      event,
-      selector,
-      callback,
-    };
-    this.delegatedListeners.push(delegatedListener);
-    this.setupGlobalClickListener();
+    const existingListener = this.delegatedListeners.find(
+      (listener) => listener.event === event && listener.selector === selector && listener.callback === callback
+    );
+
+    if (!existingListener) {
+      const delegatedListener = {
+        event,
+        selector,
+        callback,
+      };
+      this.delegatedListeners.push(delegatedListener);
+      this.setupGlobalClickListener();
+    }
   }
 
   static setupGlobalClickListener() {
@@ -24,7 +30,7 @@ export class EventDelegator {
   static handleGlobalClick = (event: Event) => {
     EventDelegator.delegatedListeners.forEach((listener) => {
       if (listener.event === 'click') {
-        if (event.target instanceof HTMLElement && event.target.contains(listener.selector)) {
+        if (event.target instanceof HTMLElement && event.target === listener.selector) {
           listener.callback(event);
         }
       }

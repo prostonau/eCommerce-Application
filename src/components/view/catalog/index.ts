@@ -3,6 +3,7 @@ import Page from '../core/templates/page';
 import { apiCatalog } from '../../controller/apiCatalog';
 import { Category, Product, ProductResponse } from '../../../types';
 import { ProductCard } from './poductCard';
+import { EventDelegator } from '../../features/eventDelegator';
 
 class CatalogPage extends Page {
   static TextObject = {
@@ -11,6 +12,9 @@ class CatalogPage extends Page {
   api: apiCatalog;
   token: string;
   bodyContainer: HTMLElement;
+  productList: HTMLDivElement;
+  categoryList: HTMLDivElement;
+  productProps: string;
 
   constructor(id: string) {
     super(id);
@@ -18,9 +22,19 @@ class CatalogPage extends Page {
     this.token = localStorage.getItem('token') || '';
     this.bodyContainer = document.createElement('section');
     this.bodyContainer.classList.add('container__catalog');
+    this.productList = document.createElement('div');
+    this.productList.classList.add('catalog__list');
+
+    this.productProps = '?';
+
+    this.categoryList = document.createElement('div');
+    this.categoryList.classList.add('category__tree');
+
+    this.bodyContainer.append(this.categoryList, this.productList);
   }
 
   render() {
+    this.container.innerHTML = '';
     const title = this.createHeaderTitle(CatalogPage.TextObject.CatalogTitle);
     this.container.append(title);
     this.generateCategoryTree().then(() => {
@@ -32,7 +46,7 @@ class CatalogPage extends Page {
 
   async getProducts(): Promise<void | ProductResponse> {
     if (this.token !== '') {
-      const data = await this.api.queryProducts(this.token);
+      const data = await this.api.queryProducts(this.token, this.productProps);
       if (data) {
         return data;
       }
@@ -47,28 +61,23 @@ class CatalogPage extends Page {
 
   async generateProducts(): Promise<void> {
     const products = await this.getProducts();
-    const productList = document.createElement('div');
-    productList.classList.add('catalog__list');
+    this.productList.innerHTML = '';
     if (products) {
       products.results?.forEach((product) => {
-        productList.append(this.generateProductCard(product));
+        this.productList.append(this.generateProductCard(product));
       });
     }
-
-    this.bodyContainer.append(productList);
   }
 
   async generateCategoryTree(): Promise<void> {
     const categories = await this.api.queryCategories(this.token);
-    const categoryList = document.createElement('div');
-    categoryList.classList.add('category__tree');
+    this.categoryList.innerHTML = '';
     document.createElement('ul');
 
     if (categories) {
       const tree = this.buildTree(categories, '', 0);
-      tree.forEach((ul) => categoryList.appendChild(ul));
+      tree.forEach((ul) => this.categoryList.appendChild(ul));
     }
-    this.bodyContainer.append(categoryList);
   }
 
   buildTree(data: Category[], parentId: string, level: number) {
@@ -93,11 +102,20 @@ class CatalogPage extends Page {
     const li = document.createElement('li');
     li.textContent = item.name['en-US'];
     li.setAttribute('data_category-id', item.id);
+
     this.buildTree(data, item.id, level + 1).forEach((childUl) => {
       if (childUl.hasChildNodes()) {
         li.appendChild(childUl);
       }
     });
+
+    EventDelegator.addDelegatedListener('click', li, () => {
+      document.querySelectorAll('.category__current').forEach((el) => el.classList.remove('category__current'));
+      li.classList.add('category__current');
+      this.productProps = `filter=categories.id:subtree("${li.getAttribute('data_category-id')}")`;
+      this.generateProducts();
+    });
+
     ul.append(li);
   }
 }
