@@ -10,11 +10,14 @@ class CatalogPage extends Page {
   };
   api: apiCatalog;
   token: string;
+  bodyContainer: HTMLElement;
 
   constructor(id: string) {
     super(id);
     this.api = new apiCatalog();
     this.token = localStorage.getItem('token') || '';
+    this.bodyContainer = document.createElement('section');
+    this.bodyContainer.classList.add('container__catalog');
   }
 
   render() {
@@ -23,6 +26,7 @@ class CatalogPage extends Page {
     this.generateCategoryTree().then(() => {
       this.generateProducts();
     });
+    this.container.append(this.bodyContainer);
     return this.container;
   }
 
@@ -51,7 +55,7 @@ class CatalogPage extends Page {
       });
     }
 
-    this.container.append(productList);
+    this.bodyContainer.append(productList);
   }
 
   async generateCategoryTree(): Promise<void> {
@@ -64,7 +68,7 @@ class CatalogPage extends Page {
       const tree = this.buildTree(categories, '', 0);
       tree.forEach((ul) => categoryList.appendChild(ul));
     }
-    this.container.append(categoryList);
+    this.bodyContainer.append(categoryList);
   }
 
   buildTree(data: Category[], parentId: string, level: number) {
