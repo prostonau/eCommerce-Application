@@ -57,9 +57,9 @@ class App {
     console.log('Test API...');
     const token = localStorage.getItem('token');
     if (token) {
-      this.APICatalog.queryProducts(token).then(async (response) => {
+      this.APICatalog.queryCategories(token).then(async (response) => {
         if (response) {
-          console.log('response = ', await response.results[0].variants[0].prices[0].value.centAmount);
+          console.log('response = ', response);
         }
 
         // this.API.getCustomer('39fd2612-1d14-4484-b6ac-1f4631a22f91', response.access_token);

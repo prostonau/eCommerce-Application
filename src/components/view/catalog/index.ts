@@ -1,8 +1,9 @@
 import './style.scss';
 import Page from '../core/templates/page';
 import { apiCatalog } from '../../controller/apiCatalog';
-import { Product, ProductResponse } from '../../../types';
+import { Category, Product, ProductResponse } from '../../../types';
 import { ProductCard } from './poductCard';
+import { EventDelegator } from '../../features/eventDelegator';
 
 class CatalogPage extends Page {
   static TextObject = {
@@ -10,23 +11,42 @@ class CatalogPage extends Page {
   };
   api: apiCatalog;
   token: string;
+  bodyContainer: HTMLElement;
+  productList: HTMLDivElement;
+  categoryList: HTMLDivElement;
+  productProps: string;
 
   constructor(id: string) {
     super(id);
     this.api = new apiCatalog();
     this.token = localStorage.getItem('token') || '';
+    this.bodyContainer = document.createElement('section');
+    this.bodyContainer.classList.add('container__catalog');
+    this.productList = document.createElement('div');
+    this.productList.classList.add('catalog__list');
+
+    this.productProps = '?';
+
+    this.categoryList = document.createElement('div');
+    this.categoryList.classList.add('category__tree');
+
+    this.bodyContainer.append(this.categoryList, this.productList);
   }
 
   render() {
+    this.container.innerHTML = '';
     const title = this.createHeaderTitle(CatalogPage.TextObject.CatalogTitle);
     this.container.append(title);
-    this.generateProducts();
+    this.generateCategoryTree().then(() => {
+      this.generateProducts();
+    });
+    this.container.append(this.bodyContainer);
     return this.container;
   }
 
   async getProducts(): Promise<void | ProductResponse> {
     if (this.token !== '') {
-      const data = await this.api.queryProducts(this.token);
+      const data = await this.api.queryProducts(this.token, this.productProps);
       if (data) {
         return data;
       }
@@ -41,15 +61,62 @@ class CatalogPage extends Page {
 
   async generateProducts(): Promise<void> {
     const products = await this.getProducts();
-    const productList = document.createElement('div');
-    productList.classList.add('catalog__list');
+    this.productList.innerHTML = '';
     if (products) {
-      products.results.forEach((product) => {
-        productList.append(this.generateProductCard(product));
+      products.results?.forEach((product) => {
+        this.productList.append(this.generateProductCard(product));
       });
     }
+  }
 
-    this.container.append(productList);
+  async generateCategoryTree(): Promise<void> {
+    const categories = await this.api.queryCategories(this.token);
+    this.categoryList.innerHTML = '';
+    document.createElement('ul');
+
+    if (categories) {
+      const tree = this.buildTree(categories, '', 0);
+      tree.forEach((ul) => this.categoryList.appendChild(ul));
+    }
+  }
+
+  buildTree(data: Category[], parentId: string, level: number) {
+    const ul = document.createElement('ul');
+    if (parentId === '') {
+      data
+        .filter((item) => item.ancestors.length == 0)
+        .forEach((item) => {
+          this.addLi(data, item, ul, level);
+        });
+    }
+
+    data
+      .filter((item) => item.parent && item.parent.id === parentId)
+      .forEach((item) => {
+        this.addLi(data, item, ul, level);
+      });
+    return [ul];
+  }
+
+  addLi(data: Category[], item: Category, ul: HTMLElement, level: number) {
+    const li = document.createElement('li');
+    li.textContent = item.name['en-US'];
+    li.setAttribute('data_category-id', item.id);
+
+    this.buildTree(data, item.id, level + 1).forEach((childUl) => {
+      if (childUl.hasChildNodes()) {
+        li.appendChild(childUl);
+      }
+    });
+
+    EventDelegator.addDelegatedListener('click', li, () => {
+      document.querySelectorAll('.category__current').forEach((el) => el.classList.remove('category__current'));
+      li.classList.add('category__current');
+      this.productProps = `filter=categories.id:subtree("${li.getAttribute('data_category-id')}")`;
+      this.generateProducts();
+    });
+
+    ul.append(li);
   }
 }
 

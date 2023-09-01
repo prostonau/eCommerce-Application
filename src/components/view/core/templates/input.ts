@@ -1,4 +1,4 @@
-import Component from '../../templates/components';
+import Component from './components';
 
 class InputBox extends Component {
   constructor(

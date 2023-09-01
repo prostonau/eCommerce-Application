@@ -1,4 +1,4 @@
-import Component from '../../templates/components';
+import Component from './components';
 
 class SelectBox extends Component {
   constructor(tagName: string, className: string, id: string = '', isRequired: boolean = false) {

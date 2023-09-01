@@ -1,4 +1,4 @@
-import Component from '../../templates/components';
+import Component from './components';
 
 class Label extends Component {
   constructor(tagName: string, className: string, typeFor: string = '', id: string = '', value: string = '') {
