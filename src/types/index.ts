@@ -161,6 +161,18 @@ export interface CategoryResponce {
   results: Category[];
 }
 
+export type ProductProps = {
+  category: string;
+  filter: {
+    type: string;
+    size: string;
+    color: string;
+  };
+  sort: string;
+  search: string;
+  [key: string]: string | Record<string, string>;
+};
+
 // export interface WinnerData {
 //   id: number;
 //   wins: number;

@@ -29,11 +29,20 @@ export class ProductCard {
     cardTitle.innerHTML = this.product.name['en-US']; //TODO language swith
 
     const cardBody = document.createElement('div');
-    cardBody.classList.add('card__description_body');
+    cardBody.classList.add('card__description_body'); //TODO language variants types
     const text = this.product.masterVariant?.attributes.map((atribute) => {
       let property = atribute.name;
       if (typeof atribute.value !== 'string' && atribute.value) {
         property += ': ' + (atribute.value as ValueResp).key;
+        if (this.product.variants[0]) {
+          this.product.variants.forEach((variant) => {
+            variant.attributes.forEach((subAttribute) => {
+              if (property.includes(subAttribute.name) && !property.includes((subAttribute.value as ValueResp).key)) {
+                property += ' | ' + (subAttribute.value as ValueResp).key;
+              }
+            });
+          });
+        }
       } else if (atribute.value) {
         property += ': ' + atribute.value;
       }
