@@ -72,13 +72,13 @@
     list-style-type: none;
     padding-left: 20px;
   }
-  
+
   & li {
     position: relative;
     cursor: pointer;
     color: #fff;
   }
-  
+
   & li:before {
     content: '';
     position: absolute;
@@ -86,9 +86,12 @@
     left: -15px;
     border-left: 1px solid rgb(16, 103, 8);
     height: 100%;
-    box-shadow: 0 0 2px rgba(0, 255, 0, 0.7), 0 0 4px rgba(0, 255, 0, 0.5), 0 0 6px rgba(0, 255, 0, 0.3);
+    box-shadow:
+      0 0 2px rgba(0, 255, 0, 0.7),
+      0 0 4px rgba(0, 255, 0, 0.5),
+      0 0 6px rgba(0, 255, 0, 0.3);
   }
-  
+
   & li:after {
     content: '';
     position: absolute;
@@ -100,7 +103,7 @@
     width: 13px;
     height: 10px;
   }
-  
+
   & ul {
     padding-left: 20px;
     position: relative;
@@ -109,7 +112,6 @@
   & li:last-child::before {
     height: 7px;
   }
-  
 }
 
 .container__catalog {
@@ -120,10 +122,39 @@
   cursor: pointer;
 }
 
-li.category__current, h3.category__current {
+li.category__current,
+h3.category__current {
   color: red;
 }
 
-li:hover, h3:hover {
+li:hover,
+h3:hover {
   color: rgb(243, 97, 7);
+}
+
+.search {
+  &__box {
+    position: relative;
+  }
+
+
+  &__button {
+    border: none;
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    height: 14px;
+    background-color: transparent;
+    cursor: pointer;
+    transition: all 0.5s;
+
+    & svg path {
+      transition: all 0.5s;
+    }
+
+    &:hover svg path {
+      fill: rgba(10, 84, 10, 0.5);
+      transition: all 0.5s;
+    }
+  }
 }

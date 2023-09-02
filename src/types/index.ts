@@ -169,6 +169,7 @@ export type ProductProps = {
     color: string;
   };
   sort: string;
+  search: string;
   [key: string]: string | Record<string, string>;
 };
 

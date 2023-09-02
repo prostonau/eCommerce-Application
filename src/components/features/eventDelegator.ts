@@ -1,8 +1,18 @@
 export class EventDelegator {
   private static globalListenerAdded = false;
-  static delegatedListeners: { event: string; selector: HTMLElement; callback: (event?: Event) => void }[] = [];
+  static delegatedListeners: {
+    event: string;
+    selector: HTMLElement;
+    callback: (event?: Event) => void;
+    include: boolean;
+  }[] = [];
 
-  static addDelegatedListener(event: string, selector: HTMLElement, callback: (event?: Event) => void) {
+  static addDelegatedListener(
+    event: string,
+    selector: HTMLElement,
+    callback: (event?: Event) => void,
+    include = false
+  ) {
     const existingListener = this.delegatedListeners.find(
       (listener) => listener.event === event && listener.selector === selector && listener.callback === callback
     );
@@ -12,6 +22,7 @@ export class EventDelegator {
         event,
         selector,
         callback,
+        include,
       };
       this.delegatedListeners.push(delegatedListener);
       this.setupGlobalClickListener();
@@ -32,8 +43,15 @@ export class EventDelegator {
   static handleGlobalClick = (event: Event) => {
     EventDelegator.delegatedListeners.forEach((listener) => {
       if (listener.event === 'click') {
-        if (event.target instanceof HTMLElement && event.target === listener.selector) {
-          listener.callback(event);
+        if (!listener.include) {
+          if (event.target instanceof HTMLElement && event.target === listener.selector) {
+            listener.callback(event);
+          }
+        } else {
+          if (event.target instanceof HTMLElement && listener.selector.contains(event.target)) {
+            console.log('yes');
+            listener.callback(event);
+          }
         }
       }
     });

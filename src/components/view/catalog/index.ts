@@ -7,6 +7,23 @@ import { EventDelegator } from '../../features/eventDelegator';
 import { createQueryFromProps } from '../../features/createQueryFromProps';
 import SelectBox from '../core/templates/select';
 import Label from '../core/templates/label';
+import InputBox from '../core/templates/input';
+
+const searchIco = `<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="15" height="15" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 500 500"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .fil1 {fill:#202020}
+   ]]>
+  </style>
+ </defs>
+ <g id="Layer_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <path class="fil1" d="M289 90c53,52 53,138 0,191 -53,53 -138,53 -191,0 -53,-53 -53,-139 0,-191 53,-53 138,-53 191,0zm27 -27c59,59 67,149 23,216l125 104c22,18 21,53 0,73 -20,21 -55,22 -73,0l-104 -125c-67,43 -157,35 -216,-23 -68,-68 -68,-178 0,-245 68,-68 177,-68 245,0z"/>
+ </g>
+</svg>`;
 
 class CatalogPage extends Page {
   static TextObject = {
@@ -21,6 +38,7 @@ class CatalogPage extends Page {
   filters: HTMLDivElement;
   navigation: HTMLElement;
   sorters: HTMLDivElement;
+  search: HTMLDivElement;
 
   constructor(id: string) {
     super(id);
@@ -31,7 +49,7 @@ class CatalogPage extends Page {
     this.productList = document.createElement('div');
     this.productList.classList.add('catalog__list');
 
-    this.productProps = { category: '', filter: { type: '', size: '', color: '' }, sort: '' };
+    this.productProps = { category: '', filter: { type: '', size: '', color: '' }, sort: '', search: '' };
 
     this.navigation = document.createElement('nav');
     this.navigation.classList.add('navigation');
@@ -45,7 +63,10 @@ class CatalogPage extends Page {
     this.sorters = document.createElement('div');
     this.sorters.classList.add('sorters');
 
-    this.navigation.append(this.categoryList, this.filters, this.sorters);
+    this.search = document.createElement('div');
+    this.search.classList.add('search');
+
+    this.navigation.append(this.categoryList, this.filters, this.sorters, this.search);
 
     this.bodyContainer.append(this.navigation, this.productList);
   }
@@ -58,6 +79,7 @@ class CatalogPage extends Page {
     this.generateProducts();
     this.generateFilters();
     this.addSortField();
+    this.addSearchField();
 
     this.container.append(this.bodyContainer);
     return this.container;
@@ -192,8 +214,28 @@ class CatalogPage extends Page {
   }
 
   addSearchField() {
-    const searchBox = document.createElement('div');
-    searchBox.classList.add('filter__box');
+    const searchBox = document.createElement('form');
+    searchBox.classList.add('search__box');
+
+    const searchTitle = document.createElement('h3');
+    searchTitle.innerHTML = 'Search';
+    searchTitle.classList.add('category__title');
+
+    const searchField = new InputBox('input', 'search__field', 'text', '', 'Search', false);
+
+    const searchButton = document.createElement('button');
+    searchButton.classList.add('search__button');
+    searchButton.type = 'submit';
+    searchButton.innerHTML = searchIco;
+
+    searchButton.addEventListener('click', (ev) => {
+      ev?.preventDefault();
+      this.productProps.search = searchField.getValue() ? `fuzzy=true&text.en-us="${searchField.getValue()}"` : '';
+      this.generateProducts();
+    });
+
+    searchBox.append(searchField.render(), searchButton);
+    this.search.append(searchTitle, searchBox);
   }
 
   addLi(data: Category[], item: Category, ul: HTMLElement, level: number) {
