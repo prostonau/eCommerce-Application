@@ -57,6 +57,7 @@ class CatalogPage extends Page {
     this.generateCategoryTree();
     this.generateProducts();
     this.generateFilters();
+    this.addSortField();
 
     this.container.append(this.bodyContainer);
     return this.container;
@@ -167,6 +168,32 @@ class CatalogPage extends Page {
 
     filterBox.append(typeFilterLabel.render(), typeFilter.render());
     return filterBox;
+  }
+
+  addSortField() {
+    const sortTitle = document.createElement('h3');
+    sortTitle.classList.add('sort__title');
+    sortTitle.innerText = 'Sorting';
+
+    const typeSort = new SelectBox('select', 'sort__input', '', false);
+    typeSort.addOptions('', 'name', 'price asc', 'price desc');
+
+    EventDelegator.addDelegatedListener('change', typeSort.render(), () => {
+      this.productProps.sort = typeSort.getValue()
+        ? `sort=${typeSort.getValue() === 'name' ? 'name.en-us asc' : typeSort.getValue()}`
+        : '';
+      this.generateProducts();
+    });
+
+    const typeSortLabel = new Label('label', 'sort__label', '');
+    typeSortLabel.render().innerText = `Sort by:`;
+
+    this.sorters.append(sortTitle, typeSortLabel.render(), typeSort.render());
+  }
+
+  addSearchField() {
+    const searchBox = document.createElement('div');
+    searchBox.classList.add('filter__box');
   }
 
   addLi(data: Category[], item: Category, ul: HTMLElement, level: number) {
