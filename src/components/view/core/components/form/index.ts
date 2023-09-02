@@ -212,7 +212,7 @@ class Form extends Component {
     const postalValBox = document.createElement('p');
     postalValBox.classList.add('validity__block');
 
-    this.countrySelect.addOptions('Poland', 'Belarus', 'Lithuania');
+    this.countrySelect.addOptions('Country', 'Poland', 'Belarus', 'Lithuania');
     const countryLabel = new Label('label', 'form__label', 'country__input', '', 'Country');
     const countryValBox = document.createElement('p');
     countryValBox.classList.add('validity__block');

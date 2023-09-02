@@ -116,6 +116,14 @@
   display: flex;
 }
 
-li.category__current {
+.category__title {
+  cursor: pointer;
+}
+
+li.category__current, h3.category__current {
   color: red;
+}
+
+li:hover, h3:hover {
+  color: rgb(243, 97, 7);
 }

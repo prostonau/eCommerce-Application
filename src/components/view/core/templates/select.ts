@@ -21,16 +21,19 @@ class SelectBox extends Component {
     return '';
   }
 
-  addOptions(...options: string[]) {
+  addOptions(text: string, ...options: string[]) {
     const holder = document.createElement('option');
     holder.setAttribute('selected', '');
     holder.setAttribute('disabled', '');
-    holder.textContent = 'Country';
+    holder.textContent = text;
     this.container.append(holder);
     for (const val of options) {
       const option = document.createElement('option');
       option.value = val;
       option.textContent = val;
+      if (option.value === '') {
+        option.textContent = 'Show all';
+      }
       this.container.append(option);
     }
   }
