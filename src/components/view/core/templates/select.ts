@@ -31,8 +31,10 @@ class SelectBox extends Component {
       const option = document.createElement('option');
       option.value = val;
       option.textContent = val;
-      if (option.value === '') {
+      if (option.value === '' && text !== 'sort') {
         option.textContent = 'Show all';
+      } else if (option.value === '' && text === 'sort') {
+        option.textContent = 'Unsorted';
       }
       this.container.append(option);
     }

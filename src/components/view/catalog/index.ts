@@ -176,7 +176,7 @@ class CatalogPage extends Page {
     sortTitle.innerText = 'Sorting';
 
     const typeSort = new SelectBox('select', 'sort__input', '', false);
-    typeSort.addOptions('', 'name', 'price asc', 'price desc');
+    typeSort.addOptions('sort', '', 'name', 'price asc', 'price desc');
 
     EventDelegator.addDelegatedListener('change', typeSort.render(), () => {
       this.productProps.sort = typeSort.getValue()
