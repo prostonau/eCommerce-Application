@@ -148,7 +148,7 @@ class CatalogPage extends Page {
     this.filters.append(filterBoxTitle, typeFilter, sizeFilter2, colorFilter2);
   }
 
-  addFilterField(id: string, options: string[], atrName: string): HTMLElement {
+  addFilterField(id: string, options: string[], atrName: 'type' | 'size' | 'color'): HTMLElement {
     const filterBox = document.createElement('div');
     filterBox.classList.add('filter__box');
 
@@ -159,7 +159,7 @@ class CatalogPage extends Page {
     typeFilterLabel.render().innerText = `Select ${atrName}`;
 
     EventDelegator.addDelegatedListener('change', typeFilter.render(), () => {
-      this.productProps.filter.type = typeFilter.getValue()
+      this.productProps.filter[atrName] = typeFilter.getValue()
         ? `filter=variants.attributes.${atrName}.key:"${typeFilter.getValue()}"`
         : '';
       this.generateProducts();
