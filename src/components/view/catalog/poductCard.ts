@@ -2,12 +2,13 @@ import { PriceValue, Product, ValueResp } from '../../../types';
 import Label from '../core/templates/label';
 
 export class ProductCard {
-  container: HTMLDivElement;
+  container: HTMLAnchorElement;
   product: Product;
 
   constructor(product: Product) {
     this.product = product;
-    this.container = document.createElement('div');
+    this.container = document.createElement('a');
+    this.container.href = `#product/${this.product.id}`;
     this.container.classList.add('card');
   }
 
