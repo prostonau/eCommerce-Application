@@ -40,15 +40,20 @@ class ProductPage extends Page {
     await this.API.clientCredentialsFlow().then(async (response) => {
       // console.log('response = ', response);
       await this.API.getProduct(response.access_token, productId).then((response) => {
-        console.log('Content response = ', response);
+        // console.log('Content response = ', response);
         this.name = response.masterData.current.name['en-US'];
-        this.description = response.masterData.current.description['en-US'];
+        //this.description = response.masterData.current.description['en-US'];
+        if (response.masterData.current.description && response.masterData.current.description['en-US']) {
+          this.description = response.masterData.current.description['en-US'];
+        } else {
+          this.description = 'None';
+        }
         this.images = response.masterData.staged.masterVariant.images;
         this.price = response.masterData.staged.masterVariant.prices[0].value.centAmount;
-        console.log(
-          'response.masterData.staged.masterVariant.prices[0].value.centAmount = ',
-          response.masterData.staged.masterVariant.prices[0].value.centAmount
-        );
+        // console.log(
+        //   'response.masterData.staged.masterVariant.prices[0].value.centAmount = ',
+        //   response.masterData.staged.masterVariant.prices[0].value.centAmount
+        // );
         this.price = (Number(this.price) / 100).toFixed(2);
         this.currency = response.masterData.staged.masterVariant.prices[0].value.currencyCode;
       });
@@ -146,7 +151,7 @@ class ProductPage extends Page {
     });
 
     // Инициализация Swiper
-    const mySwiper = new Swiper('.swiper-container', {
+    new Swiper('.swiper-container', {
       modules: [Navigation, Pagination],
       // Optional parameters
       // direction: 'vertical',
@@ -169,7 +174,7 @@ class ProductPage extends Page {
       //   hide: true,
       // },
     });
-    console.log('mySwiper = ', mySwiper);
+    // console.log('mySwiper = ', mySwiper);
   };
 
   createSliderModal() {
@@ -215,7 +220,7 @@ class ProductPage extends Page {
       // },
     });
     this.myModalSwiper = mySwiper;
-    console.log('mySwiperModal = ', mySwiper);
+    // console.log('mySwiperModal = ', mySwiper);
   }
 
   createModalWindow() {
@@ -268,17 +273,17 @@ class ProductPage extends Page {
   addSwiperIntoModal() {
     const modalContent = document.querySelector('.modal-content');
     const modalSwiper = this.createProductImagesSliderContainer('modal');
-    console.log('modalContent = ', modalContent);
-    console.log('modalSwiper = ', modalSwiper);
+    // console.log('modalContent = ', modalContent);
+    // console.log('modalSwiper = ', modalSwiper);
     modalContent?.append(modalSwiper);
-    console.log('modalContent = ', modalContent);
+    // console.log('modalContent = ', modalContent);
   }
 
   render(): HTMLElement {
-    console.log('this.productId BEFORE = ', this.productId);
+    // console.log('this.productId BEFORE = ', this.productId);
     this.getMasterData(this.productId)
       .then(() => {
-        console.log('this AFTER = ', this);
+        // console.log('this AFTER = ', this);
         const title = this.createHeaderTitle(ProductPage.TextObject.ProductTitle);
         const wrapper = this.createProductWrapper();
         wrapper.append(title);
