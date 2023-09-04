@@ -42,8 +42,8 @@
 .swiper-container{
   position: relative;
     margin-top: 30px;
-    width: 100%;
-    height: 300px; /* замените на желаемую высоту */
+    width: 100%;    
+    height: 100%; /* замените на желаемую высоту */
     overflow: hidden;
 }
 
@@ -65,11 +65,11 @@
 
   .swiper-slide img {
     display: block;
-    //width: 100%;
+    width: 100%;
     height: 100%;
     object-fit: cover;
   }
-
+  
   .swiper-pagination-bullet {
     width: 20px;
     height: 20px;

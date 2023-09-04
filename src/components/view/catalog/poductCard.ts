@@ -19,6 +19,9 @@ export class ProductCard {
 
     const cardImgContainer = document.createElement('div');
     cardImgContainer.classList.add('card__img_container');
+    cardImgContainer.addEventListener('click', () => {
+      window.location.hash = `product/${this.product.id}`;
+    });
 
     cardImgContainer.append(cardImg);
 
@@ -28,6 +31,11 @@ export class ProductCard {
     const cardTitle = document.createElement('h3');
     cardTitle.classList.add('card__description_title');
     cardTitle.innerHTML = this.product.name['en-US']; //TODO language swith
+    // window.location.hash
+    cardTitle.addEventListener('click', () => {
+      window.location.hash = `product/${this.product.id}`;
+    });
+    //console.log('this.product = ', this.product);
 
     const cardBody = document.createElement('div');
     cardBody.classList.add('card__description_body'); //TODO language variants types
