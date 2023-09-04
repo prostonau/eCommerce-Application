@@ -67,6 +67,24 @@
   }
 }
 
+.card__img {
+  cursor: pointer;
+}
+
+.card__description_title{
+  cursor: pointer;
+}
+
+@media (max-width: 480px) {
+  .card__img {
+    width: 150px;
+    width: 150px;
+  }
+  .card {
+    width: max(30%, 290px);
+  }
+}
+
 .category__tree {
   & ul {
     list-style-type: none;
@@ -116,6 +134,12 @@
 
 .container__catalog {
   display: flex;
+}
+
+@media (max-width: 480px) {
+  .container__catalog {
+    flex-direction: column;
+  }
 }
 
 .category__title {
