@@ -1,9 +1,11 @@
 abstract class Component {
   protected container: HTMLElement;
+  protected innerText: string;
 
-  constructor(tagName: string, className: string) {
+  constructor(tagName: string, className: string, innerText = '') {
     this.container = document.createElement(tagName);
     this.container.className = className;
+    this.innerText = innerText;
   }
 
   render() {

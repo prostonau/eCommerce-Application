@@ -19,6 +19,10 @@ const Buttons = [
     text: 'Catalog',
   },
   {
+    id: PageIds.ProfilePage,
+    text: 'Profile',
+  },
+  {
     id: PageIds.LogOutPage,
     text: 'LogOut',
   },

@@ -1,9 +1,9 @@
 import AppAPI from '../../../../controller/api';
 import { PageIds } from '../../../../controller/controller';
 import Component from '../../templates/components';
-import InputBox from './input';
-import Label from './label';
-import SelectBox from './select';
+import InputBox from '../../templates/input';
+import Label from '../../templates/label';
+import SelectBox from '../../templates/select';
 import CheckBox from './checkbox';
 import { Customer } from '../../../../../types/index';
 
@@ -212,7 +212,7 @@ class Form extends Component {
     const postalValBox = document.createElement('p');
     postalValBox.classList.add('validity__block');
 
-    this.countrySelect.addOptions('Poland', 'Belarus', 'Lithuania');
+    this.countrySelect.addOptions('Country', 'Poland', 'Belarus', 'Lithuania');
     const countryLabel = new Label('label', 'form__label', 'country__input', '', 'Country');
     const countryValBox = document.createElement('p');
     countryValBox.classList.add('validity__block');

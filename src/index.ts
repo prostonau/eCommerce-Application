@@ -3,5 +3,10 @@ import './global.scss';
 
 const app = new App();
 
+// EventDelegator.addDelegatedListener('click', document.body, () => {
+//   console.log('work');
+// });
+
 //app.testAPI();
 app.start();
+//app.testProductAPI();

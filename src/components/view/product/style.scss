@@ -1,0 +1,115 @@
+.product-wrapper{
+    padding: 10px;
+}
+
+.product-name {
+    padding-top:20px;
+    color: aqua;
+}
+
+.product-name span{   
+    color: white;
+    font-size:x-large;
+    font-weight: 500;
+}
+
+.product-description{
+    padding-top:20px;
+    color:aquamarine;
+}
+
+.product-description span{   
+    color: white;
+}
+
+.product-images{
+    padding-top: 20px;
+}
+
+.product-price{
+  padding-top:20px;
+  color: rgb(230, 11, 11);
+}
+
+.product-price span{
+  color: rgb(255, 255, 255);
+}
+
+
+
+/*  Slider ----------------------------------------------------*/
+
+.swiper-container{
+  position: relative;
+    margin-top: 30px;
+    width: 100%;   
+    max-width: 800px; 
+    height: 100%; /* замените на желаемую высоту */
+    overflow: hidden;
+}
+
+.swiper {
+    width: 100%;
+    height: 100%;
+  }
+
+  .swiper-slide {
+    //margin: 100px 0px;
+    height: 100%;
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    display: flex;
+    justify-content:center;
+    align-items: center;
+  }
+
+  .swiper-slide img {
+    display: block;
+    width: 100%;
+    max-width: 600px;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .swiper-pagination-bullet {
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    font-size: 12px;
+    color: #000000;
+    opacity: 1;
+    background: rgba(141, 75, 75, 0.2);   
+  }
+
+  .swiper-pagination-bullet-active {
+    color: #fff;
+    background: #33ff00;
+  }
+
+  .swiper-button-prev,
+  .swiper-button-next {
+    // position: absolute;
+    // top: 50%;
+    //transform: translateY(-50%);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #049942;
+    padding: 5px;
+    z-index: 10;
+  }
+  
+  .swiper-button-prev {
+    left: 10px;
+  }
+  
+  .swiper-button-next {
+    right: 10px;
+  }
+
+  // ::-webkit-scrollbar {
+  //   display: none;
+  // }

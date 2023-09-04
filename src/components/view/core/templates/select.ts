@@ -1,4 +1,4 @@
-import Component from '../../templates/components';
+import Component from './components';
 
 class SelectBox extends Component {
   constructor(tagName: string, className: string, id: string = '', isRequired: boolean = false) {
@@ -21,16 +21,21 @@ class SelectBox extends Component {
     return '';
   }
 
-  addOptions(...options: string[]) {
+  addOptions(text: string, ...options: string[]) {
     const holder = document.createElement('option');
     holder.setAttribute('selected', '');
     holder.setAttribute('disabled', '');
-    holder.textContent = 'Country';
+    holder.textContent = text;
     this.container.append(holder);
     for (const val of options) {
       const option = document.createElement('option');
       option.value = val;
       option.textContent = val;
+      if (option.value === '' && text !== 'sort') {
+        option.textContent = 'Show all';
+      } else if (option.value === '' && text === 'sort') {
+        option.textContent = 'Unsorted';
+      }
       this.container.append(option);
     }
   }

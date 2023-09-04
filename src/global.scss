@@ -59,7 +59,7 @@ header h1 {
   z-index: 9999;
 }
 
-#current-page {
+.main-page, .login-page, .registration-page {
   animation: comeIn 1.5s ease-in-out;
 }
 
