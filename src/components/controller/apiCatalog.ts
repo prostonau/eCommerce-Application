@@ -1,7 +1,7 @@
 import { CategoryResponce, Category, ProductResponse } from '../../types';
 import AppAPI from './api';
 
-export class apiCatalog extends AppAPI {
+export class ApiCatalog extends AppAPI {
   barierToken: string;
   constructor() {
     super();
@@ -13,6 +13,7 @@ export class apiCatalog extends AppAPI {
   // filter=categories.id:subtree("9531655b-f962-4e88-8386-88063584cfd7")
   // filter=variants.attributes.color.key:"White","Blue"
   // ${this.apiUrl}/${this.projectKey}/product-projections/search?limit=10&offset=0&text=${encodeURIComponent(searchQuery)}
+  // ${this.apiUrl}/${this.projectKey}/product-projections/search?sort=price asc&${props}
   queryProducts(BEARER_TOKEN: string, props = ''): Promise<ProductResponse | void> {
     const options = {
       method: 'GET',

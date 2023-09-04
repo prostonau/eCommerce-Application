@@ -1,8 +1,18 @@
 export class EventDelegator {
-  private static globalClickListenerAdded = false;
-  static delegatedListeners: { event: string; selector: HTMLElement; callback: (event?: Event) => void }[] = [];
+  private static globalListenerAdded = false;
+  static delegatedListeners: {
+    event: string;
+    selector: HTMLElement;
+    callback: (event?: Event) => void;
+    include: boolean;
+  }[] = [];
 
-  static addDelegatedListener(event: string, selector: HTMLElement, callback: (event?: Event) => void) {
+  static addDelegatedListener(
+    event: string,
+    selector: HTMLElement,
+    callback: (event?: Event) => void,
+    include = false
+  ) {
     const existingListener = this.delegatedListeners.find(
       (listener) => listener.event === event && listener.selector === selector && listener.callback === callback
     );
@@ -12,6 +22,7 @@ export class EventDelegator {
         event,
         selector,
         callback,
+        include,
       };
       this.delegatedListeners.push(delegatedListener);
       this.setupGlobalClickListener();
@@ -19,17 +30,36 @@ export class EventDelegator {
   }
 
   static setupGlobalClickListener() {
-    if (this.globalClickListenerAdded) {
+    if (this.globalListenerAdded) {
       document.removeEventListener('click', this.handleGlobalClick);
+      document.removeEventListener('change', this.handleGlobalChange);
     }
 
     document.addEventListener('click', this.handleGlobalClick);
-    this.globalClickListenerAdded = true;
+    document.addEventListener('change', this.handleGlobalChange);
+    this.globalListenerAdded = true;
   }
 
   static handleGlobalClick = (event: Event) => {
     EventDelegator.delegatedListeners.forEach((listener) => {
       if (listener.event === 'click') {
+        if (!listener.include) {
+          if (event.target instanceof HTMLElement && event.target === listener.selector) {
+            listener.callback(event);
+          }
+        } else {
+          if (event.target instanceof HTMLElement && listener.selector.contains(event.target)) {
+            console.log('yes');
+            listener.callback(event);
+          }
+        }
+      }
+    });
+  };
+
+  static handleGlobalChange = (event: Event) => {
+    EventDelegator.delegatedListeners.forEach((listener) => {
+      if (listener.event === 'change') {
         if (event.target instanceof HTMLElement && event.target === listener.selector) {
           listener.callback(event);
         }
