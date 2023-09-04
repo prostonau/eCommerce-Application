@@ -39,6 +39,7 @@ class CatalogPage extends Page {
   navigation: HTMLElement;
   sorters: HTMLDivElement;
   search: HTMLDivElement;
+  hideBtn: HTMLButtonElement;
 
   constructor(id: string) {
     super(id);
@@ -66,9 +67,18 @@ class CatalogPage extends Page {
     this.search = document.createElement('div');
     this.search.classList.add('search');
 
-    this.navigation.append(this.categoryList, this.filters, this.sorters, this.search);
+    this.hideBtn = document.createElement('button');
+    this.hideBtn.classList.add('open__menu');
+    this.hideBtn.innerText = '>';
 
-    this.bodyContainer.append(this.navigation, this.productList);
+    EventDelegator.addDelegatedListener('click', this.hideBtn, () => {
+      this.navigation.classList.toggle('navigation--open');
+      this.hideBtn.classList.toggle('open__menu--open');
+    });
+
+    this.navigation.append(this.search, this.categoryList, this.filters, this.sorters);
+
+    this.bodyContainer.append(this.hideBtn, this.navigation, this.productList);
   }
 
   render() {

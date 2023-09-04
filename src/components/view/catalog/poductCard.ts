@@ -72,7 +72,7 @@ export class ProductCard {
     cardPrice.classList.add('card__description_price');
 
     cardPrice.innerHTML = this.getPrice('US'); //TODO language swith
-    if (this.getPrice('US').includes('<span>')) {
+    if (this.getPrice('US').includes('<span')) {
       cardPrice.classList.add('card__price--discounted');
     }
 
@@ -114,6 +114,8 @@ export class ProductCard {
   }
 
   getDiscount(discount: PriceValue): string {
-    return '<span>' + (discount.centAmount / 100).toString() + ' ' + discount.currencyCode + '</span>';
+    return (
+      '<span id="discounted__span">' + (discount.centAmount / 100).toString() + ' ' + discount.currencyCode + '</span>'
+    );
   }
 }
