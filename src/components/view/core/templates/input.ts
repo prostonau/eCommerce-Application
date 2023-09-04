@@ -6,13 +6,13 @@ class InputBox extends Component {
     className: string,
     type: string = 'text',
     id: string = '',
-    placeholder: string = '',
+    value: string = '',
     isRequired: boolean = false
   ) {
     super(tagName, className);
     this.container.id = id;
     if (this.container instanceof HTMLInputElement) {
-      this.container.placeholder = placeholder;
+      this.container.value = value;
       this.container.type = type;
       this.container.required = isRequired;
       this.container.autocomplete = 'true';
@@ -35,6 +35,12 @@ class InputBox extends Component {
       return this.container.value;
     }
     return '';
+  }
+
+  setValue(val: string) {
+    if (this.container instanceof HTMLInputElement) {
+      this.container.value = val;
+    }
   }
 
   setType(typeText: string) {

@@ -41,6 +41,8 @@ class Form extends Component {
   sameToggle: CheckBox;
   submitBtn: HTMLButtonElement;
   regBtn: HTMLButtonElement;
+  saveBioBtn: HTMLButtonElement;
+  cancelBioBtn: HTMLButtonElement;
   valid: boolean;
   private swithVisibilityPassword: HTMLButtonElement;
 
@@ -51,7 +53,7 @@ class Form extends Component {
     this.inputPassword = new InputBox('input', 'form__input', 'password', 'password__input', '', true);
     this.nameInput = new InputBox('input', 'form__input', 'text', 'name__input', '', true);
     this.lastNameInput = new InputBox('input', 'form__input', 'text', 'last-name__input', '', true);
-    this.birthInput = new InputBox('input', 'form__input', 'date', 'birth-date__input', 'dd/mm/yyyy', true);
+    this.birthInput = new InputBox('input', 'form__input', 'date', 'birth-date__input', '', true);
     this.streetInput = new InputBox('input', 'form__input', 'text', 'street__input', '', true);
     this.cityInput = new InputBox('input', 'form__input', 'text', 'city__input', '', true);
     this.postalInput = new InputBox('input', 'form__input', 'text', 'postal__input', '', true);
@@ -80,7 +82,27 @@ class Form extends Component {
     });
 
     this.submitBtn = document.createElement('button');
+    this.submitBtn.classList.add('form__button');
+    this.submitBtn.id = 'login';
+    this.submitBtn.type = 'submit';
+    this.submitBtn.innerHTML = 'Log in';
+
     this.regBtn = document.createElement('button');
+    this.regBtn.classList.add('form__button');
+    this.regBtn.id = 'login';
+    this.regBtn.type = 'submit';
+    this.regBtn.innerHTML = 'Register';
+
+    this.saveBioBtn = document.createElement('button');
+    this.saveBioBtn.classList.add('form__button save-bio__btn');
+    this.saveBioBtn.type = 'submit';
+    this.saveBioBtn.innerHTML = 'Save';
+
+    this.cancelBioBtn = document.createElement('button');
+    this.cancelBioBtn.classList.add('form__button cancel-bio__btn');
+    this.cancelBioBtn.type = 'submit';
+    this.cancelBioBtn.innerHTML = 'Cancel';
+
     this.valid = true;
   }
 
@@ -117,11 +139,6 @@ class Form extends Component {
     this.inputPassword.render().addEventListener('input', () => {
       this.checkValidyInput(this.inputPassword.render(), inputPasswordValBox);
     });
-
-    this.submitBtn.classList.add('form__button');
-    this.submitBtn.id = 'login';
-    this.submitBtn.type = 'submit';
-    this.submitBtn.innerHTML = 'Log in';
 
     form.append(loginField, passwordField, this.submitBtn);
 
@@ -246,11 +263,6 @@ class Form extends Component {
     sameToggleLabel.classList.add('toggle__label');
     sameToggleLabel.setAttribute('for', 'same__toggle');
     sameToggleLabel.textContent = 'Use as a billing address';
-
-    this.regBtn.classList.add('form__button');
-    this.regBtn.id = 'login';
-    this.regBtn.type = 'submit';
-    this.regBtn.innerHTML = 'Register';
 
     const personalHeader = document.createElement('h3');
     personalHeader.classList.add('field-group__header');
@@ -582,6 +594,78 @@ class Form extends Component {
       passwordField,
       this.regBtn
     );
+  }
+
+  generateUpdateFormBio(mailValue: string, firstNameValue: string, lastNameValue: string, birthValue: string) {
+    const form = this.container;
+    form.classList.add('upd__form');
+
+    const mailField = document.createElement('div');
+    mailField.classList.add('form__field', 'email__field');
+
+    const firstNameField = document.createElement('div');
+    firstNameField.classList.add('form__field', 'first-name__field');
+
+    const lastNameField = document.createElement('div');
+    lastNameField.classList.add('form__field', 'last-name__field');
+
+    const birthField = document.createElement('div');
+    birthField.classList.add('form__field', 'birth__field');
+
+    const addressField = document.createElement('div');
+    addressField.classList.add('form__field', 'address__field');
+
+    const mailLabel = new Label('label', 'form__label', 'mail__input', '', 'E-mail');
+    const mailValBox = document.createElement('p');
+    mailValBox.classList.add('validity__block');
+    this.inputLogin.setValue(mailValue);
+    this.inputLogin.render().addEventListener('input', () => {
+      this.checkValidyInput(this.inputLogin.render(), mailValBox);
+    });
+
+    const firstNameLabel = new Label('label', 'form__label', 'name__input', '', 'First Name');
+    const firstNameValBox = document.createElement('p');
+    firstNameValBox.classList.add('validity__block');
+    this.nameInput.setValue(firstNameValue);
+    this.nameInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.nameInput.render(), firstNameValBox);
+    });
+
+    const lastNameLabel = new Label('label', 'form__label', 'last-name__input', '', 'Last Name');
+    const lastNameValBox = document.createElement('p');
+    lastNameValBox.classList.add('validity__block');
+    this.lastNameInput.setValue(lastNameValue);
+    this.lastNameInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.lastNameInput.render(), lastNameValBox);
+    });
+
+    const birthLabel = new Label('label', 'form__label', 'birth-date__input', '', 'Birthdate');
+    const birthValBox = document.createElement('p');
+    birthValBox.classList.add('validity__block');
+    this.birthInput.setValue(birthValue);
+    this.birthInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.birthInput.render(), birthValBox);
+    });
+
+    this.saveBioBtn.addEventListener('click', async (ev) => {
+      ev.preventDefault();
+
+      if (
+        this.checkValidyInput(this.inputLogin.render(), mailValBox) &&
+        this.checkValidyInput(this.nameInput.render(), firstNameValBox) &&
+        this.checkValidyInput(this.lastNameInput.render(), lastNameValBox) &&
+        this.checkValidyInput(this.birthInput.render(), birthValBox)
+      ) {
+        // this.api.clientCredentialsFlow()
+      }
+    });
+
+    mailField.append(mailLabel.render(), this.inputLogin.render(), mailValBox);
+    firstNameField.append(firstNameLabel.render(), this.nameInput.render(), firstNameValBox);
+    lastNameField.append(lastNameLabel.render(), this.lastNameInput.render(), lastNameValBox);
+    birthField.append(birthLabel.render(), this.birthInput.render(), birthValBox);
+
+    form.append(mailField, firstNameField, lastNameField, birthField, this.cancelBioBtn, this.saveBioBtn);
   }
 
   render() {
