@@ -50,7 +50,12 @@ class CatalogPage extends Page {
     this.productList = document.createElement('div');
     this.productList.classList.add('catalog__list');
 
-    this.productProps = { category: '', filter: { type: '', size: '', color: '' }, sort: '', search: '' };
+    this.productProps = {
+      category: '',
+      filter: { type: '', size: '', color: '' },
+      sort: '',
+      search: '',
+    };
 
     this.navigation = document.createElement('nav');
     this.navigation.classList.add('navigation');
@@ -166,19 +171,15 @@ class CatalogPage extends Page {
   }
 
   generateFilters() {
-    const typeFilter = this.addFilterField('type__select', ['Type', '', 'Bag', 'Jewelry'], 'type');
-    const sizeFilter2 = this.addFilterField('size__select', ['Size', '', 'Small', 'Large', 'Medium'], 'size');
-    const colorFilter2 = this.addFilterField(
-      'color__select',
-      ['Color', '', 'Blue', 'White', 'Green', 'Black'],
-      'color'
-    );
+    const typeFilter = this.addFilterField('type__select', ['Type', '', 'Man', 'Woman', 'Unisex', 'Child'], 'type');
+    const sizeFilter = this.addFilterField('size__select', ['Size', '', 'S', 'L', 'M', 'XL'], 'size');
+    const colorFilter = this.addFilterField('color__select', ['Color', '', 'White', 'Black', 'Red', 'Blue'], 'color');
 
     const filterBoxTitle = document.createElement('h3');
     filterBoxTitle.classList.add('filter__box_title');
     filterBoxTitle.innerText = 'Filters';
 
-    this.filters.append(filterBoxTitle, typeFilter, sizeFilter2, colorFilter2);
+    this.filters.append(filterBoxTitle, typeFilter, sizeFilter, colorFilter);
   }
 
   addFilterField(id: string, options: string[], atrName: 'type' | 'size' | 'color'): HTMLElement {
