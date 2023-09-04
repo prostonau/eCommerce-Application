@@ -89,17 +89,19 @@ class Form extends Component {
 
     this.regBtn = document.createElement('button');
     this.regBtn.classList.add('form__button');
-    this.regBtn.id = 'login';
+    this.regBtn.id = 'register';
     this.regBtn.type = 'submit';
     this.regBtn.innerHTML = 'Register';
 
     this.saveBioBtn = document.createElement('button');
-    this.saveBioBtn.classList.add('form__button save-bio__btn');
+    this.saveBioBtn.classList.add('form__button');
+    this.saveBioBtn.id = 'save-bio';
     this.saveBioBtn.type = 'submit';
     this.saveBioBtn.innerHTML = 'Save';
 
     this.cancelBioBtn = document.createElement('button');
-    this.cancelBioBtn.classList.add('form__button cancel-bio__btn');
+    this.cancelBioBtn.classList.add('form__button');
+    this.cancelBioBtn.id = 'cancel-bio';
     this.cancelBioBtn.type = 'submit';
     this.cancelBioBtn.innerHTML = 'Cancel';
 
@@ -414,7 +416,12 @@ class Form extends Component {
                     },
                   ];
 
-                  const answer1 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions1);
+                  const answer1 = await this.api.updateCustomer(
+                    response.access_token,
+                    userInfo.customer.id,
+                    userInfo.customer.version,
+                    actions1
+                  );
                   userInfo.customer.version++;
                   console.log('answer1 = ', answer1);
                   const copy1 = { ...answer1 };
@@ -429,7 +436,12 @@ class Form extends Component {
                     },
                   ];
 
-                  const answer2 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions2);
+                  const answer2 = await this.api.updateCustomer(
+                    response.access_token,
+                    userInfo.customer.id,
+                    userInfo.customer.version,
+                    actions2
+                  );
                   userInfo.customer.version++;
                   console.log('answer2 = ', answer2);
 
@@ -440,7 +452,12 @@ class Form extends Component {
                       addressId: shippingAddressId,
                     },
                   ];
-                  const answer3 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions3);
+                  const answer3 = await this.api.updateCustomer(
+                    response.access_token,
+                    userInfo.customer.id,
+                    userInfo.customer.version,
+                    actions3
+                  );
                   userInfo.customer.version++;
                   console.log('answer3 = ', answer3);
 
@@ -452,7 +469,12 @@ class Form extends Component {
                         addressId: shippingAddressId,
                       },
                     ];
-                    const answer4 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions4);
+                    const answer4 = await this.api.updateCustomer(
+                      response.access_token,
+                      userInfo.customer.id,
+                      userInfo.customer.version,
+                      actions4
+                    );
                     userInfo.customer.version++;
                     console.log('answer4 = ', answer4);
                   }
@@ -467,7 +489,8 @@ class Form extends Component {
                     ];
                     const answer5_1 = await this.api.updateCustomer(
                       response.access_token,
-                      userInfo.customer,
+                      userInfo.customer.id,
+                      userInfo.customer.version,
                       actions5_1
                     );
                     userInfo.customer.version++;
@@ -483,7 +506,8 @@ class Form extends Component {
                       ];
                       const answer5_2 = await this.api.updateCustomer(
                         response.access_token,
-                        userInfo.customer,
+                        userInfo.customer.id,
+                        userInfo.customer.version,
                         actions5_2
                       );
                       userInfo.customer.version++;
@@ -503,7 +527,12 @@ class Form extends Component {
                       },
                     ];
 
-                    const answer6 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions6);
+                    const answer6 = await this.api.updateCustomer(
+                      response.access_token,
+                      userInfo.customer.id,
+                      userInfo.customer.version,
+                      actions6
+                    );
                     userInfo.customer.version++;
                     console.log('answer6 = ', answer6);
                     const copy6 = { ...answer6 };
@@ -518,7 +547,12 @@ class Form extends Component {
                       },
                     ];
 
-                    const answer7 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions7);
+                    const answer7 = await this.api.updateCustomer(
+                      response.access_token,
+                      userInfo.customer.id,
+                      userInfo.customer.version,
+                      actions7
+                    );
                     userInfo.customer.version++;
                     console.log('answer7 = ', answer7);
 
@@ -530,7 +564,12 @@ class Form extends Component {
                           addressId: billingAddressId,
                         },
                       ];
-                      const answer8 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions8);
+                      const answer8 = await this.api.updateCustomer(
+                        response.access_token,
+                        userInfo.customer.id,
+                        userInfo.customer.version,
+                        actions8
+                      );
                       userInfo.customer.version++;
                       console.log('answer8 = ', answer8);
                     }
@@ -596,7 +635,13 @@ class Form extends Component {
     );
   }
 
-  generateUpdateFormBio(mailValue: string, firstNameValue: string, lastNameValue: string, birthValue: string) {
+  generateUpdateFormBio(
+    userId: string,
+    mailValue: string,
+    firstNameValue: string,
+    lastNameValue: string,
+    birthValue: string
+  ) {
     const form = this.container;
     form.classList.add('upd__form');
 
@@ -649,14 +694,53 @@ class Form extends Component {
 
     this.saveBioBtn.addEventListener('click', async (ev) => {
       ev.preventDefault();
-
+      this.checkValidyInput(this.inputLogin.render(), mailValBox);
+      this.checkValidyInput(this.nameInput.render(), firstNameValBox);
+      this.checkValidyInput(this.lastNameInput.render(), lastNameValBox);
+      this.checkValidyInput(this.birthInput.render(), birthValBox);
       if (
         this.checkValidyInput(this.inputLogin.render(), mailValBox) &&
         this.checkValidyInput(this.nameInput.render(), firstNameValBox) &&
         this.checkValidyInput(this.lastNameInput.render(), lastNameValBox) &&
         this.checkValidyInput(this.birthInput.render(), birthValBox)
       ) {
-        // this.api.clientCredentialsFlow()
+        this.api.clientCredentialsFlow().then((response) => {
+          this.api.getCustomer(userId, response.access_token).then(async (userInfo) => {
+            if (userInfo.id) {
+              const actions = [
+                {
+                  action: 'changeEmail',
+                  email: (this.inputLogin.render() as HTMLInputElement).value,
+                },
+                {
+                  action: 'setFirstName',
+                  firstName: (this.nameInput.render() as HTMLInputElement).value,
+                },
+                {
+                  action: 'setLastName',
+                  lastName: (this.lastNameInput.render() as HTMLInputElement).value,
+                },
+                {
+                  action: 'setDateOfBirth',
+                  dateOfBirth: (this.birthInput.render() as HTMLInputElement).value,
+                },
+              ];
+
+              const answer = await this.api.updateCustomer(
+                response.access_token,
+                userInfo.id,
+                userInfo.version,
+                actions
+              );
+              userInfo.version++;
+              console.log('answer1 = ', answer);
+              const copy1 = { ...answer };
+              const shippingAddressId = copy1.addresses.pop().id;
+              console.log('= ', shippingAddressId);
+            }
+            this.showNotification('User data updated.');
+          });
+        });
       }
     });
 

@@ -188,11 +188,11 @@ class AppAPI {
 
   // https://docs.commercetools.com/api/projects/customers#update-customer-by-id
   // https://docs.commercetools.com/api/projects/customers#update-actions
-  updateCustomer = async (BEARER_TOKEN: string, customer: Customer, actions: Actions[]) => {
+  updateCustomer = async (BEARER_TOKEN: string, customerId: string, customerVer: number, actions: Actions[]) => {
     // Создаем объект с настройками для запроса
-    const id = customer.id;
-    const version = customer.version ? customer.version : 1;
-    console.log('получаем это = ', customer);
+    const id = customerId;
+    const version = customerVer ? customerVer : 1;
+    // console.log('получаем это = ', customer);
     console.log(actions);
 
     const data = {

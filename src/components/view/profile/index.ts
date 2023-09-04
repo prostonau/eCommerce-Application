@@ -1,6 +1,7 @@
 import './style.scss';
 import Page from '../core/templates/page';
 import AppAPI from '../../controller/api';
+import Form from '../core/components/form';
 import { CustomerAddress } from '../../../types';
 
 class ProfilePage extends Page {
@@ -10,6 +11,7 @@ class ProfilePage extends Page {
 
   userId: string;
   API: AppAPI;
+  email: string;
   firstName: string;
   lastName: string;
   birthDate: string;
@@ -19,6 +21,7 @@ class ProfilePage extends Page {
     super(id);
     this.userId = userId;
     this.API = new AppAPI();
+    this.email = '';
     this.firstName = '';
     this.lastName = '';
     this.birthDate = '';
@@ -29,6 +32,7 @@ class ProfilePage extends Page {
     await this.API.clientCredentialsFlow().then(async (response) => {
       await this.API.getCustomer(userId, response.access_token).then((response) => {
         console.log('Content response = ', response);
+        this.email = response.email;
         this.firstName = response.firstName;
         this.lastName = response.lastName;
         this.birthDate = response.dateOfBirth;
@@ -94,7 +98,9 @@ class ProfilePage extends Page {
         if (this.addresses[1]) {
           wrapper.append(this.createAddresses(1));
         }
-        this.container.append(title, wrapper);
+        const updForm = new Form('form', 'form__container');
+        updForm.generateUpdateFormBio(this.userId, this.email, this.firstName, this.lastName, this.birthDate);
+        this.container.append(title, wrapper, updForm.render());
       })
       .catch((error) => {
         console.error(error);
