@@ -1,6 +1,6 @@
 import './style.scss';
 import Page from '../core/templates/page';
-import { apiCatalog } from '../../controller/apiCatalog';
+import { ApiCatalog } from '../../controller/apiCatalog';
 import { Category, Product, ProductProps, ProductResponse } from '../../../types';
 import { ProductCard } from './poductCard';
 import { EventDelegator } from '../../features/eventDelegator';
@@ -29,7 +29,7 @@ class CatalogPage extends Page {
   static TextObject = {
     CatalogTitle: 'Catalog page',
   };
-  api: apiCatalog;
+  api: ApiCatalog;
   token: string;
   bodyContainer: HTMLElement;
   productList: HTMLDivElement;
@@ -39,11 +39,12 @@ class CatalogPage extends Page {
   navigation: HTMLElement;
   sorters: HTMLDivElement;
   search: HTMLDivElement;
+  hideBtn: HTMLButtonElement;
 
   constructor(id: string) {
     super(id);
-    this.api = new apiCatalog();
-    this.token = localStorage.getItem('token') || '';
+    this.api = new ApiCatalog();
+    this.token = localStorage.getItem('token') || localStorage.getItem('guestToken') || '';
     this.bodyContainer = document.createElement('section');
     this.bodyContainer.classList.add('container__catalog');
     this.productList = document.createElement('div');
@@ -66,9 +67,18 @@ class CatalogPage extends Page {
     this.search = document.createElement('div');
     this.search.classList.add('search');
 
-    this.navigation.append(this.categoryList, this.filters, this.sorters, this.search);
+    this.hideBtn = document.createElement('button');
+    this.hideBtn.classList.add('open__menu');
+    this.hideBtn.innerText = '>';
 
-    this.bodyContainer.append(this.navigation, this.productList);
+    EventDelegator.addDelegatedListener('click', this.hideBtn, () => {
+      this.navigation.classList.toggle('navigation--open');
+      this.hideBtn.classList.toggle('open__menu--open');
+    });
+
+    this.navigation.append(this.search, this.categoryList, this.filters, this.sorters);
+
+    this.bodyContainer.append(this.hideBtn, this.navigation, this.productList);
   }
 
   render() {
@@ -197,6 +207,9 @@ class CatalogPage extends Page {
     sortTitle.classList.add('sort__title');
     sortTitle.innerText = 'Sorting';
 
+    const sortBox = document.createElement('div');
+    sortBox.classList.add('sort__box');
+
     const typeSort = new SelectBox('select', 'sort__input', '', false);
     typeSort.addOptions('sort', '', 'name', 'price asc', 'price desc');
 
@@ -210,7 +223,9 @@ class CatalogPage extends Page {
     const typeSortLabel = new Label('label', 'sort__label', '');
     typeSortLabel.render().innerText = `Sort by:`;
 
-    this.sorters.append(sortTitle, typeSortLabel.render(), typeSort.render());
+    sortBox.append(typeSortLabel.render(), typeSort.render());
+
+    this.sorters.append(sortTitle, sortBox);
   }
 
   addSearchField() {
@@ -219,7 +234,7 @@ class CatalogPage extends Page {
 
     const searchTitle = document.createElement('h3');
     searchTitle.innerHTML = 'Search';
-    searchTitle.classList.add('category__title');
+    searchTitle.classList.add('search__title');
 
     const searchField = new InputBox('input', 'search__field', 'text', '', 'Search', false);
 

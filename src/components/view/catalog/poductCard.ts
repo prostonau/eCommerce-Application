@@ -2,12 +2,13 @@ import { PriceValue, Product, ValueResp } from '../../../types';
 import Label from '../core/templates/label';
 
 export class ProductCard {
-  container: HTMLDivElement;
+  container: HTMLAnchorElement;
   product: Product;
 
   constructor(product: Product) {
     this.product = product;
-    this.container = document.createElement('div');
+    this.container = document.createElement('a');
+    this.container.href = `#product/${this.product.id}`;
     this.container.classList.add('card');
   }
 
@@ -71,7 +72,7 @@ export class ProductCard {
     cardPrice.classList.add('card__description_price');
 
     cardPrice.innerHTML = this.getPrice('US'); //TODO language swith
-    if (this.getPrice('US').includes('<span>')) {
+    if (this.getPrice('US').includes('<span')) {
       cardPrice.classList.add('card__price--discounted');
     }
 
@@ -113,6 +114,8 @@ export class ProductCard {
   }
 
   getDiscount(discount: PriceValue): string {
-    return '<span>' + (discount.centAmount / 100).toString() + ' ' + discount.currencyCode + '</span>';
+    return (
+      '<span id="discounted__span">' + (discount.centAmount / 100).toString() + ' ' + discount.currencyCode + '</span>'
+    );
   }
 }

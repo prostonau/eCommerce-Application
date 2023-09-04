@@ -7,6 +7,6 @@ const app = new App();
 //   console.log('work');
 // });
 
-app.testAPI();
+//app.testAPI();
 app.start();
 //app.testProductAPI();

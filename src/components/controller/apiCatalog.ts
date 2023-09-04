@@ -1,7 +1,7 @@
 import { CategoryResponce, Category, ProductResponse } from '../../types';
 import AppAPI from './api';
 
-export class apiCatalog extends AppAPI {
+export class ApiCatalog extends AppAPI {
   barierToken: string;
   constructor() {
     super();
