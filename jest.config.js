@@ -1,4 +1,6 @@
 module.exports = {
-    preset: 'ts-jest',
-    testEnvironment: 'jsdom',
+  preset: 'ts-jest',
+  testEnvironment: 'jsdom',
+  collectCoverage: true,
+  coverageReporters: ['lcov', 'text'],
 };

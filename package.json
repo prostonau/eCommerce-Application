@@ -7,7 +7,7 @@
     "start": "webpack serve --open --config ./webpack.config.js --env mode=dev",
     "build": "webpack --config ./webpack.config.js --env mode=prod",
     "lint": "eslint . --ext .ts",
-    "test": "jest",
+    "test": "nyc --reporter=lcov --reporter=html jest",
     "format": "prettier --write \"src/**/*.{js,ts}\"",
     "prepare": "husky install"
   },
@@ -39,6 +39,7 @@
     "jest": "^29.6.2",
     "jest-environment-jsdom": "^29.6.2",
     "jsdom": "^22.1.0",
+    "nyc": "^15.1.0",
     "prettier": "3.0.0",
     "sass-loader": "^13.3.2",
     "sass-resources-loader": "^2.2.5",

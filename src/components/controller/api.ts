@@ -149,12 +149,12 @@ class AppAPI {
     return new Promise<boolean>((resolve) => {
       this.clientCredentialsFlow().then(async (response) => {
         const allCustomers = await this.getAllCustomers(response.access_token);
-        console.log('allCustomers = ', allCustomers);
-        console.log('email = ', email);
-        console.log(
-          'allCustomers.results.filter((e: Customer) => e.email === email).length = ',
-          allCustomers.results.filter((e: Customer) => e.email === email).length
-        );
+        // console.log('allCustomers = ', allCustomers);
+        // console.log('email = ', email);
+        // console.log(
+        //   'allCustomers.results.filter((e: Customer) => e.email === email).length = ',
+        //   allCustomers.results.filter((e: Customer) => e.email === email).length
+        // );
         if (allCustomers.results.filter((e: Customer) => e.email === email).length > 0) {
           resolve(false);
         } else {
