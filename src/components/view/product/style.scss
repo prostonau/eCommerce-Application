@@ -44,6 +44,7 @@
     margin-top: 30px;
     width: 100%;
     height: 300px; /* замените на желаемую высоту */
+    overflow: hidden;
 }
 
 .swiper {
@@ -77,7 +78,7 @@
     font-size: 12px;
     color: #000000;
     opacity: 1;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.2);   
   }
 
   .swiper-pagination-bullet-active {
@@ -106,12 +107,7 @@
   .swiper-button-next {
     right: 10px;
   }
-  
 
-
-
-
-
-  ::-webkit-scrollbar {
-    display: none;
-  }
+  // ::-webkit-scrollbar {
+  //   display: none;
+  // }

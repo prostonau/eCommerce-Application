@@ -36,6 +36,14 @@ class AppController {
 
   getProductId = (idPage: string): string => idPage.split('product/')[1];
 
+  getUserId() {
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      const userDataObj = JSON.parse(userData);
+      return userDataObj.scope.split(' customer_id:')[1];
+    }
+  }
+
   renderPageContent(idPage: string) {
     const currentPageHTML = document.querySelector(`#${this.defaultPageId}`);
     if (currentPageHTML) {
@@ -67,7 +75,7 @@ class AppController {
     } else if (idPage.includes(PageIds.ProductPage)) {
       page = new ProductPage(PageIds.ProductPage, this.getProductId(idPage));
     } else if (idPage === PageIds.ProfilePage) {
-      page = new ProfilePage(PageIds.ProfilePage);
+      page = new ProfilePage(PageIds.ProfilePage, this.getUserId());
     } else {
       page = new ErrorPage(idPage, errorTypes.Error_404);
     }
