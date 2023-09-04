@@ -2,7 +2,7 @@ import AppController from '../controller/controller';
 import AppAPI from '../controller/api';
 import AppProductAPI from '../controller/apiProduct';
 import { AppView } from '../view/appView';
-import { apiCatalog } from '../controller/apiCatalog';
+import { ApiCatalog } from '../controller/apiCatalog';
 
 class App {
   controller: AppController;
@@ -10,14 +10,14 @@ class App {
   ProductAPI: AppProductAPI;
   view: AppView;
   container: HTMLElement;
-  APICatalog: apiCatalog;
+  APICatalog: ApiCatalog;
 
   constructor() {
     this.controller = new AppController();
     this.API = new AppAPI();
     this.ProductAPI = new AppProductAPI();
     this.view = new AppView();
-    this.APICatalog = new apiCatalog();
+    this.APICatalog = new ApiCatalog();
     this.container = document.body;
   }
 
@@ -50,6 +50,7 @@ class App {
       `${window.location.hash.slice(1).length > 0 ? window.location.hash.slice(1) : 'main-page'}`
     );
     // this.controller.header.renderLogoutMenu();
+    this.testUserToken();
     this.controller.header.renderDefaultMenu();
   }
 
@@ -69,6 +70,17 @@ class App {
     }
 
     //this.API.passwordFlow('johndo13e@example.com', 'secret123');
+  }
+
+  async testUserToken() {
+    if (localStorage.getItem('token')) {
+      console.log('token');
+    } else if (localStorage.getItem('guestToken')) {
+      console.log('guestToken');
+    } else {
+      const data = await this.API.clientCredentialsFlow();
+      localStorage.setItem('guestToken', data.access_token);
+    }
   }
 
   public testProductAPI(): void {

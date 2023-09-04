@@ -1,6 +1,6 @@
 import './style.scss';
 import Page from '../core/templates/page';
-import { apiCatalog } from '../../controller/apiCatalog';
+import { ApiCatalog } from '../../controller/apiCatalog';
 import { Category, Product, ProductProps, ProductResponse } from '../../../types';
 import { ProductCard } from './poductCard';
 import { EventDelegator } from '../../features/eventDelegator';
@@ -29,7 +29,7 @@ class CatalogPage extends Page {
   static TextObject = {
     CatalogTitle: 'Catalog page',
   };
-  api: apiCatalog;
+  api: ApiCatalog;
   token: string;
   bodyContainer: HTMLElement;
   productList: HTMLDivElement;
@@ -42,8 +42,8 @@ class CatalogPage extends Page {
 
   constructor(id: string) {
     super(id);
-    this.api = new apiCatalog();
-    this.token = localStorage.getItem('token') || '';
+    this.api = new ApiCatalog();
+    this.token = localStorage.getItem('token') || localStorage.getItem('guestToken') || '';
     this.bodyContainer = document.createElement('section');
     this.bodyContainer.classList.add('container__catalog');
     this.productList = document.createElement('div');
@@ -197,6 +197,9 @@ class CatalogPage extends Page {
     sortTitle.classList.add('sort__title');
     sortTitle.innerText = 'Sorting';
 
+    const sortBox = document.createElement('div');
+    sortBox.classList.add('sort__box');
+
     const typeSort = new SelectBox('select', 'sort__input', '', false);
     typeSort.addOptions('sort', '', 'name', 'price asc', 'price desc');
 
@@ -210,7 +213,9 @@ class CatalogPage extends Page {
     const typeSortLabel = new Label('label', 'sort__label', '');
     typeSortLabel.render().innerText = `Sort by:`;
 
-    this.sorters.append(sortTitle, typeSortLabel.render(), typeSort.render());
+    sortBox.append(typeSortLabel.render(), typeSort.render());
+
+    this.sorters.append(sortTitle, sortBox);
   }
 
   addSearchField() {
@@ -219,7 +224,7 @@ class CatalogPage extends Page {
 
     const searchTitle = document.createElement('h3');
     searchTitle.innerHTML = 'Search';
-    searchTitle.classList.add('category__title');
+    searchTitle.classList.add('search__title');
 
     const searchField = new InputBox('input', 'search__field', 'text', '', 'Search', false);
 
