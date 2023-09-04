@@ -1,3 +1,4 @@
+import { createQueryFromProps } from '../components/features/createQueryFromProps';
 import Form, { checkValidyInputEmail, checkValidyInputPassword } from '../components/view/core/components/form';
 import InputBox from '../components/view/core/templates/input';
 import Label from '../components/view/core/templates/label';
@@ -32,6 +33,19 @@ describe('testing label element functionality', () => {
   });
 });
 
+describe('testing props converter', () => {
+  it('Should return correct query string', () => {
+    expect(
+      createQueryFromProps({
+        category: 'aa',
+        filter: { type: 'ddd', size: 'dd', color: 'dd' },
+        sort: 'dsd',
+        search: '55',
+      })
+    ).toEqual('aa&ddd&dd&dd&dsd&55');
+  });
+});
+
 describe('testing form functionality', () => {
   const form = new Form('form', 'form__container');
   const labelTest = new Label('label', 'form__label', 'login__input', '', 'E-mail');
@@ -39,6 +53,8 @@ describe('testing form functionality', () => {
 
   it('Should return form HTMLelement', () => {
     expect(form.render()).toBeInstanceOf(HTMLFormElement);
+    expect(form.generateLoginForm()).toBeUndefined();
+    expect(form.generateRegistrationForm()).toBeUndefined();
   });
 
   it('should return validity check', () => {
