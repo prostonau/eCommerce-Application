@@ -171,7 +171,7 @@ class CatalogPage extends Page {
   }
 
   generateFilters() {
-    const typeFilter = this.addFilterField('type__select', ['Type', '', 'Man', 'Woman', 'Unisex', 'Child'], 'type');
+    const typeFilter = this.addFilterField('type__select', ['Type', '', 'Men', 'Women', 'Unisex', 'Child'], 'type');
     const sizeFilter = this.addFilterField('size__select', ['Size', '', 'S', 'L', 'M', 'XL'], 'size');
     const colorFilter = this.addFilterField('color__select', ['Color', '', 'White', 'Black', 'Red', 'Blue'], 'color');
 
