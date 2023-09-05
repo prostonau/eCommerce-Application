@@ -40,7 +40,7 @@ class AppProductAPI extends AppAPI {
     return fetch(`${this.apiUrl}/${this.projectKey}/products/${id}`, options)
       .then((response) => response.json())
       .then((data) => {
-        // console.log(`getProduct with id = '${id} |`, data);
+        console.log(`getProduct with id = '${id} |`, data);
         // console.log('img = ', data.masterData.staged.masterVariant.images);
         return data;
       })
