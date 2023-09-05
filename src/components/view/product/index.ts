@@ -21,6 +21,7 @@ class ProductPage extends Page {
   description: string;
   images: Array<ImageData>;
   price: string;
+  discountPrice: string;
   currency: string;
   myModalSwiper: Swiper | null;
 
@@ -32,6 +33,7 @@ class ProductPage extends Page {
     this.description = '';
     this.images = [];
     this.price = '';
+    this.discountPrice = '';
     this.currency = '';
     this.myModalSwiper = null;
   }
@@ -50,6 +52,18 @@ class ProductPage extends Page {
         }
         this.images = response.masterData.staged.masterVariant.images;
         this.price = response.masterData.staged.masterVariant.prices[0].value.centAmount;
+        if (
+          response.masterData.staged.masterVariant.prices[0] &&
+          response.masterData.staged.masterVariant.prices[0].discounted &&
+          response.masterData.staged.masterVariant.prices[0].discounted.value &&
+          response.masterData.staged.masterVariant.prices[0].discounted.value.centAmount
+        ) {
+          this.discountPrice = response.masterData.staged.masterVariant.prices[0].discounted.value.centAmount;
+          this.discountPrice = (Number(this.discountPrice) / 100).toFixed(2);
+        } else {
+          this.description = '';
+        }
+
         // console.log(
         //   'response.masterData.staged.masterVariant.prices[0].value.centAmount = ',
         //   response.masterData.staged.masterVariant.prices[0].value.centAmount
@@ -83,10 +97,21 @@ class ProductPage extends Page {
   createProductPrice = () => {
     const productPrice = document.createElement('div');
     productPrice.classList.add('product-price');
-    productPrice.innerHTML = `<span>Price:</span> ${Number(this.price).toLocaleString('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    })} ${this.currency}`;
+    // ${Number(this.discountPrice)}
+    if (this.discountPrice === '') {
+      productPrice.innerHTML = `<span> Price:</span> ${Number(this.price).toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      })} ${this.currency}`;
+    } else {
+      productPrice.innerHTML = `<span> Price:</span> ${Number(this.discountPrice).toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      })} <span class="zacherknuto">${Number(this.price).toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      })} </span> ${this.currency}`;
+    }
     return productPrice;
   };
 

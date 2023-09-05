@@ -91,7 +91,7 @@ class App {
     this.ProductAPI.clientCredentialsFlow().then((response) => {
       console.log('response = ', response);
       this.ProductAPI.getAllProducts(response.access_token);
-      this.ProductAPI.getProduct(response.access_token, 'f4ca85a9-1d56-451b-a735-548b94582537');
+      this.ProductAPI.getProduct(response.access_token, 'fbf119fb-303b-4ba3-8724-e9ea6873ec07');
       // this.API.getCustomer('39fd2612-1d14-4484-b6ac-1f4631a22f91', response.access_token);
       // this.API.getAllCustomers(response.access_token);
       // this.API.updateCustomer(response.access_token);
