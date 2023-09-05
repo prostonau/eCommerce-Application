@@ -36,7 +36,7 @@ class Header extends Component {
   renderPageButtons() {
     const pageButtons = document.createElement('div');
     Buttons.forEach((button) => {
-      if (button.id !== 'logout-page') {
+      if (button.id !== 'logout-page' && button.id !== 'profile') {
         const buttonHTML = document.createElement('a');
         buttonHTML.href = `#${button.id}`;
         buttonHTML.innerHTML = button.text;
@@ -50,14 +50,16 @@ class Header extends Component {
   renderPageButtonsForMainPage() {
     const pageButtons = document.createElement('div');
     Buttons.forEach((button) => {
-      if (button.id !== 'logout-page') {
-        const div = document.createElement('div');
-        const buttonHTML = document.createElement('a');
-        buttonHTML.href = `#${button.id}`;
-        buttonHTML.innerHTML = button.text;
-        div.append(buttonHTML);
-        pageButtons.append(div);
-        //console.log('pageButtons = ', pageButtons);
+      if (button.id !== PageIds.LogOutPage) {
+        if (button.id !== PageIds.ProfilePage) {
+          const div = document.createElement('div');
+          const buttonHTML = document.createElement('a');
+          buttonHTML.href = `#${button.id}`;
+          buttonHTML.innerHTML = button.text;
+          div.append(buttonHTML);
+          pageButtons.append(div);
+          //console.log('pageButtons = ', pageButtons);
+        }
       }
     });
     return pageButtons;
