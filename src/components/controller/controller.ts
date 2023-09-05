@@ -75,7 +75,11 @@ class AppController {
     } else if (idPage.includes(PageIds.ProductPage)) {
       page = new ProductPage(PageIds.ProductPage, this.getProductId(idPage));
     } else if (idPage === PageIds.ProfilePage) {
-      page = new ProfilePage(PageIds.ProfilePage, this.getUserId());
+      if (!localStorage.getItem('token')) {
+        page = new ProfilePage(PageIds.ProfilePage, this.getUserId());
+      } else {
+        window.location.hash = PageIds.MainPage;
+      }
     } else {
       page = new ErrorPage(idPage, errorTypes.Error_404);
     }
