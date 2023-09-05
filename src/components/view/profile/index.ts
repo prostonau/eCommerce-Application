@@ -98,9 +98,11 @@ class ProfilePage extends Page {
         if (this.addresses[1]) {
           wrapper.append(this.createAddresses(1));
         }
-        const updForm = new Form('form', 'form__container');
-        updForm.generateUpdateFormBio(this.userId, this.email, this.firstName, this.lastName, this.birthDate);
-        this.container.append(title, wrapper, updForm.render());
+        const updFormBio = new Form('form', 'form__container');
+        updFormBio.generateUpdateFormBio(this.userId, this.email, this.firstName, this.lastName, this.birthDate);
+        const updFormPassword = new Form('form', 'form__container');
+        updFormPassword.generateUpdateFormPassword(this.userId);
+        this.container.append(title, wrapper, updFormBio.render(), updFormPassword.render());
       })
       .catch((error) => {
         console.error(error);
