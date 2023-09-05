@@ -9,4 +9,4 @@ const app = new App();
 
 //app.testAPI();
 app.start();
-//app.testProductAPI();
+app.testProductAPI();

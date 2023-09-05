@@ -66,7 +66,12 @@ class Header extends Component {
   renderPageButtonsForLogOutMenu() {
     const pageButtons = document.createElement('div');
     Buttons.forEach((button) => {
-      if (button.id === 'main-page' || button.id === 'logout-page') {
+      if (
+        button.id === PageIds.CatalogPage ||
+        button.id === 'main-page' ||
+        button.id === 'logout-page' ||
+        button.id === PageIds.ProfilePage
+      ) {
         const buttonHTML = document.createElement('a');
         buttonHTML.href = `#${button.id}`;
         buttonHTML.innerHTML = button.text;
