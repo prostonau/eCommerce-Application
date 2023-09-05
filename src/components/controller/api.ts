@@ -219,6 +219,40 @@ class AppAPI {
       .catch((error) => console.error(error));
   };
 
+  // https://docs.commercetools.com/api/projects/customers#change-password-of-customer
+  changePassword = async (
+    BEARER_TOKEN: string,
+    customerId: string,
+    customerVer: number,
+    currPassword: string,
+    newPassword: string
+  ) => {
+    const version = customerVer ? customerVer : 1;
+
+    const data = {
+      id: customerId,
+      version: version,
+      currentPassword: currPassword,
+      newPassword: newPassword,
+    };
+
+    const options = {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${BEARER_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+
+    return fetch(`${this.apiUrl}/${this.projectKey}/customers/${customerId}`, options)
+      .then((response) => response.json())
+      .then((data) => {
+        return data;
+      })
+      .catch((error) => console.error(error));
+  };
+
   // //https://docs.commercetools.com/api/projects/customers#email-verification-of-customer
   // createEmailTokenForCustomer = (email: string, BEARER_TOKEN: string) => {
   //   // Создаем объект с настройками для запроса
