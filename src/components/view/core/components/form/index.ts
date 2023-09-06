@@ -31,6 +31,7 @@ class Form extends Component {
   regBtn: HTMLButtonElement;
   saveBtn: HTMLButtonElement;
   cancelBtn: HTMLButtonElement;
+  editBtn: HTMLButtonElement;
   valid: boolean;
   switchVisibilityPassword: Eye;
   switchVisibilityPasswordCurrent: Eye;
@@ -73,14 +74,18 @@ class Form extends Component {
     this.regBtn.innerHTML = 'Register';
 
     this.saveBtn = document.createElement('button');
-    this.saveBtn.classList.add('form__button');
+    this.saveBtn.classList.add('form__button', 'save__button');
     this.saveBtn.type = 'submit';
     this.saveBtn.innerHTML = 'Save';
 
     this.cancelBtn = document.createElement('button');
-    this.cancelBtn.classList.add('form__button');
+    this.cancelBtn.classList.add('form__button', 'cancel__button');
     this.cancelBtn.type = 'submit';
     this.cancelBtn.innerHTML = 'Cancel';
+
+    this.editBtn = document.createElement('button');
+    this.editBtn.classList.add('form__button', 'edit__button');
+    this.editBtn.innerHTML = 'Edit';
 
     this.valid = true;
   }
@@ -635,6 +640,7 @@ class Form extends Component {
     const mailLabel = new Label('label', 'form__label', 'mail__input', '', 'E-mail');
     const mailValBox = document.createElement('p');
     mailValBox.classList.add('validity__block');
+    this.inputLogin.disabled();
     this.inputLogin.setValue(mailValue);
     this.inputLogin.render().addEventListener('input', () => {
       this.checkValidyInput(this.inputLogin.render(), mailValBox);
@@ -643,6 +649,7 @@ class Form extends Component {
     const firstNameLabel = new Label('label', 'form__label', 'name__input', '', 'First Name');
     const firstNameValBox = document.createElement('p');
     firstNameValBox.classList.add('validity__block');
+    this.nameInput.disabled();
     this.nameInput.setValue(firstNameValue);
     this.nameInput.render().addEventListener('input', () => {
       this.checkValidyInput(this.nameInput.render(), firstNameValBox);
@@ -651,6 +658,7 @@ class Form extends Component {
     const lastNameLabel = new Label('label', 'form__label', 'last-name__input', '', 'Last Name');
     const lastNameValBox = document.createElement('p');
     lastNameValBox.classList.add('validity__block');
+    this.lastNameInput.disabled();
     this.lastNameInput.setValue(lastNameValue);
     this.lastNameInput.render().addEventListener('input', () => {
       this.checkValidyInput(this.lastNameInput.render(), lastNameValBox);
@@ -659,9 +667,33 @@ class Form extends Component {
     const birthLabel = new Label('label', 'form__label', 'birth-date__input', '', 'Birthdate');
     const birthValBox = document.createElement('p');
     birthValBox.classList.add('validity__block');
+    this.birthInput.disabled();
     this.birthInput.setValue(birthValue);
     this.birthInput.render().addEventListener('input', () => {
       this.checkValidyInput(this.birthInput.render(), birthValBox);
+    });
+
+    this.saveBtn.classList.add('hidden');
+    this.cancelBtn.classList.add('hidden');
+
+    this.editBtn.addEventListener('click', () => {
+      this.cancelBtn.classList.remove('hidden');
+      this.saveBtn.classList.remove('hidden');
+      this.editBtn.classList.add('hidden');
+      this.birthInput.enabled();
+      this.lastNameInput.enabled();
+      this.nameInput.enabled();
+      this.inputLogin.enabled();
+    });
+
+    this.cancelBtn.addEventListener('click', () => {
+      this.cancelBtn.classList.add('hidden');
+      this.saveBtn.classList.add('hidden');
+      this.editBtn.classList.remove('hidden');
+      this.birthInput.disabled();
+      this.lastNameInput.disabled();
+      this.nameInput.disabled();
+      this.inputLogin.disabled();
     });
 
     this.saveBtn.addEventListener('click', async (ev) => {
@@ -712,7 +744,7 @@ class Form extends Component {
     lastNameField.append(lastNameLabel.render(), this.lastNameInput.render(), lastNameValBox);
     birthField.append(birthLabel.render(), this.birthInput.render(), birthValBox);
 
-    form.append(mailField, firstNameField, lastNameField, birthField, this.cancelBtn, this.saveBtn);
+    form.append(mailField, firstNameField, lastNameField, birthField, this.cancelBtn, this.saveBtn, this.editBtn);
   }
 
   generateUpdateFormPassword(userId: string) {
@@ -766,7 +798,6 @@ class Form extends Component {
         this.api.clientCredentialsFlow().then((response) => {
           this.api.getCustomer(userId, response.access_token).then(async (userInfo) => {
             this.api.passwordFlow(userInfo.email, currPass).then(async (data) => {
-              console.log('passwResp = ', data);
               if (typeof data === 'object' && data !== null && 'statusCode' in data) {
                 this.showNotification('Wrong current password. Try again.');
               }
@@ -783,6 +814,11 @@ class Form extends Component {
     });
 
     form.append(oldPasswordField, newPasswordField, this.cancelBtn, this.saveBtn);
+  }
+
+  generateUpdateFormAddresses() {
+    const form = this.container;
+    form.classList.add('upd__form');
   }
 
   render() {

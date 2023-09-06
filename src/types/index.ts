@@ -173,36 +173,6 @@ export type ProductProps = {
   [key: string]: string | Record<string, string>;
 };
 
-// export interface WinnerData {
-//   id: number;
-//   wins: number;
-//   time: number;
-// }
-
-// export interface settingsInterface {
-//   selectedCarID: number;
-// }
-
-// export interface engineStart {
-//   distance: number;
-//   velocity: number;
-// }
-
-// export interface carsReadyToRace {
-//   id: number;
-//   distance: number;
-//   velocity: number;
-// }
-
-// export interface driveMode {
-//   success: boolean;
-// }
-
-// export interface intervalsData {
-//   id: number;
-//   intervalId: NodeJS.Timeout;
-// }
-
 export interface CustomerAddress {
   city: string;
   country: string;
