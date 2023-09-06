@@ -128,7 +128,7 @@ class Form extends Component {
           this.checkValidyInput(this.inputLogin.render(), inputLoginLabel.render()) &&
           this.checkValidyInput(this.inputPassword.render(), inputPasswordLabel.render())
         ) {
-          this.requestApiLogin(this.inputLogin.getValue(), this.inputPassword.getValue());
+          this.requestApiLogin(this.inputLogin.getValue(), this.inputPassword.getValue(), PageIds.MainPage);
         }
       }
     });
@@ -552,7 +552,7 @@ class Form extends Component {
                 this.showNotification('Вы успешно зарегистрировались и вошли в систему.');
                 console.log('sucsess reg');
                 console.log('logining ...)');
-                this.requestApiLogin(email, password);
+                this.requestApiLogin(email, password, PageIds.MainPage);
               });
             });
           } else {
@@ -754,6 +754,9 @@ class Form extends Component {
 
     this.saveBtn.addEventListener('click', async (ev) => {
       ev.preventDefault();
+      const currPass = (this.inputOldPassword.render() as HTMLInputElement).value;
+      const newPass = (this.inputNewPassword.render() as HTMLInputElement).value;
+
       this.checkValidyInput(this.inputOldPassword.render(), oldPasswordValBox);
       this.checkValidyInput(this.inputNewPassword.render(), newPasswordValBox);
       if (
@@ -762,20 +765,18 @@ class Form extends Component {
       ) {
         this.api.clientCredentialsFlow().then((response) => {
           this.api.getCustomer(userId, response.access_token).then(async (userInfo) => {
-            if (userInfo.id) {
-              const currPass = (this.inputOldPassword.render() as HTMLInputElement).value;
-              const newPass = (this.inputNewPassword.render() as HTMLInputElement).value;
-              await this.api
-                .changePassword(response.access_token, userInfo.id, userInfo.version, currPass, newPass)
-                .then((resp) => {
-                  if (resp.ok) {
-                    userInfo.version++;
-                    this.showNotification('Password updated.');
-                  } else {
-                    this.showNotification('Wrong old password. Try again.');
-                  }
-                });
-            }
+            this.api.passwordFlow(userInfo.email, currPass).then(async (data) => {
+              console.log('passwResp = ', data);
+              if (typeof data === 'object' && data !== null && 'statusCode' in data) {
+                this.showNotification('Wrong current password. Try again.');
+              }
+              if (typeof data === 'object' && data !== null && 'access_token' in data) {
+                await this.api.changePassword(data.access_token, userInfo.id, userInfo.version, currPass, newPass);
+                userInfo.version++;
+                this.requestApiLogin(userInfo.email, newPass, PageIds.ProfilePage);
+                this.showNotification('Password updated.');
+              }
+            });
           });
         });
       }
@@ -917,7 +918,7 @@ class Form extends Component {
     return true;
   }
 
-  private async requestApiLogin(login: string, password: string) {
+  private async requestApiLogin(login: string, password: string, page: PageIds) {
     // const api = new AppAPI();
     // await console.log(api.passwordFlow('johndo13e@example.com', 'secret123'));
     try {
@@ -934,9 +935,11 @@ class Form extends Component {
         const token: string = typeof data.access_token === 'string' ? data.access_token : '';
         localStorage.setItem('token', token);
         localStorage.setItem('userData', JSON.stringify(data));
-        this.showNotification('Вы успешно вошли.', true);
+        if (page === PageIds.MainPage) {
+          this.showNotification('Вы успешно вошли.', true);
+        }
         console.log('sucsess');
-        window.location.hash = PageIds.MainPage;
+        window.location.hash = page;
       }
     } catch (error) {
       this.showNotification('Произошла ошибка, попробуйте еще раз.');

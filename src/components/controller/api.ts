@@ -69,7 +69,7 @@ class AppAPI {
 
   // https://docs.commercetools.com/api/authorization#password-flow
   // Password flow for global Customers
-  passwordFlow = (email: string, password: string) => {
+  passwordFlow = (email: string, password: string): Promise<ClientCredentialsFlowResponse> => {
     return new Promise((resolve, reject) => {
       const grantType = 'password';
       const userName = email;
@@ -245,7 +245,7 @@ class AppAPI {
       body: JSON.stringify(data),
     };
 
-    return fetch(`${this.apiUrl}/${this.projectKey}/customers/${customerId}`, options)
+    return fetch(`${this.apiUrl}/${this.projectKey}/customers/password`, options)
       .then((response) => response.json())
       .then((data) => {
         return data;
