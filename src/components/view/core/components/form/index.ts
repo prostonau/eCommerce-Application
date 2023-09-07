@@ -6,26 +6,14 @@ import Label from '../../templates/label';
 import SelectBox from '../../templates/select';
 import CheckBox from './checkbox';
 import { Customer } from '../../../../../types/index';
-
-const openEye = `<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-width="15px" height="15px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
-<g id="Eye">
- <g>
-   <path d="M16,8C7.028,8,0,11.515,0,16c0,4.486,7.028,8,16,8c8.973,0,16-3.514,16-8C32,11.515,24.973,8,16,8z M2,16
-     c0-2.099,3.151-4.372,8.129-5.415C8.812,12.012,8,13.91,8,16s0.812,3.988,2.129,5.415C5.151,20.372,2,18.1,2,16z M16,22
-     c-3.309,0-6-2.691-6-6c0-3.309,2.691-6,6-6c3.309,0,6,2.691,6,6C22,19.309,19.309,22,16,22z M21.871,21.415
-     C23.188,19.988,24,18.09,24,16s-0.812-3.988-2.129-5.415C26.85,11.628,30,13.901,30,16C30,18.1,26.85,20.372,21.871,21.415z
-      M16,13c-1.654,0-3,1.346-3,3c0,1.654,1.346,3,3,3c1.654,0,3-1.346,3-3C19,14.346,17.654,13,16,13z M16,17c-0.552,0-1-0.448-1-1
-     c0-0.551,0.448-1,1-1s1,0.449,1,1C17,16.552,16.552,17,16,17z"/>
- </g>
-</g>
-</svg>`;
-const closeEye = `<svg width="15px" height="15px" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;" version="1.1" viewBox="0 0 32 32" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:serif="http://www.serif.com/" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M5.992,18.611l-2.679,2.682c-0.39,0.391 -0.39,1.024 0,1.414c0.391,0.391 1.025,0.39 1.415,-0l3.027,-3.031c2.098,1.149 4.577,2.094 7.249,2.288l0.016,4.04c0.002,0.552 0.452,0.998 1.004,0.996c0.552,-0.002 0.998,-0.452 0.996,-1.004l-0.016,-4.033c2.281,-0.166 4.421,-0.88 6.302,-1.8c0.002,0.002 0.004,0.004 0.007,0.006l3.533,3.538c0.391,0.39 1.024,0.391 1.415,0c0.39,-0.39 0.39,-1.023 0,-1.414l-3.126,-3.13c3.415,-2.063 5.61,-4.496 5.61,-4.496c0.368,-0.411 0.333,-1.043 -0.078,-1.412c-0.411,-0.368 -1.043,-0.333 -1.412,0.078c0,-0 -5.93,6.667 -13.255,6.667c-7.325,0 -13.255,-6.667 -13.255,-6.667c-0.369,-0.411 -1.001,-0.446 -1.412,-0.078c-0.411,0.369 -0.446,1.001 -0.078,1.412c0,0 1.826,2.024 4.737,3.944Z"/></svg>`;
+import Eye from '../../templates/eye';
 
 class Form extends Component {
   api: AppAPI;
   inputLogin: InputBox;
   inputPassword: InputBox;
+  inputOldPassword: InputBox;
+  inputNewPassword: InputBox;
   nameInput: InputBox;
   lastNameInput: InputBox;
   birthInput: InputBox;
@@ -41,17 +29,24 @@ class Form extends Component {
   sameToggle: CheckBox;
   submitBtn: HTMLButtonElement;
   regBtn: HTMLButtonElement;
+  saveBtn: HTMLButtonElement;
+  cancelBtn: HTMLButtonElement;
+  editBtn: HTMLButtonElement;
   valid: boolean;
-  private swithVisibilityPassword: HTMLButtonElement;
+  switchVisibilityPassword: Eye;
+  switchVisibilityPasswordCurrent: Eye;
+  switchVisibilityPasswordNew: Eye;
 
   constructor(tagName: string, className: string) {
     super(tagName, className);
     this.api = new AppAPI();
     this.inputLogin = new InputBox('input', 'form__input', 'text', 'login__input', '', true);
     this.inputPassword = new InputBox('input', 'form__input', 'password', 'password__input', '', true);
+    this.inputOldPassword = new InputBox('input', 'form__input', 'password', 'old-password__input', '', true);
+    this.inputNewPassword = new InputBox('input', 'form__input', 'password', 'new-password__input', '', true);
     this.nameInput = new InputBox('input', 'form__input', 'text', 'name__input', '', true);
     this.lastNameInput = new InputBox('input', 'form__input', 'text', 'last-name__input', '', true);
-    this.birthInput = new InputBox('input', 'form__input', 'date', 'birth-date__input', 'dd/mm/yyyy', true);
+    this.birthInput = new InputBox('input', 'form__input', 'date', 'birth-date__input', '', true);
     this.streetInput = new InputBox('input', 'form__input', 'text', 'street__input', '', true);
     this.cityInput = new InputBox('input', 'form__input', 'text', 'city__input', '', true);
     this.postalInput = new InputBox('input', 'form__input', 'text', 'postal__input', '', true);
@@ -62,25 +57,36 @@ class Form extends Component {
     this.shipToggle = new CheckBox('input', 'form__toggle', 'ship__toggle', true);
     this.billToggle = new CheckBox('input', 'form__toggle', 'bill__toggle', true);
     this.sameToggle = new CheckBox('input', 'form__toggle', 'same__toggle', true);
-
-    this.swithVisibilityPassword = document.createElement('button');
-    this.swithVisibilityPassword.type = 'button';
-    this.swithVisibilityPassword.classList.add('switch-visibility__btn');
-    this.swithVisibilityPassword.innerHTML = openEye;
-
-    this.swithVisibilityPassword.addEventListener('click', (ev) => {
-      ev.preventDefault();
-      if (this.inputPassword.getType() === 'password') {
-        this.inputPassword.setType('text');
-        this.swithVisibilityPassword.innerHTML = closeEye;
-      } else {
-        this.inputPassword.setType('password');
-        this.swithVisibilityPassword.innerHTML = openEye;
-      }
-    });
+    this.switchVisibilityPassword = new Eye('switch-visibility__btn', this.inputPassword);
+    this.switchVisibilityPasswordCurrent = new Eye('switch-visibility__btn', this.inputOldPassword);
+    this.switchVisibilityPasswordNew = new Eye('switch-visibility__btn', this.inputNewPassword);
 
     this.submitBtn = document.createElement('button');
+    this.submitBtn.classList.add('form__button');
+    this.submitBtn.id = 'login';
+    this.submitBtn.type = 'submit';
+    this.submitBtn.innerHTML = 'Log in';
+
     this.regBtn = document.createElement('button');
+    this.regBtn.classList.add('form__button');
+    this.regBtn.id = 'register';
+    this.regBtn.type = 'submit';
+    this.regBtn.innerHTML = 'Register';
+
+    this.saveBtn = document.createElement('button');
+    this.saveBtn.classList.add('form__button', 'save__button');
+    this.saveBtn.type = 'submit';
+    this.saveBtn.innerHTML = 'Save';
+
+    this.cancelBtn = document.createElement('button');
+    this.cancelBtn.classList.add('form__button', 'cancel__button');
+    this.cancelBtn.type = 'submit';
+    this.cancelBtn.innerHTML = 'Cancel';
+
+    this.editBtn = document.createElement('button');
+    this.editBtn.classList.add('form__button', 'edit__button');
+    this.editBtn.innerHTML = 'Edit';
+
     this.valid = true;
   }
 
@@ -106,7 +112,7 @@ class Form extends Component {
     passwordField.append(
       inputPasswordLabel.render(),
       this.inputPassword.render(),
-      this.swithVisibilityPassword,
+      this.switchVisibilityPassword.render(),
       inputPasswordValBox
     );
 
@@ -118,11 +124,6 @@ class Form extends Component {
       this.checkValidyInput(this.inputPassword.render(), inputPasswordValBox);
     });
 
-    this.submitBtn.classList.add('form__button');
-    this.submitBtn.id = 'login';
-    this.submitBtn.type = 'submit';
-    this.submitBtn.innerHTML = 'Log in';
-
     form.append(loginField, passwordField, this.submitBtn);
 
     this.submitBtn.addEventListener('click', (ev) => {
@@ -132,7 +133,7 @@ class Form extends Component {
           this.checkValidyInput(this.inputLogin.render(), inputLoginLabel.render()) &&
           this.checkValidyInput(this.inputPassword.render(), inputPasswordLabel.render())
         ) {
-          this.requestApiLogin(this.inputLogin.getValue(), this.inputPassword.getValue());
+          this.requestApiLogin(this.inputLogin.getValue(), this.inputPassword.getValue(), PageIds.MainPage);
         }
       }
     });
@@ -246,11 +247,6 @@ class Form extends Component {
     sameToggleLabel.classList.add('toggle__label');
     sameToggleLabel.setAttribute('for', 'same__toggle');
     sameToggleLabel.textContent = 'Use as a billing address';
-
-    this.regBtn.classList.add('form__button');
-    this.regBtn.id = 'login';
-    this.regBtn.type = 'submit';
-    this.regBtn.innerHTML = 'Register';
 
     const personalHeader = document.createElement('h3');
     personalHeader.classList.add('field-group__header');
@@ -377,11 +373,6 @@ class Form extends Component {
               password: password,
             };
 
-            //customer.email = email;
-            //customer.firstName = (this.nameInput.render() as HTMLInputElement).value;
-            //customer.lastName = (this.nameInput.render() as HTMLInputElement).value;
-            //customer.password = password;
-
             this.api.clientCredentialsFlow().then((response) => {
               console.log('response = ', response);
               this.api.createCustomer(response.access_token, customer).then(async (userInfo) => {
@@ -402,7 +393,12 @@ class Form extends Component {
                     },
                   ];
 
-                  const answer1 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions1);
+                  const answer1 = await this.api.updateCustomer(
+                    response.access_token,
+                    userInfo.customer.id,
+                    userInfo.customer.version,
+                    actions1
+                  );
                   userInfo.customer.version++;
                   console.log('answer1 = ', answer1);
                   const copy1 = { ...answer1 };
@@ -417,7 +413,12 @@ class Form extends Component {
                     },
                   ];
 
-                  const answer2 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions2);
+                  const answer2 = await this.api.updateCustomer(
+                    response.access_token,
+                    userInfo.customer.id,
+                    userInfo.customer.version,
+                    actions2
+                  );
                   userInfo.customer.version++;
                   console.log('answer2 = ', answer2);
 
@@ -428,7 +429,12 @@ class Form extends Component {
                       addressId: shippingAddressId,
                     },
                   ];
-                  const answer3 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions3);
+                  const answer3 = await this.api.updateCustomer(
+                    response.access_token,
+                    userInfo.customer.id,
+                    userInfo.customer.version,
+                    actions3
+                  );
                   userInfo.customer.version++;
                   console.log('answer3 = ', answer3);
 
@@ -440,7 +446,12 @@ class Form extends Component {
                         addressId: shippingAddressId,
                       },
                     ];
-                    const answer4 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions4);
+                    const answer4 = await this.api.updateCustomer(
+                      response.access_token,
+                      userInfo.customer.id,
+                      userInfo.customer.version,
+                      actions4
+                    );
                     userInfo.customer.version++;
                     console.log('answer4 = ', answer4);
                   }
@@ -455,7 +466,8 @@ class Form extends Component {
                     ];
                     const answer5_1 = await this.api.updateCustomer(
                       response.access_token,
-                      userInfo.customer,
+                      userInfo.customer.id,
+                      userInfo.customer.version,
                       actions5_1
                     );
                     userInfo.customer.version++;
@@ -471,7 +483,8 @@ class Form extends Component {
                       ];
                       const answer5_2 = await this.api.updateCustomer(
                         response.access_token,
-                        userInfo.customer,
+                        userInfo.customer.id,
+                        userInfo.customer.version,
                         actions5_2
                       );
                       userInfo.customer.version++;
@@ -491,7 +504,12 @@ class Form extends Component {
                       },
                     ];
 
-                    const answer6 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions6);
+                    const answer6 = await this.api.updateCustomer(
+                      response.access_token,
+                      userInfo.customer.id,
+                      userInfo.customer.version,
+                      actions6
+                    );
                     userInfo.customer.version++;
                     console.log('answer6 = ', answer6);
                     const copy6 = { ...answer6 };
@@ -506,7 +524,12 @@ class Form extends Component {
                       },
                     ];
 
-                    const answer7 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions7);
+                    const answer7 = await this.api.updateCustomer(
+                      response.access_token,
+                      userInfo.customer.id,
+                      userInfo.customer.version,
+                      actions7
+                    );
                     userInfo.customer.version++;
                     console.log('answer7 = ', answer7);
 
@@ -518,7 +541,12 @@ class Form extends Component {
                           addressId: billingAddressId,
                         },
                       ];
-                      const answer8 = await this.api.updateCustomer(response.access_token, userInfo.customer, actions8);
+                      const answer8 = await this.api.updateCustomer(
+                        response.access_token,
+                        userInfo.customer.id,
+                        userInfo.customer.version,
+                        actions8
+                      );
                       userInfo.customer.version++;
                       console.log('answer8 = ', answer8);
                     }
@@ -529,7 +557,7 @@ class Form extends Component {
                 this.showNotification('Вы успешно зарегистрировались и вошли в систему.');
                 console.log('sucsess reg');
                 console.log('logining ...)');
-                this.requestApiLogin(email, password);
+                this.requestApiLogin(email, password, PageIds.MainPage);
               });
             });
           } else {
@@ -556,7 +584,7 @@ class Form extends Component {
     passwordField.append(
       passwordLabel.render(),
       this.inputPassword.render(),
-      this.swithVisibilityPassword,
+      this.switchVisibilityPassword.render(),
       passwordValBox
     );
 
@@ -582,6 +610,215 @@ class Form extends Component {
       passwordField,
       this.regBtn
     );
+  }
+
+  generateUpdateFormBio(
+    userId: string,
+    mailValue: string,
+    firstNameValue: string,
+    lastNameValue: string,
+    birthValue: string
+  ) {
+    const form = this.container;
+    form.classList.add('upd__form');
+
+    const mailField = document.createElement('div');
+    mailField.classList.add('form__field', 'email__field');
+
+    const firstNameField = document.createElement('div');
+    firstNameField.classList.add('form__field', 'first-name__field');
+
+    const lastNameField = document.createElement('div');
+    lastNameField.classList.add('form__field', 'last-name__field');
+
+    const birthField = document.createElement('div');
+    birthField.classList.add('form__field', 'birth__field');
+
+    const addressField = document.createElement('div');
+    addressField.classList.add('form__field', 'address__field');
+
+    const mailLabel = new Label('label', 'form__label', 'mail__input', '', 'E-mail');
+    const mailValBox = document.createElement('p');
+    mailValBox.classList.add('validity__block');
+    this.inputLogin.disabled();
+    this.inputLogin.setValue(mailValue);
+    this.inputLogin.render().addEventListener('input', () => {
+      this.checkValidyInput(this.inputLogin.render(), mailValBox);
+    });
+
+    const firstNameLabel = new Label('label', 'form__label', 'name__input', '', 'First Name');
+    const firstNameValBox = document.createElement('p');
+    firstNameValBox.classList.add('validity__block');
+    this.nameInput.disabled();
+    this.nameInput.setValue(firstNameValue);
+    this.nameInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.nameInput.render(), firstNameValBox);
+    });
+
+    const lastNameLabel = new Label('label', 'form__label', 'last-name__input', '', 'Last Name');
+    const lastNameValBox = document.createElement('p');
+    lastNameValBox.classList.add('validity__block');
+    this.lastNameInput.disabled();
+    this.lastNameInput.setValue(lastNameValue);
+    this.lastNameInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.lastNameInput.render(), lastNameValBox);
+    });
+
+    const birthLabel = new Label('label', 'form__label', 'birth-date__input', '', 'Birthdate');
+    const birthValBox = document.createElement('p');
+    birthValBox.classList.add('validity__block');
+    this.birthInput.disabled();
+    this.birthInput.setValue(birthValue);
+    this.birthInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.birthInput.render(), birthValBox);
+    });
+
+    this.saveBtn.classList.add('hidden');
+    this.cancelBtn.classList.add('hidden');
+
+    this.editBtn.addEventListener('click', () => {
+      this.cancelBtn.classList.remove('hidden');
+      this.saveBtn.classList.remove('hidden');
+      this.editBtn.classList.add('hidden');
+      this.birthInput.enabled();
+      this.lastNameInput.enabled();
+      this.nameInput.enabled();
+      this.inputLogin.enabled();
+    });
+
+    this.cancelBtn.addEventListener('click', () => {
+      this.cancelBtn.classList.add('hidden');
+      this.saveBtn.classList.add('hidden');
+      this.editBtn.classList.remove('hidden');
+      this.birthInput.disabled();
+      this.lastNameInput.disabled();
+      this.nameInput.disabled();
+      this.inputLogin.disabled();
+    });
+
+    this.saveBtn.addEventListener('click', async (ev) => {
+      ev.preventDefault();
+      this.checkValidyInput(this.inputLogin.render(), mailValBox);
+      this.checkValidyInput(this.nameInput.render(), firstNameValBox);
+      this.checkValidyInput(this.lastNameInput.render(), lastNameValBox);
+      this.checkValidyInput(this.birthInput.render(), birthValBox);
+      if (
+        this.checkValidyInput(this.inputLogin.render(), mailValBox) &&
+        this.checkValidyInput(this.nameInput.render(), firstNameValBox) &&
+        this.checkValidyInput(this.lastNameInput.render(), lastNameValBox) &&
+        this.checkValidyInput(this.birthInput.render(), birthValBox)
+      ) {
+        this.api.clientCredentialsFlow().then((response) => {
+          this.api.getCustomer(userId, response.access_token).then(async (userInfo) => {
+            if (userInfo.id) {
+              const actions = [
+                {
+                  action: 'changeEmail',
+                  email: (this.inputLogin.render() as HTMLInputElement).value,
+                },
+                {
+                  action: 'setFirstName',
+                  firstName: (this.nameInput.render() as HTMLInputElement).value,
+                },
+                {
+                  action: 'setLastName',
+                  lastName: (this.lastNameInput.render() as HTMLInputElement).value,
+                },
+                {
+                  action: 'setDateOfBirth',
+                  dateOfBirth: (this.birthInput.render() as HTMLInputElement).value,
+                },
+              ];
+
+              await this.api.updateCustomer(response.access_token, userInfo.id, userInfo.version, actions);
+              userInfo.version++;
+            }
+            this.showNotification('User data updated.');
+          });
+        });
+      }
+    });
+
+    mailField.append(mailLabel.render(), this.inputLogin.render(), mailValBox);
+    firstNameField.append(firstNameLabel.render(), this.nameInput.render(), firstNameValBox);
+    lastNameField.append(lastNameLabel.render(), this.lastNameInput.render(), lastNameValBox);
+    birthField.append(birthLabel.render(), this.birthInput.render(), birthValBox);
+
+    form.append(mailField, firstNameField, lastNameField, birthField, this.cancelBtn, this.saveBtn, this.editBtn);
+  }
+
+  generateUpdateFormPassword(userId: string) {
+    const form = this.container;
+    form.classList.add('upd__form');
+
+    const oldPasswordField = document.createElement('div');
+    oldPasswordField.classList.add('form__field', 'old-password__field');
+
+    const newPasswordField = document.createElement('div');
+    newPasswordField.classList.add('form__field', 'new-password__field');
+
+    const oldPasswordLabel = new Label('label', 'form__label', 'old-password__input', '', 'Current Password');
+    const oldPasswordValBox = document.createElement('p');
+    oldPasswordValBox.classList.add('validity__block');
+    this.inputOldPassword.render().addEventListener('input', () => {
+      this.checkValidyInput(this.inputOldPassword.render(), oldPasswordValBox);
+    });
+
+    const newPasswordLabel = new Label('label', 'form__label', 'new-password__input', '', 'New Password');
+    const newPasswordValBox = document.createElement('p');
+    newPasswordValBox.classList.add('validity__block');
+    this.inputNewPassword.render().addEventListener('input', () => {
+      this.checkValidyInput(this.inputNewPassword.render(), newPasswordValBox);
+    });
+
+    oldPasswordField.append(
+      oldPasswordLabel.render(),
+      this.inputOldPassword.render(),
+      this.switchVisibilityPasswordCurrent.render(),
+      oldPasswordValBox
+    );
+    newPasswordField.append(
+      newPasswordLabel.render(),
+      this.inputNewPassword.render(),
+      this.switchVisibilityPasswordNew.render(),
+      newPasswordValBox
+    );
+
+    this.saveBtn.addEventListener('click', async (ev) => {
+      ev.preventDefault();
+      const currPass = (this.inputOldPassword.render() as HTMLInputElement).value;
+      const newPass = (this.inputNewPassword.render() as HTMLInputElement).value;
+
+      this.checkValidyInput(this.inputOldPassword.render(), oldPasswordValBox);
+      this.checkValidyInput(this.inputNewPassword.render(), newPasswordValBox);
+      if (
+        this.checkValidyInput(this.inputOldPassword.render(), oldPasswordValBox) &&
+        this.checkValidyInput(this.inputNewPassword.render(), newPasswordValBox)
+      ) {
+        this.api.clientCredentialsFlow().then((response) => {
+          this.api.getCustomer(userId, response.access_token).then(async (userInfo) => {
+            this.api.passwordFlow(userInfo.email, currPass).then(async (data) => {
+              if (typeof data === 'object' && data !== null && 'statusCode' in data) {
+                this.showNotification('Wrong current password. Try again.');
+              }
+              if (typeof data === 'object' && data !== null && 'access_token' in data) {
+                await this.api.changePassword(data.access_token, userInfo.id, userInfo.version, currPass, newPass);
+                userInfo.version++;
+                this.requestApiLogin(userInfo.email, newPass, PageIds.ProfilePage);
+                this.showNotification('Password updated.');
+              }
+            });
+          });
+        });
+      }
+    });
+
+    form.append(oldPasswordField, newPasswordField, this.cancelBtn, this.saveBtn);
+  }
+
+  generateUpdateFormAddresses() {
+    const form = this.container;
+    form.classList.add('upd__form');
   }
 
   render() {
@@ -717,7 +954,7 @@ class Form extends Component {
     return true;
   }
 
-  private async requestApiLogin(login: string, password: string) {
+  private async requestApiLogin(login: string, password: string, page: PageIds) {
     // const api = new AppAPI();
     // await console.log(api.passwordFlow('johndo13e@example.com', 'secret123'));
     try {
@@ -734,9 +971,11 @@ class Form extends Component {
         const token: string = typeof data.access_token === 'string' ? data.access_token : '';
         localStorage.setItem('token', token);
         localStorage.setItem('userData', JSON.stringify(data));
-        this.showNotification('Вы успешно вошли.', true);
+        if (page === PageIds.MainPage) {
+          this.showNotification('Вы успешно вошли.', true);
+        }
         console.log('sucsess');
-        window.location.hash = PageIds.MainPage;
+        window.location.hash = page;
       }
     } catch (error) {
       this.showNotification('Произошла ошибка, попробуйте еще раз.');

@@ -69,7 +69,7 @@ class AppAPI {
 
   // https://docs.commercetools.com/api/authorization#password-flow
   // Password flow for global Customers
-  passwordFlow = (email: string, password: string) => {
+  passwordFlow = (email: string, password: string): Promise<ClientCredentialsFlowResponse> => {
     return new Promise((resolve, reject) => {
       const grantType = 'password';
       const userName = email;
@@ -188,11 +188,11 @@ class AppAPI {
 
   // https://docs.commercetools.com/api/projects/customers#update-customer-by-id
   // https://docs.commercetools.com/api/projects/customers#update-actions
-  updateCustomer = async (BEARER_TOKEN: string, customer: Customer, actions: Actions[]) => {
+  updateCustomer = async (BEARER_TOKEN: string, customerId: string, customerVer: number, actions: Actions[]) => {
     // Создаем объект с настройками для запроса
-    const id = customer.id;
-    const version = customer.version ? customer.version : 1;
-    console.log('получаем это = ', customer);
+    const id = customerId;
+    const version = customerVer ? customerVer : 1;
+    // console.log('получаем это = ', customer);
     console.log(actions);
 
     const data = {
@@ -214,6 +214,40 @@ class AppAPI {
       .then((response) => response.json())
       .then((data) => {
         //console.log('updateCustomer = ', data);
+        return data;
+      })
+      .catch((error) => console.error(error));
+  };
+
+  // https://docs.commercetools.com/api/projects/customers#change-password-of-customer
+  changePassword = async (
+    BEARER_TOKEN: string,
+    customerId: string,
+    customerVer: number,
+    currPassword: string,
+    newPassword: string
+  ) => {
+    const version = customerVer ? customerVer : 1;
+
+    const data = {
+      id: customerId,
+      version: version,
+      currentPassword: currPassword,
+      newPassword: newPassword,
+    };
+
+    const options = {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${BEARER_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+
+    return fetch(`${this.apiUrl}/${this.projectKey}/customers/password`, options)
+      .then((response) => response.json())
+      .then((data) => {
         return data;
       })
       .catch((error) => console.error(error));
