@@ -143,16 +143,13 @@ class ProfilePage extends Page {
         const updFormPassword = new Form('form', 'password__form');
         updFormPassword.generateUpdateFormPassword(this.userId);
 
-        const updFormAddresses = new Form('form', 'addresses__form');
-        updFormAddresses.generateUpdateFormAddresses();
+        this.container.append(title, this.createFormSwitches(), updFormBio.render(), updFormPassword.render());
 
-        this.container.append(
-          title,
-          this.createFormSwitches(),
-          updFormBio.render(),
-          updFormPassword.render(),
-          updFormAddresses.render()
-        );
+        this.addresses.forEach((address) => {
+          const updFormAddresses = new Form('form', 'addresses__form');
+          updFormAddresses.generateUpdateFormAddresses(address);
+          this.container.append(updFormAddresses.render());
+        });
       })
       .catch((error) => {
         console.error(error);
