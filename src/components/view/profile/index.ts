@@ -1,6 +1,7 @@
 import './style.scss';
 import Page from '../core/templates/page';
 import AppAPI from '../../controller/api';
+import Form from '../core/components/form';
 import { CustomerAddress } from '../../../types';
 
 class ProfilePage extends Page {
@@ -10,6 +11,7 @@ class ProfilePage extends Page {
 
   userId: string;
   API: AppAPI;
+  email: string;
   firstName: string;
   lastName: string;
   birthDate: string;
@@ -19,6 +21,7 @@ class ProfilePage extends Page {
     super(id);
     this.userId = userId;
     this.API = new AppAPI();
+    this.email = '';
     this.firstName = '';
     this.lastName = '';
     this.birthDate = '';
@@ -29,6 +32,7 @@ class ProfilePage extends Page {
     await this.API.clientCredentialsFlow().then(async (response) => {
       await this.API.getCustomer(userId, response.access_token).then((response) => {
         console.log('Content response = ', response);
+        this.email = response.email;
         this.firstName = response.firstName;
         this.lastName = response.lastName;
         this.birthDate = response.dateOfBirth;
@@ -37,7 +41,45 @@ class ProfilePage extends Page {
     });
   }
 
-  createUserInfoContainer() {
+  createFormSwitches() {
+    const fragment = document.createDocumentFragment();
+
+    const bioRadio = document.createElement('input');
+    bioRadio.classList.add('radio__input');
+    bioRadio.id = 'bio-radio';
+    bioRadio.type = 'radio';
+    bioRadio.name = 'form-switch';
+    bioRadio.checked = true;
+    // bioRadio.setAttribute('checked', 'checked');
+    const bioLabel = document.createElement('label');
+    bioLabel.classList.add('radio__label');
+    bioLabel.setAttribute('for', 'bio-radio');
+    bioLabel.textContent = 'Personal info';
+
+    const passwordRadio = document.createElement('input');
+    passwordRadio.classList.add('radio__input');
+    passwordRadio.id = 'password-radio';
+    passwordRadio.type = 'radio';
+    passwordRadio.name = 'form-switch';
+    const passwordLabel = document.createElement('label');
+    passwordLabel.classList.add('radio__label');
+    passwordLabel.setAttribute('for', 'password-radio');
+    passwordLabel.textContent = 'Change password';
+
+    const addressRadio = document.createElement('input');
+    addressRadio.classList.add('radio__input');
+    addressRadio.id = 'address-radio';
+    addressRadio.type = 'radio';
+    addressRadio.name = 'form-switch';
+    const addressLabel = document.createElement('label');
+    addressLabel.classList.add('radio__label');
+    addressLabel.setAttribute('for', 'address-radio');
+    addressLabel.textContent = 'Addresses';
+
+    fragment.append(bioRadio, bioLabel, passwordRadio, passwordLabel, addressRadio, addressLabel);
+    return fragment;
+  }
+  /* createUserInfoContainer() {
     const userInfoContainer = document.createElement('div');
     userInfoContainer.classList.add('profile');
     return userInfoContainer;
@@ -83,18 +125,31 @@ class ProfilePage extends Page {
 
     fragment.append(country, city, street, postCode);
     return fragment;
-  }
+  } */
 
   render(): HTMLElement {
     this.getUserData(this.userId)
       .then(() => {
         const title = this.createHeaderTitle(ProfilePage.TextObject.ProfileTitle);
-        const wrapper = this.createUserInfoContainer();
+        /* const wrapper = this.createUserInfoContainer();
         wrapper.append(this.createBioData(), this.createAddresses(0));
         if (this.addresses[1]) {
           wrapper.append(this.createAddresses(1));
-        }
-        this.container.append(title, wrapper);
+        } */
+
+        const updFormBio = new Form('form', 'bio__form');
+        updFormBio.generateUpdateFormBio(this.userId, this.email, this.firstName, this.lastName, this.birthDate);
+
+        const updFormPassword = new Form('form', 'password__form');
+        updFormPassword.generateUpdateFormPassword(this.userId);
+
+        this.container.append(title, this.createFormSwitches(), updFormBio.render(), updFormPassword.render());
+
+        this.addresses.forEach((address) => {
+          const updFormAddresses = new Form('form', 'addresses__form');
+          updFormAddresses.generateUpdateFormAddresses(address);
+          this.container.append(updFormAddresses.render());
+        });
       })
       .catch((error) => {
         console.error(error);

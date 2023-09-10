@@ -46,10 +46,12 @@ class ProductPage extends Page {
         this.name = response.masterData.current.name['en-US'];
         //this.description = response.masterData.current.description['en-US'];
         if (response.masterData.current.description && response.masterData.current.description['en-US']) {
+          console.log('description = ', response.masterData.current.description['en-US']);
           this.description = response.masterData.current.description['en-US'];
         } else {
           this.description = 'None';
         }
+        console.log('this.description = ', this.description);
         this.images = response.masterData.staged.masterVariant.images;
         this.price = response.masterData.staged.masterVariant.prices[0].value.centAmount;
         if (
@@ -61,7 +63,7 @@ class ProductPage extends Page {
           this.discountPrice = response.masterData.staged.masterVariant.prices[0].discounted.value.centAmount;
           this.discountPrice = (Number(this.discountPrice) / 100).toFixed(2);
         } else {
-          this.description = '';
+          this.discountPrice = '';
         }
 
         // console.log(
