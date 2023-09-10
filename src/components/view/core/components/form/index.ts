@@ -5,7 +5,7 @@ import InputBox from '../../templates/input';
 import Label from '../../templates/label';
 import SelectBox from '../../templates/select';
 import CheckBox from './checkbox';
-import { Customer } from '../../../../../types/index';
+import { Customer, CustomerAddress } from '../../../../../types/index';
 import Eye from '../../templates/eye';
 
 class Form extends Component {
@@ -816,9 +816,68 @@ class Form extends Component {
     form.append(oldPasswordField, newPasswordField, this.cancelBtn, this.saveBtn);
   }
 
-  generateUpdateFormAddresses() {
+  generateUpdateFormAddresses(adresses: CustomerAddress) {
     const form = this.container;
     form.classList.add('upd__form');
+
+    const countryField = document.createElement('div');
+    countryField.classList.add('form__field', 'country__field');
+
+    const streetField = document.createElement('div');
+    streetField.classList.add('form__field', 'bill-street__field');
+
+    const postalField = document.createElement('div');
+    postalField.classList.add('form__field', 'bill-postal__field');
+
+    const cityField = document.createElement('div');
+    cityField.classList.add('form__field', 'bill-city__field');
+
+    const streetLabel = new Label('label', 'form__label', 'street__input', '', 'Street address and number');
+    const streetValBox = document.createElement('p');
+    streetValBox.classList.add('validity__block');
+    this.streetInput.disabled();
+    this.streetInput.setValue(adresses.streetName);
+
+    const cityLabel = new Label('label', 'form__label', 'city__input', '', 'City');
+    const cityValBox = document.createElement('p');
+    cityValBox.classList.add('validity__block');
+    this.cityInput.disabled();
+    this.cityInput.setValue(adresses.city);
+
+    const postalLabel = new Label('label', 'form__label', 'postal__input', '', 'Postal code');
+    const postalValBox = document.createElement('p');
+    postalValBox.classList.add('validity__block');
+    this.postalInput.disabled();
+    this.postalInput.setValue(adresses.postalCode);
+
+    this.countrySelect.addOptions('Country', 'Poland', 'Belarus', 'Lithuania');
+    const countryLabel = new Label('label', 'form__label', 'country__input', '', 'Country');
+    const countryValBox = document.createElement('p');
+    countryValBox.classList.add('validity__block');
+
+    this.streetInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.streetInput.render(), streetValBox);
+    });
+
+    this.cityInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.cityInput.render(), cityValBox);
+    });
+
+    this.postalInput.render().addEventListener('input', () => {
+      this.checkValidyInput(this.postalInput.render(), postalValBox);
+    });
+
+    this.countrySelect.render().addEventListener('change', () => {
+      this.checkValidyInput(this.postalInput.render(), postalValBox);
+      this.checkValiditySelect(this.countrySelect.render(), countryValBox);
+    });
+
+    countryField.append(countryLabel.render(), this.countrySelect.render(), countryValBox);
+    cityField.append(cityLabel.render(), this.cityInput.render(), cityValBox);
+    streetField.append(streetLabel.render(), this.streetInput.render(), streetValBox);
+    postalField.append(postalLabel.render(), this.postalInput.render(), postalValBox);
+
+    form.append(countryField, cityField, streetField, postalField);
   }
 
   render() {
