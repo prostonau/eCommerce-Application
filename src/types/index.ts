@@ -180,3 +180,8 @@ export interface CustomerAddress {
   postalCode: string;
   streetName: string;
 }
+
+export interface lineInCart {
+  productId: string;
+  id: string;
+}
