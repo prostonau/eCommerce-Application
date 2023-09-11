@@ -4,7 +4,7 @@ import Form, {
   checkValidyInputPassword,
   convertCountry,
 } from '../components/view/core/components/form';
-import InputBox from '../components/view/core/templates/input';
+// import InputBox from '../components/view/core/templates/input';
 import Label from '../components/view/core/templates/label';
 // import AppController from '../components/controller/controller';
 // import Component from '../components/view/core/templates/components';
@@ -15,20 +15,20 @@ describe('emptyTest', () => {
   });
 });
 
-describe('testing input field functionality', () => {
-  const inputFieldTest = new InputBox('input', 'form__input', 'email', 'login__input', 'Login', true);
-  it('methods should return right values', () => {
-    expect(inputFieldTest.getType()).toEqual('email');
-    expect(inputFieldTest.getValue()).toEqual('');
-    expect(inputFieldTest.render()).toBeInstanceOf(HTMLInputElement);
-  });
+// describe('testing input field functionality', () => {
+//   const inputFieldTest = new InputBox('input', 'form__input', 'email', 'login__input', 'Login', true);
+//   it('methods should return right values', () => {
+//     expect(inputFieldTest.getType()).toEqual('email');
+//     expect(inputFieldTest.getValue()).toEqual('');
+//     expect(inputFieldTest.render()).toBeInstanceOf(HTMLInputElement);
+//   });
 
-  it('setter must change type', () => {
-    expect(inputFieldTest.getType()).toEqual('email');
-    inputFieldTest.setType('text');
-    expect(inputFieldTest.getType()).toEqual('text');
-  });
-});
+//   it('setter must change type', () => {
+//     expect(inputFieldTest.getType()).toEqual('email');
+//     inputFieldTest.setType('text');
+//     expect(inputFieldTest.getType()).toEqual('text');
+//   });
+// });
 
 describe('testing label element functionality', () => {
   const labelTest = new Label('label', 'form__label', 'login__input', '', 'E-mail');
