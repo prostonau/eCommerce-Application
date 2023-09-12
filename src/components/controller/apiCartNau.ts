@@ -49,7 +49,7 @@ class APICartNau extends AppAPI {
     });
   };
 
-  createCart = (id: string, BEARER_TOKEN: string) => {
+  createCart = (BEARER_TOKEN: string) => {
     // Создаем объект с настройками для запроса
     const options = {
       method: 'POST',
@@ -59,14 +59,11 @@ class APICartNau extends AppAPI {
       },
       body: JSON.stringify({
         currency: 'USD',
-        customer: {
-          id: `${id}`,
-        },
       }),
     };
 
     // Выполняем запрос
-    return fetch(`${this.apiUrl}/${this.projectKey}/carts`, options)
+    return fetch(`${this.apiUrl}/${this.projectKey}/me/carts`, options)
       .then((response) => response.json())
       .then(async (data) => {
         console.log('createCart = ', data);
@@ -90,6 +87,27 @@ class APICartNau extends AppAPI {
       .then((response) => response.json())
       .then((data) => {
         console.log('getCartbyCartId = ', data, data.version);
+        localStorage.setItem('cartVersionId', data.version);
+        return data;
+      })
+      .catch((error) => console.error(error));
+  };
+
+  getCartCustomersCart = (BEARER_TOKEN: string) => {
+    // Создаем объект с настройками для запроса
+    const options = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${BEARER_TOKEN}`,
+      },
+    };
+
+    // Выполняем запрос https://api.{region}.commercetools.com/{projectKey}/carts/customer-id={customerId}
+    // https://api.{region}.commercetools.com/{projectKey}/me/active-cart
+    return fetch(`${this.apiUrl}/${this.projectKey}/me/active-cart`, options)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('getCartbyCartIdCustomer = ', data, data.version);
         localStorage.setItem('cartVersionId', data.version);
         return data;
       })

@@ -4,7 +4,8 @@ import AppProductAPI from '../controller/apiProduct';
 import { AppView } from '../view/appView';
 import { ApiCatalog } from '../controller/apiCatalog';
 import APICartNau from '../controller/apiCartNau';
-import { lineInCart } from '../../types';
+// import { lineInCart } from '../../types';
+// import { lineInCart } from '../../types';
 
 class App {
   controller: AppController;
@@ -80,11 +81,14 @@ class App {
   async testUserToken() {
     if (localStorage.getItem('token')) {
       console.log('token');
+      return localStorage.getItem('token') || '';
     } else if (localStorage.getItem('guestToken')) {
       console.log('guestToken');
+      return localStorage.getItem('guestToken') || '';
     } else {
       const data = await this.API.clientCredentialsFlow();
       localStorage.setItem('guestToken', data.access_token);
+      return localStorage.getItem('guestToken') || '';
     }
   }
 
@@ -98,19 +102,19 @@ class App {
     }
   }
 
-  public testProductAPI(): void {
+  public async testProductAPI(): Promise<void> {
     console.log('________________________');
     console.log('Test Product API...');
     console.log('START >>>>>>>>>>>>>>>>>>');
 
-    this.ProductAPI.clientCredentialsFlow().then((response) => {
-      console.log('response = ', response);
-      this.ProductAPI.getAllProducts(response.access_token);
-      this.ProductAPI.getProduct(response.access_token, 'fbf119fb-303b-4ba3-8724-e9ea6873ec07');
-      // this.API.getCustomer('39fd2612-1d14-4484-b6ac-1f4631a22f91', response.access_token);
-      // this.API.getAllCustomers(response.access_token);
-      // this.API.updateCustomer(response.access_token);
-    });
+    // this.APICart.getCartById(await this.testUserToken(), 'eab3b965-fc8f-46f1-a7a6-f14c7283e2d3').then((response) => {
+    //   console.log('response = ', response);
+    //   //this.ProductAPI.getAllProducts(response.access_token);
+    //   //this.ProductAPI.getProduct(response.access_token, 'fbf119fb-303b-4ba3-8724-e9ea6873ec07');
+    //   // this.API.getCustomer('39fd2612-1d14-4484-b6ac-1f4631a22f91', response.access_token);
+    //   // this.API.getAllCustomers(response.access_token);
+    //   // this.API.updateCustomer(response.access_token);
+    // });
 
     //this.API.passwordFlow('johndo13e@example.com', 'secret123');
     console.log('END <<<<<<<<<<<<<<<<<<<');
@@ -122,39 +126,44 @@ class App {
     console.log('Test Cart API...');
     console.log('START >>>>>>>>>>>>>>>>>>');
 
-    await this.APICardNau.getTokenForAnonymous();
-    const anonymousId = localStorage.getItem('anonymousId');
-    const anonymousToken = localStorage.getItem('anonymousToken');
-    if (anonymousId && anonymousToken) {
-      await this.APICardNau.createCart(anonymousId, anonymousToken);
-      const cartId = localStorage.getItem('cartId');
-      // const cartVersioId = localStorage.setItem('cartVersioId');
-      if (cartId) {
-        await this.APICardNau.getCartbyCartId(cartId, anonymousToken);
-        await this.APICardNau.addProductToCart(cartId, anonymousToken, 'fbf119fb-303b-4ba3-8724-e9ea6873ec07', 2);
-        await this.APICardNau.requestApiLogin('prostonau@mail.ru', 'QwertyQwerty%1982');
-        const userToken = localStorage.getItem('token');
-        if (userToken) {
-          await this.APICardNau.addProductToCart(cartId, userToken, '0db9875a-d588-4661-9ab2-16e89f089183', 3);
-          await this.APICardNau.getCartbyCartId(cartId, userToken);
-          await this.APICardNau.addProductToCart(cartId, userToken, '0db9875a-d588-4661-9ab2-16e89f089183', 5);
-          await this.APICardNau.getCartbyCartId(cartId, userToken).then(async (e) => {
-            const lineId = e.lineItems.filter(
-              (l: lineInCart) => l.productId === '0db9875a-d588-4661-9ab2-16e89f089183'
-            )[0].id;
-            await this.APICardNau.updateProductQuantityInCart(cartId, userToken, lineId, 2);
-          });
-          await this.APICardNau.getCartbyCartId(cartId, userToken);
-          await this.APICardNau.getCartbyCartId(cartId, userToken).then(async (e) => {
-            const lineId = e.lineItems.filter(
-              (l: lineInCart) => l.productId === 'fbf119fb-303b-4ba3-8724-e9ea6873ec07'
-            )[0].id;
-            await this.APICardNau.removeLineItemFromCart(cartId, userToken, lineId);
-          });
-          await this.APICardNau.getCartbyCartId(cartId, userToken);
-        }
-      }
-    }
+    this.API.getCustomer('eab3b965-fc8f-46f1-a7a6-f14c7283e2d3', 'wc8VJmXbN1qGhctx_ir6jjSzbbGAv5pO');
+    //this.APICardNau.createCart('wc8VJmXbN1qGhctx_ir6jjSzbbGAv5pO');
+    this.APICardNau.getCartCustomersCart('wc8VJmXbN1qGhctx_ir6jjSzbbGAv5pO');
+    // {"access_token":"wc8VJmXbN1qGhctx_ir6jjSzbbGAv5pO","expires_in":172800,"token_type":"Bearer","scope":"manage_project:611a116e-87f8-43a5-9c07-959851c6dff3 customer_id:eab3b965-fc8f-46f1-a7a6-f14c7283e2d3","refresh_token":"611a116e-87f8-43a5-9c07-959851c6dff3:0eO7NZl6L1uSwNPX8ZUEIZZypO_pqA6NqgS-RwrnSE8"}
+    // // await this.APICardNau.getTokenForAnonymous();
+    // const anonymousId = localStorage.getItem('anonymousId');
+    // const anonymousToken = localStorage.getItem('anonymousToken');
+    // if (anonymousId && anonymousToken) {
+    //   await this.APICardNau.createCart(anonymousId, anonymousToken);
+    //   await this.APICardNau.getCartbyCustomerCartId(anonymousId, anonymousToken);
+    //   const cartId = localStorage.getItem('cartId');
+    //   // const cartVersioId = localStorage.setItem('cartVersioId');
+    //   if (cartId) {
+    //     await this.APICardNau.getCartbyCartId(cartId, anonymousToken);
+    //     await this.APICardNau.addProductToCart(cartId, anonymousToken, 'fbf119fb-303b-4ba3-8724-e9ea6873ec07', 2);
+    //     await this.APICardNau.requestApiLogin('prostonau@mail.ru', 'QwertyQwerty%1982');
+    //     const userToken = localStorage.getItem('token');
+    //     if (userToken) {
+    //       await this.APICardNau.addProductToCart(cartId, userToken, '0db9875a-d588-4661-9ab2-16e89f089183', 3);
+    //       await this.APICardNau.getCartbyCartId(cartId, userToken);
+    //       await this.APICardNau.addProductToCart(cartId, userToken, '0db9875a-d588-4661-9ab2-16e89f089183', 5);
+    //       await this.APICardNau.getCartbyCartId(cartId, userToken).then(async (e) => {
+    //         const lineId = e.lineItems.filter(
+    //           (l: lineInCart) => l.productId === '0db9875a-d588-4661-9ab2-16e89f089183'
+    //         )[0].id;
+    //         await this.APICardNau.updateProductQuantityInCart(cartId, userToken, lineId, 2);
+    //       });
+    //       await this.APICardNau.getCartbyCartId(cartId, userToken);
+    //       await this.APICardNau.getCartbyCartId(cartId, userToken).then(async (e) => {
+    //         const lineId = e.lineItems.filter(
+    //           (l: lineInCart) => l.productId === 'fbf119fb-303b-4ba3-8724-e9ea6873ec07'
+    //         )[0].id;
+    //         await this.APICardNau.removeLineItemFromCart(cartId, userToken, lineId);
+    //       });
+    //       await this.APICardNau.getCartbyCartId(cartId, userToken);
+    //     }
+    //   }
+    // }
     console.log('END <<<<<<<<<<<<<<<<<<<');
     console.log('________________________');
   }

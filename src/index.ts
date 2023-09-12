@@ -7,7 +7,7 @@ const app = new App();
 //   console.log('work');
 // });
 
-//app.testAPI();
+// app.testProductAPI();
 app.start();
 //app.testProductAPI();
 
