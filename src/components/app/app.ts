@@ -3,6 +3,7 @@ import AppAPI from '../controller/api';
 import AppProductAPI from '../controller/apiProduct';
 import { AppView } from '../view/appView';
 import { ApiCatalog } from '../controller/apiCatalog';
+import { ApiCart } from '../controller/apiCart';
 
 class App {
   controller: AppController;
@@ -11,6 +12,7 @@ class App {
   view: AppView;
   container: HTMLElement;
   APICatalog: ApiCatalog;
+  APICart: ApiCart;
 
   constructor() {
     this.controller = new AppController();
@@ -18,6 +20,7 @@ class App {
     this.ProductAPI = new AppProductAPI();
     this.view = new AppView();
     this.APICatalog = new ApiCatalog();
+    this.APICart = new ApiCart();
     this.container = document.body;
   }
 
@@ -75,23 +78,26 @@ class App {
   async testUserToken() {
     if (localStorage.getItem('token')) {
       console.log('token');
+      return localStorage.getItem('token') || '';
     } else if (localStorage.getItem('guestToken')) {
       console.log('guestToken');
+      return localStorage.getItem('guestToken') || '';
     } else {
       const data = await this.API.clientCredentialsFlow();
       localStorage.setItem('guestToken', data.access_token);
+      return localStorage.getItem('guestToken') || '';
     }
   }
 
-  public testProductAPI(): void {
+  public async testProductAPI(): Promise<void> {
     console.log('________________________');
     console.log('Test Product API...');
     console.log('START >>>>>>>>>>>>>>>>>>');
 
-    this.ProductAPI.clientCredentialsFlow().then((response) => {
+    this.APICart.getCartById(await this.testUserToken()).then((response) => {
       console.log('response = ', response);
-      this.ProductAPI.getAllProducts(response.access_token);
-      this.ProductAPI.getProduct(response.access_token, 'fbf119fb-303b-4ba3-8724-e9ea6873ec07');
+      //this.ProductAPI.getAllProducts(response.access_token);
+      //this.ProductAPI.getProduct(response.access_token, 'fbf119fb-303b-4ba3-8724-e9ea6873ec07');
       // this.API.getCustomer('39fd2612-1d14-4484-b6ac-1f4631a22f91', response.access_token);
       // this.API.getAllCustomers(response.access_token);
       // this.API.updateCustomer(response.access_token);
