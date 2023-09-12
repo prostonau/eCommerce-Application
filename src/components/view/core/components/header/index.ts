@@ -26,6 +26,10 @@ const Buttons = [
     id: PageIds.LogOutPage,
     text: 'LogOut',
   },
+  {
+    id: PageIds.AboutUsPage,
+    text: 'About us',
+  },
 ];
 
 class Header extends Component {

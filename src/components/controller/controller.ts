@@ -7,6 +7,7 @@ import ProductPage from '../view/product/index';
 import ProfilePage from '../view/profile/index';
 import Header from '../view/core/components/header';
 import ErrorPage from '../view/error';
+import AboutUsPage from '../view/about_us';
 import { errorTypes } from '../view/error';
 
 export const enum PageIds {
@@ -17,6 +18,7 @@ export const enum PageIds {
   ProductPage = 'product',
   ProfilePage = 'profile',
   LogOutPage = 'logout-page',
+  AboutUsPage = 'about-us-page',
 }
 
 class AppController {
@@ -72,6 +74,8 @@ class AppController {
       page = new MainPage(PageIds.MainPage);
     } else if (idPage === PageIds.CatalogPage) {
       page = new CatalogPage(PageIds.CatalogPage);
+    } else if (idPage === PageIds.AboutUsPage) {
+      page = new AboutUsPage(PageIds.AboutUsPage);
     } else if (idPage.includes(PageIds.ProductPage)) {
       page = new ProductPage(PageIds.ProductPage, this.getProductId(idPage));
     } else if (idPage === PageIds.ProfilePage) {
