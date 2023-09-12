@@ -7,8 +7,8 @@ const app = new App();
 //   console.log('work');
 // });
 
-app.testProductAPI();
+// app.testProductAPI();
 app.start();
 //app.testProductAPI();
 
-// app.testCardAPI();
+app.testCardAPI();
