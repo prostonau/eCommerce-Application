@@ -10,7 +10,7 @@ export class ApiCart extends AppAPI {
     this.token = localStorage.getItem('token');
   }
 
-  getCartById(BEARER_TOKEN: string): Promise<ProductResponse | void> {
+  getCartById(BEARER_TOKEN: string, customerId: string): Promise<ProductResponse | void> {
     const options = {
       method: 'GET',
       headers: {
@@ -19,7 +19,7 @@ export class ApiCart extends AppAPI {
     };
 
     // https://api.{region}.commercetools.com/{projectKey}/carts/customer-id={customerId}
-    return fetch(`${this.apiUrl}/${this.projectKey}/carts/customer-id=${BEARER_TOKEN}`, options)
+    return fetch(`${this.apiUrl}/${this.projectKey}/carts/customer-id=${customerId}`, options)
       .then((response) => response.json())
       .then((data: ProductResponse) => {
         console.log('cart = ', data);

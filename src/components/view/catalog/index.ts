@@ -44,7 +44,7 @@ class CatalogPage extends Page {
   constructor(id: string) {
     super(id);
     this.api = new ApiCatalog();
-    this.token = localStorage.getItem('token') || localStorage.getItem('guestToken') || '';
+    this.token = localStorage.getItem('token') || localStorage.getItem('anonymousToken') || '';
     this.bodyContainer = document.createElement('section');
     this.bodyContainer.classList.add('container__catalog');
     this.productList = document.createElement('div');
