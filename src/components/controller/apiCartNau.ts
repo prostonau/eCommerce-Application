@@ -42,6 +42,7 @@ class APICartNau extends AppAPI {
           //if (!localStorage.getItem('anonymousToken'))
           localStorage.setItem('anonymousToken', data.access_token);
           // if (!localStorage.getItem('anonymousDataSet'))\
+          data.expires_in_date = new Date(+new Date() + data.expires_in * 1000);
           localStorage.setItem('anonymousDataSet', JSON.stringify(data));
           return resolve(data);
         })
@@ -49,7 +50,7 @@ class APICartNau extends AppAPI {
     });
   };
 
-  createCart = (BEARER_TOKEN: string) => {
+  createCart = (BEARER_TOKEN: string, storageName: string) => {
     // Создаем объект с настройками для запроса
     const options = {
       method: 'POST',
@@ -67,7 +68,8 @@ class APICartNau extends AppAPI {
       .then((response) => response.json())
       .then(async (data) => {
         console.log('createCart = ', data);
-        localStorage.setItem('cartId', data.id);
+        localStorage.setItem(`${storageName}Id`, data.id);
+        localStorage.setItem(`${storageName}VersionId`, data.version);
         return data;
       })
       .catch((error) => console.error(error));
@@ -93,7 +95,7 @@ class APICartNau extends AppAPI {
       .catch((error) => console.error(error));
   };
 
-  getCartCustomersCart = (BEARER_TOKEN: string) => {
+  getCartCustomersCart = (BEARER_TOKEN: string, storageName: string) => {
     // Создаем объект с настройками для запроса
     const options = {
       method: 'GET',
@@ -107,9 +109,16 @@ class APICartNau extends AppAPI {
     return fetch(`${this.apiUrl}/${this.projectKey}/me/active-cart`, options)
       .then((response) => response.json())
       .then((data) => {
-        console.log('getCartbyCartIdCustomer = ', data, data.version);
-        localStorage.setItem('cartVersionId', data.version);
-        return data;
+        if (!data.statusCode) {
+          console.log('getCartbyCartIdCustomer = ', data, data.version);
+          localStorage.setItem(`${storageName}VersionId`, data.version);
+          localStorage.setItem(`${storageName}Id`, data.id);
+          console.log('удалось получить корзину');
+          return data;
+        } else {
+          console.log('создана новая корзина');
+          return this.createCart(BEARER_TOKEN, storageName);
+        }
       })
       .catch((error) => console.error(error));
   };

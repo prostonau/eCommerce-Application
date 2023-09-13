@@ -4,6 +4,7 @@ import AppProductAPI from '../controller/apiProduct';
 import { AppView } from '../view/appView';
 import { ApiCatalog } from '../controller/apiCatalog';
 import APICartNau from '../controller/apiCartNau';
+import { ClientCredentialsFlowResponse } from '../../types';
 // import { lineInCart } from '../../types';
 // import { lineInCart } from '../../types';
 
@@ -47,7 +48,8 @@ class App {
     });
   }
 
-  public start(): void {
+  public async start(): Promise<void> {
+    await this.setToken();
     console.log('Start eCommerce-Application...');
     this.enableRouteChange();
     this.controller.renderHeader();
@@ -56,8 +58,10 @@ class App {
     );
     // this.controller.header.renderLogoutMenu();
     //this.testUserToken();
-    this.setToken();
-    this.controller.header.renderDefaultMenu();
+
+    localStorage.getItem('token')
+      ? this.controller.header.renderLogoutMenu()
+      : this.controller.header.renderDefaultMenu();
   }
 
   public testAPI(): void {
@@ -78,27 +82,42 @@ class App {
     //this.API.passwordFlow('johndo13e@example.com', 'secret123');
   }
 
-  async testUserToken() {
+  async setToken() {
     if (localStorage.getItem('token')) {
-      console.log('token');
-      return localStorage.getItem('token') || '';
-    } else if (localStorage.getItem('guestToken')) {
-      console.log('guestToken');
-      return localStorage.getItem('guestToken') || '';
+      const userData = localStorage.getItem('userData');
+      console.log('token = ', localStorage.getItem('token'));
+      if (userData) {
+        if (this.checkExpires(JSON.parse(userData))) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('userData');
+          this.setToken();
+        } else {
+          this.APICardNau.getCartCustomersCart(localStorage.getItem('token') || '', 'cart');
+        }
+      }
+    } else if (localStorage.getItem('anonymousToken')) {
+      const userData = localStorage.getItem('anonymousDataSet');
+      if (userData) {
+        if (this.checkExpires(JSON.parse(userData))) {
+          localStorage.removeItem('anonymousId');
+          localStorage.removeItem('anonymousToken');
+          localStorage.removeItem('anonymousDataSet');
+          this.setToken();
+        } else {
+          this.APICardNau.getCartCustomersCart(localStorage.getItem('anonymousToken') || '', 'cartAnonimus');
+        }
+      }
     } else {
-      const data = await this.API.clientCredentialsFlow();
-      localStorage.setItem('guestToken', data.access_token);
-      return localStorage.getItem('guestToken') || '';
+      await this.APICardNau.getTokenForAnonymous();
+      this.APICardNau.getCartCustomersCart(localStorage.getItem('anonymousToken') || '', 'cartAnonimus');
     }
   }
 
-  async setToken() {
-    if (localStorage.getItem('token')) {
-      console.log('token = ', localStorage.getItem('token'));
-    } else if (localStorage.getItem('anonymousToken')) {
-      console.log('anonymousToken', localStorage.getItem('anonymousToken'));
+  checkExpires(userData: ClientCredentialsFlowResponse) {
+    if (+new Date(userData.expires_in_date ? userData.expires_in_date : '') - +new Date() < 0) {
+      return true;
     } else {
-      await this.APICardNau.getTokenForAnonymous();
+      return false;
     }
   }
 
@@ -126,9 +145,9 @@ class App {
     console.log('Test Cart API...');
     console.log('START >>>>>>>>>>>>>>>>>>');
 
-    this.API.getCustomer('eab3b965-fc8f-46f1-a7a6-f14c7283e2d3', 'wc8VJmXbN1qGhctx_ir6jjSzbbGAv5pO');
+    // this.API.getCustomer('eab3b965-fc8f-46f1-a7a6-f14c7283e2d3', 'wc8VJmXbN1qGhctx_ir6jjSzbbGAv5pO');
     //this.APICardNau.createCart('wc8VJmXbN1qGhctx_ir6jjSzbbGAv5pO');
-    this.APICardNau.getCartCustomersCart('wc8VJmXbN1qGhctx_ir6jjSzbbGAv5pO');
+    // this.APICardNau.getCartCustomersCart('njaAPwtEa-EM9dbBDJFF_R0ngcYOJdRe');
     // {"access_token":"wc8VJmXbN1qGhctx_ir6jjSzbbGAv5pO","expires_in":172800,"token_type":"Bearer","scope":"manage_project:611a116e-87f8-43a5-9c07-959851c6dff3 customer_id:eab3b965-fc8f-46f1-a7a6-f14c7283e2d3","refresh_token":"611a116e-87f8-43a5-9c07-959851c6dff3:0eO7NZl6L1uSwNPX8ZUEIZZypO_pqA6NqgS-RwrnSE8"}
     // // await this.APICardNau.getTokenForAnonymous();
     // const anonymousId = localStorage.getItem('anonymousId');

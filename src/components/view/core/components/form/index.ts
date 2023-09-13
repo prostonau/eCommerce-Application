@@ -1029,6 +1029,7 @@ class Form extends Component {
       if (typeof data === 'object' && data !== null && 'access_token' in data) {
         const token: string = typeof data.access_token === 'string' ? data.access_token : '';
         localStorage.setItem('token', token);
+        data.expires_in_date = new Date(+new Date() + data.expires_in * 1000);
         localStorage.setItem('userData', JSON.stringify(data));
         if (page === PageIds.MainPage) {
           this.showNotification('Вы успешно вошли.', true);

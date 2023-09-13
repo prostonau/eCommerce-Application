@@ -3,6 +3,7 @@ export interface ClientCredentialsFlowResponse {
   expires_in: number;
   scope: string;
   token_type: string;
+  expires_in_date?: Date;
 }
 
 export interface Customer {
