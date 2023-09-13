@@ -177,9 +177,9 @@ class APICartNau extends AppAPI {
   };
 
   static updateProductQuantityInCart = (cartId: string, BEARER_TOKEN: string, lineItemId: string, quantity: number) => {
-    let versionId = localStorage.getItem('cartVersionId') ? localStorage.getItem('cartVersionId') : 0;
+    let versionId = this.getСartVersionId(); //localStorage.getItem('cartVersionId') ? localStorage.getItem('cartVersionId') : 0;
     console.log('versionId = ', versionId);
-    if (versionId === null) versionId = 0;
+    if (versionId === null) versionId = '0';
     if (!lineItemId) lineItemId = '';
 
     const data = {
@@ -213,9 +213,9 @@ class APICartNau extends AppAPI {
   };
 
   static removeLineItemFromCart = (cartId: string, BEARER_TOKEN: string, lineItemId: string) => {
-    let versionId = localStorage.getItem('cartVersionId') ? localStorage.getItem('cartVersionId') : 0;
+    let versionId = this.getСartVersionId(); //localStorage.getItem('cartVersionId') ? localStorage.getItem('cartVersionId') : 0;
     console.log('versionId = ', versionId);
-    if (versionId === null) versionId = 0;
+    if (versionId === null) versionId = '0';
     if (!lineItemId) lineItemId = '';
 
     const data = {
@@ -292,6 +292,17 @@ class APICartNau extends AppAPI {
     } else {
       console.error('We can not identify cartId');
       return 'Error.noCartId';
+    }
+  };
+
+  static getСartVersionId = () => {
+    if (localStorage.getItem('cartVersionId')) {
+      return localStorage.getItem('cartVersionId');
+    } else if (localStorage.getItem('cartAnonimusVersionId')) {
+      return localStorage.getItem('cartAnonimusVersionId');
+    } else {
+      console.error('We can not identify cartVersionId');
+      return 'Error.noСartVersionId';
     }
   };
 
