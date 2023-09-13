@@ -30,6 +30,10 @@ const Buttons = [
     id: PageIds.AboutUsPage,
     text: 'About us',
   },
+  {
+    id: PageIds.CartPage,
+    text: 'Cart page',
+  },
 ];
 
 class Header extends Component {
@@ -76,7 +80,8 @@ class Header extends Component {
         button.id === PageIds.CatalogPage ||
         button.id === 'main-page' ||
         button.id === 'logout-page' ||
-        button.id === PageIds.ProfilePage
+        button.id === PageIds.ProfilePage ||
+        button.id === PageIds.CartPage
       ) {
         const buttonHTML = document.createElement('a');
         buttonHTML.href = `#${button.id}`;

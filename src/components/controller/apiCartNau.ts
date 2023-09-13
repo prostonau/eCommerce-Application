@@ -1,5 +1,6 @@
 // import { Actions, ClientCredentialsFlowResponse } from '../../types/index';
 // import { Customer } from '../../types/index';
+import { CartResponce } from '../../types';
 import AppAPI from './api';
 
 class APICartNau extends AppAPI {
@@ -8,7 +9,17 @@ class APICartNau extends AppAPI {
     console.log('apiProduct initialized...');
   }
 
-  getTokenForAnonymous = () => {
+  static cartVersion = 0;
+  static cartId = '';
+  static bathUrl = 'europe-west1.gcp.commercetools.com';
+  static authUrl = `https://auth.${APICartNau.bathUrl}`;
+  static apiUrl = `https://api.${APICartNau.bathUrl}`;
+  static projectKey = '611a116e-87f8-43a5-9c07-959851c6dff3';
+  static secret = 'wiWXgK9Z2y_K8rx0FYLg1N-r';
+  static scope = 'i9z0351m49c9fr3YGHU_CsVHk9Eh0hyP';
+  static store = 'cycklesStoreeCommerceRSSchool';
+
+  static getTokenForAnonymous = () => {
     return new Promise((resolve, reject) => {
       const grantType = 'client_credentials';
       const scope = `manage_project:${this.projectKey}`;
@@ -23,7 +34,7 @@ class APICartNau extends AppAPI {
       const options = {
         method: 'POST',
         headers: {
-          Authorization: 'Basic ' + btoa(`${this.secret}:${this.scope}`),
+          Authorization: 'Basic ' + btoa(`${APICartNau.secret}:${APICartNau.scope}`),
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: new URLSearchParams(data),
@@ -42,6 +53,7 @@ class APICartNau extends AppAPI {
           //if (!localStorage.getItem('anonymousToken'))
           localStorage.setItem('anonymousToken', data.access_token);
           // if (!localStorage.getItem('anonymousDataSet'))\
+          data.expires_in_date = new Date(+new Date() + data.expires_in * 1000);
           localStorage.setItem('anonymousDataSet', JSON.stringify(data));
           return resolve(data);
         })
@@ -49,7 +61,7 @@ class APICartNau extends AppAPI {
     });
   };
 
-  createCart = (BEARER_TOKEN: string) => {
+  static createCart = (BEARER_TOKEN: string, storageName: string) => {
     // Создаем объект с настройками для запроса
     const options = {
       method: 'POST',
@@ -65,15 +77,18 @@ class APICartNau extends AppAPI {
     // Выполняем запрос
     return fetch(`${this.apiUrl}/${this.projectKey}/me/carts`, options)
       .then((response) => response.json())
-      .then(async (data) => {
+      .then(async (data: CartResponce) => {
         console.log('createCart = ', data);
-        localStorage.setItem('cartId', data.id);
+        localStorage.setItem(`${storageName}Id`, data.id);
+        this.cartVersion = +data.version;
+        this.cartId = data.id;
+        localStorage.setItem(`${storageName}VersionId`, data.version.toString());
         return data;
       })
       .catch((error) => console.error(error));
   };
 
-  getCartbyCartId = (cartId: string, BEARER_TOKEN: string) => {
+  static getCartbyCartId = (cartId: string, BEARER_TOKEN: string) => {
     // Создаем объект с настройками для запроса
     const options = {
       method: 'GET',
@@ -85,15 +100,17 @@ class APICartNau extends AppAPI {
     // Выполняем запрос
     return fetch(`${this.apiUrl}/${this.projectKey}/carts/${cartId}`, options)
       .then((response) => response.json())
-      .then((data) => {
+      .then((data: CartResponce) => {
         console.log('getCartbyCartId = ', data, data.version);
-        localStorage.setItem('cartVersionId', data.version);
+        localStorage.setItem('cartVersionId', data.version.toString());
+        this.cartVersion = +data.version;
+        this.cartId = data.id;
         return data;
       })
       .catch((error) => console.error(error));
   };
 
-  getCartCustomersCart = (BEARER_TOKEN: string) => {
+  static getCartCustomersCart = (BEARER_TOKEN: string, storageName: string) => {
     // Создаем объект с настройками для запроса
     const options = {
       method: 'GET',
@@ -106,15 +123,24 @@ class APICartNau extends AppAPI {
     // https://api.{region}.commercetools.com/{projectKey}/me/active-cart
     return fetch(`${this.apiUrl}/${this.projectKey}/me/active-cart`, options)
       .then((response) => response.json())
-      .then((data) => {
-        console.log('getCartbyCartIdCustomer = ', data, data.version);
-        localStorage.setItem('cartVersionId', data.version);
-        return data;
+      .then((data: CartResponce) => {
+        if (!data.statusCode) {
+          console.log('getCartbyCartIdCustomer = ', data, data.version);
+          localStorage.setItem(`${storageName}VersionId`, data.version.toString());
+          this.cartVersion = +data.version;
+          this.cartId = data.id;
+          localStorage.setItem(`${storageName}Id`, data.id);
+          console.log('удалось получить корзину');
+          return data;
+        } else {
+          console.log('создана новая корзина');
+          return this.createCart(BEARER_TOKEN, storageName);
+        }
       })
       .catch((error) => console.error(error));
   };
 
-  addProductToCart = (cartId: string, BEARER_TOKEN: string, productId: string, quantity: number) => {
+  static addProductToCart = (cartId: string, BEARER_TOKEN: string, productId: string, quantity: number) => {
     let versionId = localStorage.getItem('cartVersionId') ? localStorage.getItem('cartVersionId') : 0;
     console.log('versionId = ', versionId);
     if (versionId === null) versionId = 0;
@@ -150,7 +176,7 @@ class APICartNau extends AppAPI {
       .catch((error) => console.error(error));
   };
 
-  updateProductQuantityInCart = (cartId: string, BEARER_TOKEN: string, lineItemId: string, quantity: number) => {
+  static updateProductQuantityInCart = (cartId: string, BEARER_TOKEN: string, lineItemId: string, quantity: number) => {
     let versionId = localStorage.getItem('cartVersionId') ? localStorage.getItem('cartVersionId') : 0;
     console.log('versionId = ', versionId);
     if (versionId === null) versionId = 0;
@@ -186,7 +212,7 @@ class APICartNau extends AppAPI {
       .catch((error) => console.error(error));
   };
 
-  removeLineItemFromCart = (cartId: string, BEARER_TOKEN: string, lineItemId: string) => {
+  static removeLineItemFromCart = (cartId: string, BEARER_TOKEN: string, lineItemId: string) => {
     let versionId = localStorage.getItem('cartVersionId') ? localStorage.getItem('cartVersionId') : 0;
     console.log('versionId = ', versionId);
     if (versionId === null) versionId = 0;
@@ -245,7 +271,7 @@ class APICartNau extends AppAPI {
     }
   }
 
-  parseAnonymousId = (scope: string) => scope.split(' ')[1].split(':')[1];
+  static parseAnonymousId = (scope: string) => scope.split(' ')[1].split(':')[1];
 
   //findLineItemIdInCart = (productId: string) => {};
 }
