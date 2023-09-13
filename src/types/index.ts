@@ -186,3 +186,112 @@ export interface lineInCart {
   productId: string;
   id: string;
 }
+
+export interface ProductInCart {
+  id: string;
+  productId: string;
+  productKey: string;
+  name: Record<string, string>;
+  productType: {
+    id: string;
+    typeId: string;
+  };
+  productSlug: Record<string, string>;
+  variants: Variant[];
+
+  quantity: number;
+
+  // далее не проверенные поля
+  price: {
+    id: string;
+    value: {
+      type: string;
+      currencyCode: string;
+      centAmount: number;
+      fractionDigits: number;
+    };
+    validFrom: string;
+    validUntil: string;
+    discounted?: {
+      value: {
+        type: string;
+        currencyCode: string;
+        centAmount: number;
+        fractionDigits: number;
+      };
+      discount: {
+        typeId: string;
+        id: string;
+      };
+    };
+  };
+  discountedPricePerQuantity: [];
+  perMethodTaxRate: [];
+  addedAt: string;
+  lastModifiedAt: string;
+  state: {
+    quantity: number;
+    state: {
+      typeId: string;
+      id: string;
+    };
+  }[];
+  priceMode: string;
+  lineItemMode: string;
+  totalPrice: {
+    type: string;
+    currencyCode: string;
+    centAmount: number;
+    fractionDigits: number;
+  };
+  taxedPricePortions: [];
+}
+
+export interface CartResponce {
+  statusCode?: number;
+  type: string;
+  id: string;
+  version: number;
+  versionModifiedAt: string;
+  lastMessageSequenceNumber: number;
+  createdAt: string;
+  lastModifiedAt: string;
+  lastModifiedBy: {
+    clientId: string;
+    isPlatformClient: false;
+    customer: {
+      typeId: string;
+      id: string;
+    };
+  };
+  createdBy: {
+    clientId: string;
+    isPlatformClient: false;
+    customer: {
+      typeId: string;
+      id: string;
+    };
+  };
+  customerId: string;
+  lineItems: ProductInCart[];
+  cartState: string;
+  totalPrice: {
+    type: string;
+    currencyCode: string;
+    centAmount: number;
+    fractionDigits: number;
+  };
+  shippingMode: string;
+  shipping: [];
+  customLineItems: [];
+  discountCodes: [];
+  directDiscounts: [];
+  inventoryMode: string;
+  taxMode: string;
+  taxRoundingMode: string;
+  taxCalculationMode: string;
+  deleteDaysAfterLastModification: number;
+  refusedGifts: [];
+  origin: string;
+  itemShippingAddresses: [];
+}

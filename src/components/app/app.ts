@@ -90,9 +90,11 @@ class App {
         if (this.checkExpires(JSON.parse(userData))) {
           localStorage.removeItem('token');
           localStorage.removeItem('userData');
+          localStorage.removeItem('cartId');
+          localStorage.removeItem('cartVersionId');
           this.setToken();
         } else {
-          this.APICardNau.getCartCustomersCart(localStorage.getItem('token') || '', 'cart');
+          APICartNau.getCartCustomersCart(localStorage.getItem('token') || '', 'cart');
         }
       }
     } else if (localStorage.getItem('anonymousToken')) {
@@ -104,12 +106,12 @@ class App {
           localStorage.removeItem('anonymousDataSet');
           this.setToken();
         } else {
-          this.APICardNau.getCartCustomersCart(localStorage.getItem('anonymousToken') || '', 'cartAnonimus');
+          APICartNau.getCartCustomersCart(localStorage.getItem('anonymousToken') || '', 'cartAnonimus');
         }
       }
     } else {
-      await this.APICardNau.getTokenForAnonymous();
-      this.APICardNau.getCartCustomersCart(localStorage.getItem('anonymousToken') || '', 'cartAnonimus');
+      await APICartNau.getTokenForAnonymous();
+      APICartNau.getCartCustomersCart(localStorage.getItem('anonymousToken') || '', 'cartAnonimus');
     }
   }
 
