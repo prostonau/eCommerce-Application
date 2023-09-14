@@ -1,6 +1,6 @@
 // import { Actions, ClientCredentialsFlowResponse } from '../../types/index';
 // import { Customer } from '../../types/index';
-import { CartResponce } from '../../types';
+import { CartResponce, ProductInCart } from '../../types';
 import AppAPI from './api';
 
 class APICartNau extends AppAPI {
@@ -177,9 +177,9 @@ class APICartNau extends AppAPI {
   };
 
   static updateProductQuantityInCart = (cartId: string, BEARER_TOKEN: string, lineItemId: string, quantity: number) => {
-    let versionId = localStorage.getItem('cartVersionId') ? localStorage.getItem('cartVersionId') : 0;
+    let versionId = this.getСartVersionId(); //localStorage.getItem('cartVersionId') ? localStorage.getItem('cartVersionId') : 0;
     console.log('versionId = ', versionId);
-    if (versionId === null) versionId = 0;
+    if (versionId === null) versionId = '0';
     if (!lineItemId) lineItemId = '';
 
     const data = {
@@ -213,9 +213,9 @@ class APICartNau extends AppAPI {
   };
 
   static removeLineItemFromCart = (cartId: string, BEARER_TOKEN: string, lineItemId: string) => {
-    let versionId = localStorage.getItem('cartVersionId') ? localStorage.getItem('cartVersionId') : 0;
+    let versionId = this.getСartVersionId(); //localStorage.getItem('cartVersionId') ? localStorage.getItem('cartVersionId') : 0;
     console.log('versionId = ', versionId);
-    if (versionId === null) versionId = 0;
+    if (versionId === null) versionId = '0';
     if (!lineItemId) lineItemId = '';
 
     const data = {
@@ -273,6 +273,57 @@ class APICartNau extends AppAPI {
 
   static parseAnonymousId = (scope: string) => scope.split(' ')[1].split(':')[1];
 
-  //findLineItemIdInCart = (productId: string) => {};
+  static getToken = () => {
+    if (localStorage.getItem('token')) {
+      return localStorage.getItem('token');
+    } else if (localStorage.getItem('anonymousToken')) {
+      return localStorage.getItem('anonymousToken');
+    } else {
+      console.error('We can not identify token');
+      return 'Error.noToken';
+    }
+  };
+
+  static getCartId = () => {
+    if (localStorage.getItem('cartId')) {
+      return localStorage.getItem('cartId');
+    } else if (localStorage.getItem('cartAnonimusId')) {
+      return localStorage.getItem('cartAnonimusId');
+    } else {
+      console.error('We can not identify cartId');
+      return 'Error.noCartId';
+    }
+  };
+
+  static getСartVersionId = () => {
+    if (localStorage.getItem('cartVersionId')) {
+      return localStorage.getItem('cartVersionId');
+    } else if (localStorage.getItem('cartAnonimusVersionId')) {
+      return localStorage.getItem('cartAnonimusVersionId');
+    } else {
+      console.error('We can not identify cartVersionId');
+      return 'Error.noСartVersionId';
+    }
+  };
+
+  static getLineIdInCartByProductId = (productId: string) => {
+    let lineId: string = '';
+    const token = this.getToken();
+    const cartId = this.getCartId();
+    if (token && cartId) {
+      this.getCartbyCartId(cartId, token).then(async (e) => {
+        lineId = e?.lineItems.filter((l: ProductInCart) => l.productId === productId)[0].id
+          ? e?.lineItems.filter((l: ProductInCart) => l.productId === productId)[0].id
+          : '';
+      });
+    } else {
+      console.error('We can not identify cartId or token');
+    }
+    if (lineId === '') {
+      console.error('We have incorrect lineId');
+    } else {
+      return lineId;
+    }
+  };
 }
 export default APICartNau;
