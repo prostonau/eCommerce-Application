@@ -82,7 +82,7 @@ class APICartNau extends AppAPI {
         localStorage.setItem(`${storageName}Id`, data.id);
         this.cartVersion = +data.version;
         this.cartId = data.id;
-        localStorage.setItem(`${storageName}VersionId`, data.version.toString());
+        localStorage.setItem(`${storageName}VersionId`, '1'); //data.version.toString());
         return data;
       })
       .catch((error) => console.error(error));
@@ -141,9 +141,9 @@ class APICartNau extends AppAPI {
   };
 
   static addProductToCart = (cartId: string, BEARER_TOKEN: string, productId: string, quantity: number) => {
-    let versionId = localStorage.getItem('cartVersionId') ? localStorage.getItem('cartVersionId') : 0;
+    let versionId = this.getСartVersionId(); //localStorage.getItem('cartVersionId') ? localStorage.getItem('cartVersionId') : 0;
     console.log('versionId = ', versionId);
-    if (versionId === null) versionId = 0;
+    if (versionId === null) versionId = '0';
     if (!productId) productId = '';
 
     const data = {
@@ -170,7 +170,9 @@ class APICartNau extends AppAPI {
       .then((response) => response.json())
       .then((data) => {
         console.log('addProductToCart = ', data);
-        localStorage.setItem('cartVersionId', data.version);
+        localStorage.getItem('token')
+          ? localStorage.setItem('cartVersionId', data.version)
+          : localStorage.setItem('cartAnonimusVersionId', data.version);
         return data;
       })
       .catch((error) => console.error(error));
