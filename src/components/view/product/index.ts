@@ -2,6 +2,7 @@ import './style.scss';
 import './modal.scss';
 import Page from '../core/templates/page';
 import AppProductAPI from '../../controller/apiProduct';
+import APICartNau from '../../controller/apiCartNau';
 import { ImageData } from '../../../types';
 import Swiper from 'swiper';
 import { Navigation, Pagination } from 'swiper/modules';
@@ -17,6 +18,7 @@ class ProductPage extends Page {
 
   productId: string;
   API: AppProductAPI;
+  APIcart: APICartNau;
   name: string;
   description: string;
   images: Array<ImageData>;
@@ -29,6 +31,7 @@ class ProductPage extends Page {
     super(id);
     this.productId = productId;
     this.API = new AppProductAPI();
+    this.APIcart = new APICartNau();
     this.name = '';
     this.description = '';
     this.images = [];
@@ -115,6 +118,54 @@ class ProductPage extends Page {
       })} </span> ${this.currency}`;
     }
     return productPrice;
+  };
+
+  createAddToCartButton = () => {
+    const addToCartButtonContainer = document.createElement('div');
+    addToCartButtonContainer.classList.add('addToCartButtonContainer');
+    const addToCartButton = document.createElement('button');
+    addToCartButton.classList.add('card__button');
+    addToCartButton.classList.add('card__button-product-add');
+    addToCartButton.innerText = 'Add to cart';
+
+    addToCartButtonContainer.append(addToCartButton);
+
+    return addToCartButtonContainer;
+  };
+
+  createRemoveFromCartButton = () => {
+    const removeFromCartButton = document.createElement('div');
+    removeFromCartButton.classList.add('removeFromCartButtonContainer');
+    const addToCartButton = document.createElement('button');
+    addToCartButton.classList.add('card__button');
+    addToCartButton.classList.add('card__button-product-remove');
+    addToCartButton.innerText = 'Remove';
+
+    removeFromCartButton.append(addToCartButton);
+
+    return removeFromCartButton;
+  };
+
+  createCheckCartInConsoleButton = () => {
+    const checkCartInConsole = document.createElement('div');
+    checkCartInConsole.classList.add('removeFromCartButtonContainer');
+    const addToCartButton = document.createElement('button');
+    addToCartButton.classList.add('card__button');
+    addToCartButton.classList.add('card__button-console');
+    addToCartButton.innerText = 'Check Cart In Console';
+
+    checkCartInConsole.append(addToCartButton);
+
+    return checkCartInConsole;
+  };
+
+  createButtonsContainer = () => {
+    const buttonsContainer = document.createElement('div');
+    buttonsContainer.classList.add('product-buttons-container');
+    buttonsContainer.append(this.createAddToCartButton());
+    buttonsContainer.append(this.createRemoveFromCartButton());
+    buttonsContainer.append(this.createCheckCartInConsoleButton());
+    return buttonsContainer;
   };
 
   createProductImages = () => {
@@ -306,6 +357,41 @@ class ProductPage extends Page {
     // console.log('modalContent = ', modalContent);
   }
 
+  addCartToConsoleEventListener = () => {
+    const node = document.querySelector('.card__button-console');
+    // Закрытие модального окна при клике на крестик
+    if (node)
+      node.addEventListener('click', async () => {
+        const cartId = APICartNau.getCartId();
+        const token = APICartNau.getToken();
+        if (cartId && token) {
+          await APICartNau.getCartbyCartId(cartId, token).then((e) => {
+            console.clear();
+            console.log('cart = ', e);
+          });
+        }
+      });
+  };
+
+  addAddtoCartEventListener = () => {
+    const node = document.querySelector('.card__button-product-add');
+    // Закрытие модального окна при клике на крестик
+    if (node)
+      node.addEventListener('click', async () => {
+        const cartId = APICartNau.getCartId();
+        const token = APICartNau.getToken();
+        if (cartId && token) {
+          await APICartNau.addProductToCart(cartId, token, this.productId, 1).then((e) => {
+            console.clear();
+            (node as HTMLButtonElement).disabled = true;
+            console.log('this.productId =', this.productId);
+            console.log('add to cart answer = ', e);
+          });
+        }
+      });
+  };
+  // (cartId: string, BEARER_TOKEN: string, productId: string, quantity: number) => {
+
   render(): HTMLElement {
     // console.log('this.productId BEFORE = ', this.productId);
     this.getMasterData(this.productId)
@@ -317,6 +403,8 @@ class ProductPage extends Page {
         wrapper.append(this.createProductTitle());
         wrapper.append(this.createProductDescription());
         wrapper.append(this.createProductPrice());
+        wrapper.append(this.createButtonsContainer());
+
         // wrapper.append(this.createProductImages());
         wrapper.append(this.createProductImagesSliderContainer('normal'));
         wrapper.append(this.createModalWindow());
@@ -327,6 +415,9 @@ class ProductPage extends Page {
         this.addSwiperIntoModal();
         this.createSliderModal();
         this.createSlider();
+
+        this.addCartToConsoleEventListener();
+        this.addAddtoCartEventListener();
       })
       .catch((error) => {
         console.error(error);
