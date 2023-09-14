@@ -308,12 +308,12 @@ class APICartNau extends AppAPI {
     }
   };
 
-  static getLineIdInCartByProductId = (productId: string) => {
+  static getLineIdInCartByProductId = async (productId: string) => {
     let lineId: string = '';
     const token = this.getToken();
     const cartId = this.getCartId();
     if (token && cartId) {
-      this.getCartbyCartId(cartId, token).then(async (e) => {
+      await this.getCartbyCartId(cartId, token).then(async (e) => {
         lineId = e?.lineItems.filter((l: ProductInCart) => l.productId === productId)[0].id
           ? e?.lineItems.filter((l: ProductInCart) => l.productId === productId)[0].id
           : '';
@@ -325,6 +325,26 @@ class APICartNau extends AppAPI {
       console.error('We have incorrect lineId');
     } else {
       return lineId;
+    }
+  };
+
+  static checkDoWeHaveThisProductIdInCart = async (productId: string) => {
+    let lineId: string = '';
+    const token = this.getToken();
+    const cartId = this.getCartId();
+    if (token && cartId) {
+      await this.getCartbyCartId(cartId, token).then(async (e) => {
+        lineId = e?.lineItems.filter((l: ProductInCart) => l.productId === productId)[0].id
+          ? e?.lineItems.filter((l: ProductInCart) => l.productId === productId)[0].id
+          : '';
+      });
+    } else {
+      console.error('ERROR: We can not identify cartId or token');
+    }
+    if (lineId === '') {
+      return false; // no line
+    } else {
+      return true; // we have this line
     }
   };
 }
