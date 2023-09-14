@@ -45,7 +45,7 @@ class ProductPage extends Page {
   }
 
   setRemoveShowHideButton = async () => {
-    console.log('asdf = ', await APICartNau.checkDoWeHaveThisProductIdInCart(this.productId).then((e) => e));
+    // console.log('asdf = ', await APICartNau.checkDoWeHaveThisProductIdInCart(this.productId).then((e) => e));
 
     this.removeShowHideButton = await APICartNau.checkDoWeHaveThisProductIdInCart(this.productId).then((e) => e);
   };
@@ -59,12 +59,12 @@ class ProductPage extends Page {
         this.name = response.masterData.current.name['en-US'];
         //this.description = response.masterData.current.description['en-US'];
         if (response.masterData.current.description && response.masterData.current.description['en-US']) {
-          console.log('description = ', response.masterData.current.description['en-US']);
+          // console.log('description = ', response.masterData.current.description['en-US']);
           this.description = response.masterData.current.description['en-US'];
         } else {
           this.description = 'None';
         }
-        console.log('this.description = ', this.description);
+        // console.log('this.description = ', this.description);
         this.images = response.masterData.staged.masterVariant.images;
         this.price = response.masterData.staged.masterVariant.prices[0].value.centAmount;
         if (
@@ -377,9 +377,9 @@ class ProductPage extends Page {
         const cartId = APICartNau.getCartId();
         const token = APICartNau.getToken();
         if (cartId && token) {
-          await APICartNau.getCartbyCartId(cartId, token).then((e) => {
+          await APICartNau.getCartbyCartId(cartId, token).then(() => {
             console.clear();
-            console.log('cart = ', e);
+            // console.log('cart = ', e);
           });
         }
       });
@@ -394,13 +394,13 @@ class ProductPage extends Page {
         const cartId = APICartNau.getCartId();
         const token = APICartNau.getToken();
         if (cartId && token) {
-          await APICartNau.addProductToCart(cartId, token, this.productId, 1).then((e) => {
+          await APICartNau.addProductToCart(cartId, token, this.productId, 1).then(() => {
             //console.clear();
             (addButton as HTMLButtonElement).disabled = true;
             (removeButton as HTMLButtonElement).disabled = false;
             APICartNau.showNotification('Added');
-            console.log('this.productId =', this.productId);
-            console.log('add to cart answer = ', e);
+            // console.log('this.productId =', this.productId);
+            // console.log('add to cart answer = ', e);
           });
         }
       });
@@ -418,13 +418,13 @@ class ProductPage extends Page {
           await APICartNau.getCartbyCartId(cartId, token).then(async (e) => {
             if (e?.lineItems.filter((l: ProductInCart) => l.productId === this.productId)[0].id) {
               const lineId = e?.lineItems.filter((l: ProductInCart) => l.productId === this.productId)[0].id;
-              await APICartNau.removeLineItemFromCart(cartId, token, lineId).then((e) => {
+              await APICartNau.removeLineItemFromCart(cartId, token, lineId).then(() => {
                 //console.clear();
                 (addButton as HTMLButtonElement).disabled = false;
                 (removeButton as HTMLButtonElement).disabled = true;
                 APICartNau.showNotification('Removed');
                 console.clear();
-                console.log('remove from cart answer = ', e);
+                // console.log('remove from cart answer = ', e);
               });
             }
           });
