@@ -102,7 +102,7 @@ class APICartNau extends AppAPI {
       .then((response) => response.json())
       .then((data: CartResponce) => {
         console.log('getCartbyCartId = ', data, data.version);
-        localStorage.setItem('cartVersionId', data.version.toString());
+        localStorage.setItem(`${this.returnPrefixForCartVersion()}VersionId`, data.version.toString());
         this.cartVersion = +data.version;
         this.cartId = data.id;
         return data;
@@ -170,9 +170,9 @@ class APICartNau extends AppAPI {
       .then((response) => response.json())
       .then((data) => {
         console.log('addProductToCart = ', data);
-        localStorage.getItem('token')
-          ? localStorage.setItem('cartVersionId', data.version)
-          : localStorage.setItem('cartAnonimusVersionId', data.version);
+        console.log('${this.returnPrefixForCartVersion() = ', this.returnPrefixForCartVersion());
+        localStorage.setItem(`${this.returnPrefixForCartVersion()}VersionId`, data.version);
+
         return data;
       })
       .catch((error) => console.error(error));
@@ -208,7 +208,7 @@ class APICartNau extends AppAPI {
       .then((response) => response.json())
       .then((data) => {
         console.log('addProductToCart = ', data);
-        localStorage.setItem('cartVersionId', data.version);
+        localStorage.setItem(`${this.returnPrefixForCartVersion()}VersionId`, data.version);
         return data;
       })
       .catch((error) => console.error(error));
@@ -243,7 +243,7 @@ class APICartNau extends AppAPI {
       .then((response) => response.json())
       .then((data) => {
         console.log('addProductToCart = ', data);
-        localStorage.setItem('cartVersionId', data.version);
+        localStorage.setItem(`${this.returnPrefixForCartVersion()}VersionId`, data.version);
         return data;
       })
       .catch((error) => console.error(error));
@@ -329,23 +329,54 @@ class APICartNau extends AppAPI {
   };
 
   static checkDoWeHaveThisProductIdInCart = async (productId: string) => {
-    let lineId: string = '';
+    // console.clear();
+    let output = false;
     const token = this.getToken();
     const cartId = this.getCartId();
     if (token && cartId) {
       await this.getCartbyCartId(cartId, token).then(async (e) => {
-        lineId = e?.lineItems.filter((l: ProductInCart) => l.productId === productId)[0].id
-          ? e?.lineItems.filter((l: ProductInCart) => l.productId === productId)[0].id
-          : '';
+        if (e?.lineItems.filter((l: ProductInCart) => l.productId === productId).length) {
+          console.log(
+            'e?.lineItems.filter((l: ProductInCart) => l.productId === productId).length = ',
+            e?.lineItems.filter((l: ProductInCart) => l.productId === productId).length
+          );
+          if (e?.lineItems.filter((l: ProductInCart) => l.productId === productId).length > 0) output = true;
+          else output = false;
+        }
       });
     } else {
       console.error('ERROR: We can not identify cartId or token');
     }
-    if (lineId === '') {
-      return false; // no line
-    } else {
-      return true; // we have this line
-    }
+    return output;
   };
+
+  static checkLogin = () => {
+    if (localStorage.getItem('token')) return true;
+    else return false;
+  };
+
+  static returnPrefixForCartVersion = () => {
+    if (this.checkLogin()) return 'cart';
+    else return 'cartAnonimus';
+  };
+
+  static showNotification(text: string, top: boolean = false) {
+    // Создаем элемент для уведомления
+    const notification = document.createElement('div');
+    if (top) {
+      notification.className = 'notificationTop';
+    } else {
+      notification.className = 'notification';
+    }
+    notification.textContent = text;
+
+    // Добавляем уведомление внизу экрана
+    document.body.appendChild(notification);
+
+    // Устанавливаем таймер на скрытие уведомления через 5 секунд
+    setTimeout(function () {
+      notification.style.display = 'none';
+    }, 5000);
+  }
 }
 export default APICartNau;

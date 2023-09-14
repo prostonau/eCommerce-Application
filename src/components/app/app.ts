@@ -92,9 +92,9 @@ class App {
           localStorage.removeItem('userData');
           localStorage.removeItem('cartId');
           localStorage.removeItem('cartVersionId');
-          this.setToken();
+          await this.setToken();
         } else {
-          APICartNau.getCartCustomersCart(localStorage.getItem('token') || '', 'cart');
+          await APICartNau.getCartCustomersCart(localStorage.getItem('token') || '', 'cart');
         }
       }
     } else if (localStorage.getItem('anonymousToken')) {
@@ -104,14 +104,14 @@ class App {
           localStorage.removeItem('anonymousId');
           localStorage.removeItem('anonymousToken');
           localStorage.removeItem('anonymousDataSet');
-          this.setToken();
+          await this.setToken();
         } else {
-          APICartNau.getCartCustomersCart(localStorage.getItem('anonymousToken') || '', 'cartAnonimus');
+          await APICartNau.getCartCustomersCart(localStorage.getItem('anonymousToken') || '', 'cartAnonimus');
         }
       }
     } else {
       await APICartNau.getTokenForAnonymous();
-      APICartNau.getCartCustomersCart(localStorage.getItem('anonymousToken') || '', 'cartAnonimus');
+      await APICartNau.getCartCustomersCart(localStorage.getItem('anonymousToken') || '', 'cartAnonimus');
     }
   }
 

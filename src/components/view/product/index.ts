@@ -6,6 +6,7 @@ import APICartNau from '../../controller/apiCartNau';
 import { ImageData } from '../../../types';
 import Swiper from 'swiper';
 import { Navigation, Pagination } from 'swiper/modules';
+import { ProductInCart } from '../../../types';
 //import 'swiper/css/bundle';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -26,6 +27,7 @@ class ProductPage extends Page {
   discountPrice: string;
   currency: string;
   myModalSwiper: Swiper | null;
+  removeShowHideButton: boolean;
 
   constructor(id: string, productId: string) {
     super(id);
@@ -39,9 +41,17 @@ class ProductPage extends Page {
     this.discountPrice = '';
     this.currency = '';
     this.myModalSwiper = null;
+    this.removeShowHideButton = false;
   }
 
+  setRemoveShowHideButton = async () => {
+    console.log('asdf = ', await APICartNau.checkDoWeHaveThisProductIdInCart(this.productId).then((e) => e));
+
+    this.removeShowHideButton = await APICartNau.checkDoWeHaveThisProductIdInCart(this.productId).then((e) => e);
+  };
+
   async getMasterData(productId: string) {
+    await this.setRemoveShowHideButton();
     await this.API.clientCredentialsFlow().then(async (response) => {
       // console.log('response = ', response);
       await this.API.getProduct(response.access_token, productId).then((response) => {
@@ -127,6 +137,7 @@ class ProductPage extends Page {
     addToCartButton.classList.add('card__button');
     addToCartButton.classList.add('card__button-product-add');
     addToCartButton.innerText = 'Add to cart';
+    (addToCartButton as HTMLButtonElement).disabled = this.removeShowHideButton;
 
     addToCartButtonContainer.append(addToCartButton);
 
@@ -136,12 +147,13 @@ class ProductPage extends Page {
   createRemoveFromCartButton = () => {
     const removeFromCartButton = document.createElement('div');
     removeFromCartButton.classList.add('removeFromCartButtonContainer');
-    const addToCartButton = document.createElement('button');
-    addToCartButton.classList.add('card__button');
-    addToCartButton.classList.add('card__button-product-remove');
-    addToCartButton.innerText = 'Remove';
+    const removeButton = document.createElement('button');
+    removeButton.classList.add('card__button');
+    removeButton.classList.add('card__button-product-remove');
+    removeButton.innerText = 'Remove';
+    (removeButton as HTMLButtonElement).disabled = !this.removeShowHideButton;
 
-    removeFromCartButton.append(addToCartButton);
+    removeFromCartButton.append(removeButton);
 
     return removeFromCartButton;
   };
@@ -374,18 +386,47 @@ class ProductPage extends Page {
   };
 
   addAddtoCartEventListener = () => {
-    const node = document.querySelector('.card__button-product-add');
+    const addButton = document.querySelector('.card__button-product-add');
+    const removeButton = document.querySelector('.card__button-product-remove');
     // Закрытие модального окна при клике на крестик
-    if (node)
-      node.addEventListener('click', async () => {
+    if (addButton && removeButton)
+      addButton.addEventListener('click', async () => {
         const cartId = APICartNau.getCartId();
         const token = APICartNau.getToken();
         if (cartId && token) {
           await APICartNau.addProductToCart(cartId, token, this.productId, 1).then((e) => {
-            console.clear();
-            (node as HTMLButtonElement).disabled = true;
+            //console.clear();
+            (addButton as HTMLButtonElement).disabled = true;
+            (removeButton as HTMLButtonElement).disabled = false;
+            APICartNau.showNotification('Added');
             console.log('this.productId =', this.productId);
             console.log('add to cart answer = ', e);
+          });
+        }
+      });
+  };
+
+  addRemoveProductFromCartEventListener = () => {
+    const addButton = document.querySelector('.card__button-product-add');
+    const removeButton = document.querySelector('.card__button-product-remove');
+    // Закрытие модального окна при клике на крестик
+    if (addButton && removeButton)
+      removeButton.addEventListener('click', async () => {
+        const cartId = APICartNau.getCartId();
+        const token = APICartNau.getToken();
+        if (cartId && token) {
+          await APICartNau.getCartbyCartId(cartId, token).then(async (e) => {
+            if (e?.lineItems.filter((l: ProductInCart) => l.productId === this.productId)[0].id) {
+              const lineId = e?.lineItems.filter((l: ProductInCart) => l.productId === this.productId)[0].id;
+              await APICartNau.removeLineItemFromCart(cartId, token, lineId).then((e) => {
+                //console.clear();
+                (addButton as HTMLButtonElement).disabled = false;
+                (removeButton as HTMLButtonElement).disabled = true;
+                APICartNau.showNotification('Removed');
+                console.clear();
+                console.log('remove from cart answer = ', e);
+              });
+            }
           });
         }
       });
@@ -418,6 +459,7 @@ class ProductPage extends Page {
 
         this.addCartToConsoleEventListener();
         this.addAddtoCartEventListener();
+        this.addRemoveProductFromCartEventListener();
       })
       .catch((error) => {
         console.error(error);
