@@ -371,7 +371,6 @@ class ProductPage extends Page {
 
   addCartToConsoleEventListener = () => {
     const node = document.querySelector('.card__button-console');
-    // Закрытие модального окна при клике на крестик
     if (node) {
       node.addEventListener('click', async () => {
         const cartId = APICartNau.getCartId();
@@ -390,7 +389,6 @@ class ProductPage extends Page {
   addAddtoCartEventListener = () => {
     const addButton = document.querySelector('.card__button-product-add');
     const removeButton = document.querySelector('.card__button-product-remove');
-    // Закрытие модального окна при клике на крестик
     if (addButton && removeButton)
       addButton.addEventListener('click', async () => {
         const cartId = APICartNau.getCartId();
