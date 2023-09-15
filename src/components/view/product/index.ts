@@ -371,24 +371,24 @@ class ProductPage extends Page {
 
   addCartToConsoleEventListener = () => {
     const node = document.querySelector('.card__button-console');
-    // Закрытие модального окна при клике на крестик
-    if (node)
+    if (node) {
       node.addEventListener('click', async () => {
         const cartId = APICartNau.getCartId();
         const token = APICartNau.getToken();
         if (cartId && token) {
-          await APICartNau.getCartbyCartId(cartId, token).then(() => {
+          await APICartNau.getCartbyCartId(cartId, token).then((e) => {
             console.clear();
-            // console.log('cart = ', e);
+            localStorage.clear();
+            console.log('cart = ', e);
           });
         }
       });
+    }
   };
 
   addAddtoCartEventListener = () => {
     const addButton = document.querySelector('.card__button-product-add');
     const removeButton = document.querySelector('.card__button-product-remove');
-    // Закрытие модального окна при клике на крестик
     if (addButton && removeButton)
       addButton.addEventListener('click', async () => {
         const cartId = APICartNau.getCartId();
