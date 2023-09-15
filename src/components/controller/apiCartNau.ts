@@ -141,7 +141,7 @@ class APICartNau extends AppAPI {
   };
 
   static addProductToCart = (cartId: string, BEARER_TOKEN: string, productId: string, quantity: number) => {
-    let versionId = this.getСartVersionId(); //localStorage.getItem('cartVersionId') ? localStorage.getItem('cartVersionId') : 0;
+    let versionId = this.getCartVersionId(); //localStorage.getItem('cartVersionId') ? localStorage.getItem('cartVersionId') : 0;
     console.log('versionId = ', versionId);
     if (versionId === null) versionId = '0';
     if (!productId) productId = '';
@@ -179,7 +179,7 @@ class APICartNau extends AppAPI {
   };
 
   static updateProductQuantityInCart = (cartId: string, BEARER_TOKEN: string, lineItemId: string, quantity: number) => {
-    let versionId = this.getСartVersionId(); //localStorage.getItem('cartVersionId') ? localStorage.getItem('cartVersionId') : 0;
+    let versionId = this.getCartVersionId(); //localStorage.getItem('cartVersionId') ? localStorage.getItem('cartVersionId') : 0;
     console.log('versionId = ', versionId);
     if (versionId === null) versionId = '0';
     if (!lineItemId) lineItemId = '';
@@ -215,7 +215,7 @@ class APICartNau extends AppAPI {
   };
 
   static removeLineItemFromCart = (cartId: string, BEARER_TOKEN: string, lineItemId: string) => {
-    let versionId = this.getСartVersionId(); //localStorage.getItem('cartVersionId') ? localStorage.getItem('cartVersionId') : 0;
+    let versionId = this.getCartVersionId(); //localStorage.getItem('cartVersionId') ? localStorage.getItem('cartVersionId') : 0;
     console.log('versionId = ', versionId);
     if (versionId === null) versionId = '0';
     if (!lineItemId) lineItemId = '';
@@ -297,14 +297,14 @@ class APICartNau extends AppAPI {
     }
   };
 
-  static getСartVersionId = () => {
+  static getCartVersionId = () => {
     if (localStorage.getItem('cartVersionId')) {
       return localStorage.getItem('cartVersionId');
     } else if (localStorage.getItem('cartAnonimusVersionId')) {
       return localStorage.getItem('cartAnonimusVersionId');
     } else {
       console.error('We can not identify cartVersionId');
-      return 'Error.noСartVersionId';
+      return 'Error.noCartVersionId';
     }
   };
 

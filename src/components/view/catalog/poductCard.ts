@@ -7,13 +7,15 @@ export class ProductCard {
   container: HTMLAnchorElement;
   product: Product;
   showHideAddToCartButton: boolean;
+  cartId: string | null;
 
-  constructor(product: Product) {
+  constructor(product: Product, cartId: string | null) {
     this.product = product;
     this.container = document.createElement('a');
     // this.container.href = `#product/${this.product.id}`;
     this.container.classList.add('card');
     this.showHideAddToCartButton = false;
+    this.cartId = cartId;
   }
 
   async getMasterData() {
@@ -80,8 +82,8 @@ export class ProductCard {
       const cardPrice = document.createElement('h4');
       cardPrice.classList.add('card__description_price');
 
-      cardPrice.innerHTML = this.getPrice('US'); //TODO language swith
-      if (this.getPrice('US').includes('<span')) {
+      cardPrice.innerHTML = this.getPrice('USD'); //TODO language swith
+      if (this.getPrice('USD').includes('<span')) {
         cardPrice.classList.add('card__price--discounted');
       }
 
@@ -104,7 +106,7 @@ export class ProductCard {
     const prices = this.product.masterVariant.prices;
     let result = '';
     prices.forEach((price) => {
-      if (price.country === country) {
+      if (price.value.currencyCode === country) {
         result = (price.value.centAmount / 100).toString() + ' ' + price.value.currencyCode;
         if (price.discounted) {
           result += this.getDiscount(price.discounted.value);
@@ -113,7 +115,7 @@ export class ProductCard {
     });
     if (result === '') {
       prices.forEach((price) => {
-        if (price.country === 'US') {
+        if (price.country === 'USD') {
           result = (price.value.centAmount / 100).toString() + ' ' + price.value.currencyCode;
           if (price.discounted) {
             result += this.getDiscount(price.discounted.value);
@@ -132,19 +134,19 @@ export class ProductCard {
   }
 
   addAddtoCartEventListener = (button: HTMLButtonElement) => {
-    if (button)
+    if (button) {
       button.addEventListener('click', async () => {
         console.log('click');
-        const cartId = APICartNau.getCartId();
         const token = APICartNau.getToken();
-        if (cartId && token) {
-          await APICartNau.addProductToCart(cartId, token, this.product.id, 1).then(() => {
+        if (this.cartId && token) {
+          await APICartNau.addProductToCart(this.cartId, token, this.product.id, 1).then(() => {
             //console.clear();
             button.disabled = true;
             APICartNau.showNotification('Added');
           });
         }
       });
+    }
   };
 
   setRemoveShowHideButton = async () => {
