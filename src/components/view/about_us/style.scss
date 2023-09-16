@@ -1,0 +1,85 @@
+.about-us-page {
+  padding: 30px;
+}
+
+.about-us__header {
+  text-align: center;
+}
+
+.about-us__paragraph {
+  margin-block: 30px;
+  margin-inline: 3%;
+  line-height: 1.6rem;
+}
+
+.member__container {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.member__card {
+  margin: 16px;
+  padding: 18px;
+  text-align: center;
+  width: 300px;
+  border-radius: 8px;
+  box-shadow: 4px 4px 10px #3f4636, -4px -4px 10px #444d3a;
+}
+
+.member__image {
+  max-width: 100px;
+  border-radius: 50%;
+}
+
+.member__name {
+  font-size: 1.25rem;
+}
+
+.member__role {
+  font-style: italic;
+  font-size: 0.75rem;
+}
+
+.member__github {
+  cursor: pointer;
+  display: block;
+  text-decoration: none;
+}
+
+.member__github {
+  color: #64baba;
+  transition: opacity .2s;
+}
+
+.member__github:hover {
+  opacity: 0.7;
+}
+
+.git-hub-icon {
+  margin-top: 2px;
+}
+
+.git-hub-icon svg {
+  height: 16px;
+}
+
+.member__info {
+  text-align: justify;
+}
+
+.member__info, .member__github, .member__role {
+  margin-top: 8px;
+}
+
+.school-logo {
+  display: block;
+  max-width: 150px;
+  margin: 20px auto;
+  transition: transform .3s;
+}
+
+.school-logo:hover {
+  transform: scale(1.15);
+}
