@@ -1,29 +1,39 @@
-import { PriceValue, Product, ValueResp } from '../../../types';
+import { Product, ProductInCart, ValueResp } from '../../../types';
+import { ProductCard } from '../catalog/poductCard';
+import InputBox from '../core/templates/input';
 import Label from '../core/templates/label';
-import APICartNau from '../../controller/apiCartNau';
-import { EventDelegator } from '../../features/eventDelegator';
 // import { ProductInCart } from '../../../types';
 
-export class ProductCard {
-  container: HTMLAnchorElement;
-  product: Product;
-  showHideAddToCartButton: boolean;
-  cartId: string | null;
+export class ProductCardInCart extends ProductCard {
+  productInCart: ProductInCart;
+  inputBox: HTMLDivElement;
+  decButton: HTMLButtonElement;
+  incButton: HTMLButtonElement;
+  inputQuantity: InputBox;
+  cardToCart: HTMLButtonElement;
+  constructor(product: Product, cartId: string | null, productInCart: ProductInCart) {
+    super(product, cartId);
+    this.productInCart = productInCart;
+    this.inputBox = document.createElement('div');
+    this.inputBox.classList.add('quantity__select_box');
 
-  constructor(product: Product, cartId: string | null) {
-    this.product = product;
-    this.container = document.createElement('a');
-    // this.container.href = `#product/${this.product.id}`;
-    this.container.classList.add('card');
-    this.showHideAddToCartButton = false;
-    this.cartId = cartId;
-  }
-
-  async getMasterData() {
-    await this.setRemoveShowHideButton();
+    this.decButton = document.createElement('button');
+    this.decButton.innerHTML = '<';
+    this.incButton = document.createElement('button');
+    this.incButton.innerHTML = '>';
+    this.inputQuantity = new InputBox(
+      'input',
+      'quantity__select',
+      'number',
+      '',
+      this.productInCart.quantity.toString(),
+      false
+    );
+    this.cardToCart = document.createElement('button');
   }
 
   render(): HTMLElement {
+    this.container.innerHTML = '';
     this.getMasterData().then(() => {
       const cardImg = document.createElement('img');
       cardImg.classList.add('card__img');
@@ -88,13 +98,10 @@ export class ProductCard {
         cardPrice.classList.add('card__price--discounted');
       }
 
-      const cardToCart = document.createElement('button');
-      cardToCart.classList.add('card__button');
-      cardToCart.innerText = 'Add to cart';
-      cardToCart.disabled = this.showHideAddToCartButton;
-      this.addAddtoCartEventListener(cardToCart);
+      this.cardToCart.classList.add('card__button');
+      this.cardToCart.innerHTML = 'Remove';
 
-      cardBody.append(cardPrice, cardToCart);
+      cardBody.append(this.addQuantityInput(), cardPrice, this.cardToCart);
       cardDescription.append(cardTitle, cardBody);
 
       this.container.append(cardImgContainer, cardDescription);
@@ -103,54 +110,13 @@ export class ProductCard {
     return this.container;
   }
 
-  getPrice(country: string): string {
-    const prices = this.product.masterVariant.prices;
-    let result = '';
-    prices.forEach((price) => {
-      if (price.value.currencyCode === country) {
-        result = (price.value.centAmount / 100).toString() + ' ' + price.value.currencyCode;
-        if (price.discounted) {
-          result += this.getDiscount(price.discounted.value);
-        }
-      }
-    });
-    if (result === '') {
-      prices.forEach((price) => {
-        if (price.country === 'USD') {
-          result = (price.value.centAmount / 100).toString() + ' ' + price.value.currencyCode;
-          if (price.discounted) {
-            result += this.getDiscount(price.discounted.value);
-          }
-        }
-      });
+  addQuantityInput() {
+    const inputQuantityEl = this.inputQuantity.render();
+    if (inputQuantityEl instanceof HTMLInputElement) {
+      inputQuantityEl.min = '1';
     }
+    this.inputBox.append(this.decButton, inputQuantityEl, this.incButton);
 
-    return result;
+    return this.inputBox;
   }
-
-  getDiscount(discount: PriceValue): string {
-    return (
-      '<span id="discounted__span">' + (discount.centAmount / 100).toString() + ' ' + discount.currencyCode + '</span>'
-    );
-  }
-
-  addAddtoCartEventListener = (button: HTMLButtonElement) => {
-    if (button) {
-      EventDelegator.addDelegatedListener('click', button, async () => {
-        console.log('click');
-        const token = APICartNau.getToken();
-        if (this.cartId && token) {
-          await APICartNau.addProductToCart(this.cartId, token, this.product.id, 1).then(() => {
-            button.disabled = true;
-            APICartNau.showNotification('Added');
-          });
-        }
-      });
-    }
-  };
-
-  setRemoveShowHideButton = async () => {
-    // console.log('asdf = ', await APICartNau.checkDoWeHaveThisProductIdInCart(this.productId).then((e) => e));
-    this.showHideAddToCartButton = await APICartNau.checkDoWeHaveThisProductIdInCart(this.product.id).then((e) => e);
-  };
 }

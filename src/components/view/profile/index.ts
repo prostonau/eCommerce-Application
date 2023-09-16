@@ -131,11 +131,6 @@ class ProfilePage extends Page {
     this.getUserData(this.userId)
       .then(() => {
         const title = this.createHeaderTitle(ProfilePage.TextObject.ProfileTitle);
-        /* const wrapper = this.createUserInfoContainer();
-        wrapper.append(this.createBioData(), this.createAddresses(0));
-        if (this.addresses[1]) {
-          wrapper.append(this.createAddresses(1));
-        } */
 
         const updFormBio = new Form('form', 'bio__form');
         updFormBio.generateUpdateFormBio(this.userId, this.email, this.firstName, this.lastName, this.birthDate);

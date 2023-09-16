@@ -81,6 +81,7 @@ class Header extends Component {
         button.id === 'main-page' ||
         button.id === 'logout-page' ||
         button.id === PageIds.ProfilePage ||
+        button.id === PageIds.AboutUsPage ||
         button.id === PageIds.CartPage
       ) {
         const buttonHTML = document.createElement('a');
