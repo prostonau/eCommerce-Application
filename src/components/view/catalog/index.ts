@@ -8,6 +8,7 @@ import { createQueryFromProps } from '../../features/createQueryFromProps';
 import SelectBox from '../core/templates/select';
 import Label from '../core/templates/label';
 import InputBox from '../core/templates/input';
+import APICartNau from '../../controller/apiCartNau';
 
 const searchIco = `<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="15" height="15" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
 viewBox="0 0 500 500"
@@ -135,8 +136,8 @@ class CatalogPage extends Page {
     }
   }
 
-  generateProductCard(product: Product): HTMLElement {
-    const cardBody = new ProductCard(product);
+  generateProductCard(product: Product, cartId: string | null): HTMLElement {
+    const cardBody = new ProductCard(product, cartId);
 
     return cardBody.render();
   }
@@ -149,9 +150,10 @@ class CatalogPage extends Page {
     if (element) {
       element.remove();
     }
+    const cartId = APICartNau.getCartId();
     if (products) {
       products.results?.forEach((product) => {
-        this.productList.append(this.generateProductCard(product));
+        this.productList.append(this.generateProductCard(product, cartId));
         const catalog__list = document.querySelector('.container__catalog');
         if (flag) {
           const element = document.querySelector('.pagination__container_wrapper');

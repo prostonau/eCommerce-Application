@@ -17,6 +17,13 @@ header {
   padding-bottom: 10px;
 }
 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
 @media (max-width: 480px) {
 header div {
 flex-direction: column;

@@ -6,7 +6,7 @@ class SelectBox extends Component {
     this.container.id = id;
     if (this.container instanceof HTMLSelectElement) {
       this.container.required = isRequired;
-      this.container.autocomplete = 'true';
+      this.container.autocomplete = '';
     }
   }
 
