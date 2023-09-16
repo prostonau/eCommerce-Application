@@ -40,6 +40,9 @@ class CatalogPage extends Page {
   sorters: HTMLDivElement;
   search: HTMLDivElement;
   hideBtn: HTMLButtonElement;
+  limit: number;
+  pageId: number;
+  offset: number;
 
   constructor(id: string) {
     super(id);
@@ -49,12 +52,16 @@ class CatalogPage extends Page {
     this.bodyContainer.classList.add('container__catalog');
     this.productList = document.createElement('div');
     this.productList.classList.add('catalog__list');
-
+    this.limit = 4;
+    this.pageId = 0;
+    this.offset = 0;
     this.productProps = {
       category: '',
       filter: { type: '', size: '', color: '' },
       sort: '',
       search: '',
+      offset: `limit=${this.limit}`,
+      limit: `offset=${this.offset}`,
     };
 
     this.navigation = document.createElement('nav');
@@ -86,6 +93,20 @@ class CatalogPage extends Page {
     this.bodyContainer.append(this.hideBtn, this.navigation, this.productList);
   }
 
+  clearPaginationSettings() {
+    this.limit = 4;
+    this.pageId = 0;
+    this.offset = 0;
+    this.productProps = {
+      category: '',
+      filter: { type: '', size: '', color: '' },
+      sort: '',
+      search: '',
+      offset: `limit=${this.limit}`,
+      limit: `offset=${this.offset}`,
+    };
+  }
+
   render() {
     this.container.innerHTML = '';
     const title = this.createHeaderTitle(CatalogPage.TextObject.CatalogTitle);
@@ -95,6 +116,7 @@ class CatalogPage extends Page {
     this.generateFilters();
     this.addSortField();
     this.addSearchField();
+    //this.addPaginationContainer();
 
     this.container.append(this.bodyContainer);
     return this.container;
@@ -102,8 +124,11 @@ class CatalogPage extends Page {
 
   async getProducts(): Promise<void | ProductResponse> {
     if (this.token !== '') {
+      // console.log('AAAA = ', this.productProps);
       const data = await this.api.queryProducts(this.token, createQueryFromProps(this.productProps));
-      console.log(createQueryFromProps(this.productProps));
+      // console.log('-----------------------------------------------------------------------------------');
+      // console.log('createQueryFromProps(this.productProps) = ', createQueryFromProps(this.productProps));
+      // console.log('data =', data);
       if (data) {
         return data;
       }
@@ -119,9 +144,26 @@ class CatalogPage extends Page {
   async generateProducts(): Promise<void> {
     const products = await this.getProducts();
     this.productList.innerHTML = '';
+    let flag = true;
+    const element = document.querySelector('.pagination__container_wrapper');
+    if (element) {
+      element.remove();
+    }
     if (products) {
       products.results?.forEach((product) => {
         this.productList.append(this.generateProductCard(product));
+        const catalog__list = document.querySelector('.container__catalog');
+        if (flag) {
+          const element = document.querySelector('.pagination__container_wrapper');
+          if (element) {
+            element.remove();
+          }
+          const paginationContainerPromise = this.addPaginationContainer();
+          paginationContainerPromise.then((paginationContainer) => {
+            (catalog__list as HTMLDivElement).append(paginationContainer);
+          });
+          flag = false;
+        }
       });
     }
   }
@@ -139,6 +181,7 @@ class CatalogPage extends Page {
       document.querySelectorAll('.category__current').forEach((el) => el.classList.remove('category__current'));
       categoryListTitle.classList.add('category__current');
       this.productProps.category = ``;
+      this.clearPaginationSettings();
       this.generateProducts();
     });
 
@@ -273,6 +316,46 @@ class CatalogPage extends Page {
     });
 
     ul.append(li);
+  }
+
+  async addPaginationContainer() {
+    const paginationContainerWrapper = document.createElement('div');
+    paginationContainerWrapper.classList.add('pagination__container_wrapper');
+    const paginationContainer = document.createElement('div');
+    paginationContainer.classList.add('pagination__container');
+    paginationContainerWrapper.append(paginationContainer);
+
+    await this.getProducts().then((data) => {
+      // console.log('data = ', data);
+      let numberOfPages = 0;
+      if (data?.total) numberOfPages = Math.ceil(data.total / this.limit);
+
+      // console.log('numberOfPages =', numberOfPages);
+
+      for (let i = 0; i < numberOfPages; i++) {
+        const button = document.createElement('button');
+        button.classList.add('paggination__button');
+        button.innerHTML = (i + 1).toString();
+        if (this.pageId === i) button.classList.toggle('actvie_pag_button');
+
+        button.addEventListener('click', (e) => {
+          e?.preventDefault();
+          this.pageId = i;
+          // this.offset = i * this.limit;
+          // this.limit = 4;
+          this.productProps.offset = `offset=${i * this.limit}`;
+          this.productProps.limit = `limit=${this.limit}`;
+          // console.log('this.pageId = ', this.pageId);
+          // console.log('this.offset = ', this.offset);
+          this.generateProducts();
+        });
+
+        paginationContainer.append(button);
+      }
+    });
+
+    //this.container.append(paginationContainerWrapper);
+    return paginationContainerWrapper;
   }
 }
 

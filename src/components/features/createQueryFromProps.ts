@@ -1,6 +1,7 @@
 import { ProductProps } from '../../types';
 
 export function createQueryFromProps(props: ProductProps) {
+  // console.log('props = ', props);
   const queryParams: string[] = [];
 
   for (const prop in props) {
@@ -25,5 +26,6 @@ export function createQueryFromProps(props: ProductProps) {
       }
     }
   }
+  // console.log('queryParams.join(&) = ', queryParams.join('&'));
   return queryParams.join('&');
 }
