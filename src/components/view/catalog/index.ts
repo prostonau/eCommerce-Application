@@ -176,8 +176,9 @@ class CatalogPage extends Page {
     EventDelegator.addDelegatedListener('click', categoryListTitle, () => {
       document.querySelectorAll('.category__current').forEach((el) => el.classList.remove('category__current'));
       categoryListTitle.classList.add('category__current');
-      this.productProps.category = ``;
+      // console.log('start clear');
       this.clearPaginationSettings();
+      this.productProps.category = ``;
       this.generateProducts();
     });
 
@@ -235,6 +236,7 @@ class CatalogPage extends Page {
       this.productProps.filter[atrName] = typeFilter.getValue()
         ? `filter=variants.attributes.${atrName}.key:"${typeFilter.getValue()}"`
         : '';
+      this.clearPaginationSettings();
       this.generateProducts();
     });
 
@@ -257,6 +259,7 @@ class CatalogPage extends Page {
       this.productProps.sort = typeSort.getValue()
         ? `sort=${typeSort.getValue() === 'name' ? 'name.en-us asc' : typeSort.getValue()}`
         : '';
+      this.clearPaginationSettings();
       this.generateProducts();
     });
 
@@ -286,6 +289,7 @@ class CatalogPage extends Page {
     searchButton.addEventListener('click', (ev) => {
       ev?.preventDefault();
       this.productProps.search = searchField.getValue() ? `fuzzy=true&text.en-us="${searchField.getValue()}"` : '';
+      this.clearPaginationSettings();
       this.generateProducts();
     });
 
@@ -308,6 +312,8 @@ class CatalogPage extends Page {
       document.querySelectorAll('.category__current').forEach((el) => el.classList.remove('category__current'));
       li.classList.add('category__current');
       this.productProps.category = `filter=categories.id:subtree("${li.getAttribute('data_category-id')}")`;
+      // console.log('start BBBBBBBBBBBBBBBBBBBBBB');
+      this.clearPaginationSettings();
       this.generateProducts();
     });
 
