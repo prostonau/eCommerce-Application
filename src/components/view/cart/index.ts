@@ -3,6 +3,7 @@ import APICartNau from '../../controller/apiCartNau';
 import { ApiCatalog } from '../../controller/apiCatalog';
 import Page from '../core/templates/page';
 import { ProductCardInCart } from './productCardinCart';
+import { EventDelegator } from '../../features/eventDelegator';
 
 export class CartPage extends Page {
   static TextObject = {
@@ -14,6 +15,8 @@ export class CartPage extends Page {
   productList: HTMLDivElement;
   cartApi: APICartNau;
   cartId: string;
+  productCartAside: HTMLElement;
+  cardContainer: HTMLDivElement;
 
   constructor(id: string) {
     super(id);
@@ -25,6 +28,9 @@ export class CartPage extends Page {
     this.productList = document.createElement('div');
     this.productList.classList.add('catalog__list');
     this.cartApi = new APICartNau();
+    this.productCartAside = document.createElement('aside');
+    this.productCartAside.classList.add('cart__asside');
+    this.cardContainer = document.createElement('div');
   }
 
   render() {
@@ -33,29 +39,70 @@ export class CartPage extends Page {
     this.container.append(title);
     this.generateAddedProducts();
     this.generateAssideBar();
+
+    this.bodyContainer.append(this.cardContainer, this.productCartAside);
     this.container.append(this.bodyContainer);
     return this.container;
   }
 
   async generateAddedProducts() {
-    const cart = await APICartNau.getCartbyCartId(this.cartId, this.token);
-    const cardContainer = document.createElement('div');
+    this.cardContainer.innerHTML = '';
+    let cart = await APICartNau.getCartbyCartId(this.cartId, this.token);
     cart?.lineItems.forEach(async (item) => {
       const product = await this.api.queryProducts(APICartNau.getToken() || '', `filter=id: "${item.productId}"`);
       if (product?.results[0]) {
-        const productCartCard = new ProductCardInCart(product?.results[0], this.cartId);
-        cardContainer.append(productCartCard.render());
+        const productCartCard = new ProductCardInCart(product?.results[0], this.cartId, item);
+
+        EventDelegator.addDelegatedListener('click', productCartCard.decButton, async () => {
+          productCartCard.inputQuantity.setValue(
+            (+productCartCard.inputQuantity.getValue() - 1 > 0
+              ? +productCartCard.inputQuantity.getValue() - 1
+              : 1
+            ).toString()
+          );
+          cart = await APICartNau.updateProductQuantityInCart(
+            this.cartId,
+            this.token,
+            item.id,
+            +productCartCard.inputQuantity.getValue()
+          );
+          this.generateAssideBar();
+          console.log('Запрос на обновление корзины');
+        });
+
+        EventDelegator.addDelegatedListener('click', productCartCard.incButton, async () => {
+          productCartCard.inputQuantity.setValue((+productCartCard.inputQuantity.getValue() + 1).toString());
+          cart = await APICartNau.updateProductQuantityInCart(
+            this.cartId,
+            this.token,
+            item.id,
+            +productCartCard.inputQuantity.getValue()
+          );
+          this.generateAssideBar();
+          console.log('Запрос на обновление корзины');
+        });
+
+        EventDelegator.addDelegatedListener('input', productCartCard.inputQuantity.render(), async () => {
+          cart = await APICartNau.updateProductQuantityInCart(
+            this.cartId,
+            this.token,
+            item.id,
+            +productCartCard.inputQuantity.getValue() > 0 ? +productCartCard.inputQuantity.getValue() : 1
+          );
+          this.generateAssideBar();
+          console.log('Запрос на обновление корзины');
+        });
+
+        this.cardContainer.append(productCartCard.render());
       }
     });
-    this.bodyContainer.append(cardContainer);
   }
 
   async generateAssideBar() {
+    this.productCartAside.innerHTML = '';
     const cart = await APICartNau.getCartbyCartId(this.cartId, this.token);
     if (cart) {
-      const productCartAside = document.createElement('aside');
-      productCartAside.innerHTML = `Total price: ${(cart.totalPrice.centAmount / 100).toString()} USD`;
-      this.bodyContainer.append(productCartAside);
+      this.productCartAside.innerHTML = `Total price: ${(cart.totalPrice.centAmount / 100).toString()} USD`;
     }
   }
 }
