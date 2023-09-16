@@ -33,10 +33,12 @@ export class EventDelegator {
     if (this.globalListenerAdded) {
       document.removeEventListener('click', this.handleGlobalClick);
       document.removeEventListener('change', this.handleGlobalChange);
+      document.removeEventListener('input', this.handleGlobalInput);
     }
 
     document.addEventListener('click', this.handleGlobalClick);
     document.addEventListener('change', this.handleGlobalChange);
+    document.addEventListener('input', this.handleGlobalInput);
     this.globalListenerAdded = true;
   }
 
@@ -60,6 +62,16 @@ export class EventDelegator {
   static handleGlobalChange = (event: Event) => {
     EventDelegator.delegatedListeners.forEach((listener) => {
       if (listener.event === 'change') {
+        if (event.target instanceof HTMLElement && event.target === listener.selector) {
+          listener.callback(event);
+        }
+      }
+    });
+  };
+
+  static handleGlobalInput = (event: Event) => {
+    EventDelegator.delegatedListeners.forEach((listener) => {
+      if (listener.event === 'input') {
         if (event.target instanceof HTMLElement && event.target === listener.selector) {
           listener.callback(event);
         }

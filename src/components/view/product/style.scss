@@ -119,5 +119,34 @@
   //   display: none;
   // }
 
+  .addToCartButtonContainer{
+    padding: 10px;
+  }
+   
+  .card__button-product-add{
+    padding: 10px;
+    background-color: goldenrod;
+  }
 
+  .removeFromCartButtonContainer {
+    padding: 10px;
+  }
 
+  .card__button-product-remove{
+    padding: 10px;
+    background-color: goldenrod;
+  }
+
+  .card__button-console{
+    padding: 10px;
+    background-color: goldenrod;
+  }
+
+  .removeFromCartButtonContainer {
+    padding: 10px;
+  }
+  
+
+  .product-buttons-container{
+    display: flex;    
+  }

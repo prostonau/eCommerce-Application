@@ -11,4 +11,4 @@ const app = new App();
 app.start();
 //app.testProductAPI();
 
-app.testCardAPI();
+// app.testCardAPI();
