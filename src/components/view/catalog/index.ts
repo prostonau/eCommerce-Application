@@ -97,14 +97,8 @@ class CatalogPage extends Page {
     this.limit = 4;
     this.pageId = 0;
     this.offset = 0;
-    this.productProps = {
-      category: '',
-      filter: { type: '', size: '', color: '' },
-      sort: '',
-      search: '',
-      offset: `limit=${this.limit}`,
-      limit: `offset=${this.offset}`,
-    };
+    this.productProps.offset = `limit=4`;
+    this.productProps.limit = `offset=0`;
   }
 
   render() {
