@@ -197,7 +197,7 @@ export interface ProductInCart {
     typeId: string;
   };
   productSlug: Record<string, string>;
-  variants: Variant[];
+  variant: Variant;
 
   quantity: number;
 
