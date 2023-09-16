@@ -52,6 +52,7 @@ export class CartPage extends Page {
       const product = await this.api.queryProducts(APICartNau.getToken() || '', `filter=id: "${item.productId}"`);
       if (product?.results[0]) {
         const productCartCard = new ProductCardInCart(product?.results[0], this.cartId, item);
+        const productCartCardEl = productCartCard.render();
 
         EventDelegator.addDelegatedListener('click', productCartCard.decButton, async () => {
           productCartCard.inputQuantity.setValue(
@@ -93,7 +94,15 @@ export class CartPage extends Page {
           console.log('Запрос на обновление корзины');
         });
 
-        this.cardContainer.append(productCartCard.render());
+        EventDelegator.addDelegatedListener('click', productCartCard.cardToCart, async () => {
+          cart = await APICartNau.updateProductQuantityInCart(this.cartId, this.token, item.id, 0);
+          this.generateAssideBar();
+          APICartNau.showNotification('Removed');
+          productCartCardEl.id = 'removed';
+          console.log('Запрос на обновление корзины');
+        });
+
+        this.cardContainer.append(productCartCardEl);
       }
     });
   }

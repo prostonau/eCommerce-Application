@@ -10,6 +10,7 @@ export class ProductCardInCart extends ProductCard {
   decButton: HTMLButtonElement;
   incButton: HTMLButtonElement;
   inputQuantity: InputBox;
+  cardToCart: HTMLButtonElement;
   constructor(product: Product, cartId: string | null, productInCart: ProductInCart) {
     super(product, cartId);
     this.productInCart = productInCart;
@@ -28,6 +29,7 @@ export class ProductCardInCart extends ProductCard {
       this.productInCart.quantity.toString(),
       false
     );
+    this.cardToCart = document.createElement('button');
   }
 
   render(): HTMLElement {
@@ -96,13 +98,10 @@ export class ProductCardInCart extends ProductCard {
         cardPrice.classList.add('card__price--discounted');
       }
 
-      const cardToCart = document.createElement('button');
-      cardToCart.classList.add('card__button');
-      cardToCart.innerText = 'Add to cart';
-      cardToCart.disabled = this.showHideAddToCartButton;
-      this.addAddtoCartEventListener(cardToCart);
+      this.cardToCart.classList.add('card__button');
+      this.cardToCart.innerHTML = 'Remove';
 
-      cardBody.append(this.addQuantityInput(), cardPrice, cardToCart);
+      cardBody.append(this.addQuantityInput(), cardPrice, this.cardToCart);
       cardDescription.append(cardTitle, cardBody);
 
       this.container.append(cardImgContainer, cardDescription);

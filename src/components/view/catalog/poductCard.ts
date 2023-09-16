@@ -1,6 +1,7 @@
 import { PriceValue, Product, ValueResp } from '../../../types';
 import Label from '../core/templates/label';
 import APICartNau from '../../controller/apiCartNau';
+import { EventDelegator } from '../../features/eventDelegator';
 // import { ProductInCart } from '../../../types';
 
 export class ProductCard {
@@ -135,12 +136,11 @@ export class ProductCard {
 
   addAddtoCartEventListener = (button: HTMLButtonElement) => {
     if (button) {
-      button.addEventListener('click', async () => {
+      EventDelegator.addDelegatedListener('click', button, async () => {
         console.log('click');
         const token = APICartNau.getToken();
         if (this.cartId && token) {
           await APICartNau.addProductToCart(this.cartId, token, this.product.id, 1).then(() => {
-            //console.clear();
             button.disabled = true;
             APICartNau.showNotification('Added');
           });
