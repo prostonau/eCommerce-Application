@@ -92,6 +92,9 @@ export class ProductCard {
       cardToCart.classList.add('card__button');
       cardToCart.innerText = 'Add to cart';
       cardToCart.disabled = this.showHideAddToCartButton;
+      if (cardToCart.disabled) {
+        cardToCart.innerText = 'Added';
+      }
       this.addAddtoCartEventListener(cardToCart);
 
       cardBody.append(cardPrice, cardToCart);
@@ -142,6 +145,7 @@ export class ProductCard {
         if (this.cartId && token) {
           await APICartNau.addProductToCart(this.cartId, token, this.product.id, 1).then(() => {
             button.disabled = true;
+            button.innerText = 'Added';
             APICartNau.showNotification('Added');
           });
         }

@@ -1,4 +1,4 @@
-import { Product, ProductInCart, ValueResp } from '../../../types';
+import { PriceValue, Product, ProductInCart, ValueResp } from '../../../types';
 import { ProductCard } from '../catalog/poductCard';
 import InputBox from '../core/templates/input';
 import Label from '../core/templates/label';
@@ -11,6 +11,7 @@ export class ProductCardInCart extends ProductCard {
   incButton: HTMLButtonElement;
   inputQuantity: InputBox;
   cardToCart: HTMLButtonElement;
+  cardPrice: HTMLHeadingElement;
   constructor(product: Product, cartId: string | null, productInCart: ProductInCart) {
     super(product, cartId);
     this.productInCart = productInCart;
@@ -18,8 +19,10 @@ export class ProductCardInCart extends ProductCard {
     this.inputBox.classList.add('quantity__select_box');
 
     this.decButton = document.createElement('button');
+    this.decButton.classList.add('quantity__select_button');
     this.decButton.innerHTML = '<';
     this.incButton = document.createElement('button');
+    this.incButton.classList.add('quantity__select_button');
     this.incButton.innerHTML = '>';
     this.inputQuantity = new InputBox(
       'input',
@@ -30,6 +33,7 @@ export class ProductCardInCart extends ProductCard {
       false
     );
     this.cardToCart = document.createElement('button');
+    this.cardPrice = document.createElement('h4');
   }
 
   render(): HTMLElement {
@@ -90,18 +94,17 @@ export class ProductCardInCart extends ProductCard {
       );
       properties.classList.add('card__description_body-properties');
 
-      const cardPrice = document.createElement('h4');
-      cardPrice.classList.add('card__description_price');
+      this.cardPrice.classList.add('card__description_price');
 
-      cardPrice.innerHTML = this.getPrice('USD'); //TODO language swith
+      this.cardPrice.innerHTML = this.getPrice('USD');
       if (this.getPrice('USD').includes('<span')) {
-        cardPrice.classList.add('card__price--discounted');
+        this.cardPrice.classList.add('card__price--discounted');
       }
 
       this.cardToCart.classList.add('card__button');
       this.cardToCart.innerHTML = 'Remove';
 
-      cardBody.append(this.addQuantityInput(), cardPrice, this.cardToCart);
+      cardBody.append(this.addQuantityInput(), this.cardPrice, this.cardToCart);
       cardDescription.append(cardTitle, cardBody);
 
       this.container.append(cardImgContainer, cardDescription);
@@ -118,5 +121,44 @@ export class ProductCardInCart extends ProductCard {
     this.inputBox.append(this.decButton, inputQuantityEl, this.incButton);
 
     return this.inputBox;
+  }
+
+  getPrice(country: string): string {
+    const prices = this.product.masterVariant.prices;
+    let result = '';
+    prices.forEach((price) => {
+      if (price.value.currencyCode === country) {
+        result =
+          ((price.value.centAmount / 100) * +this.inputQuantity.getValue()).toString() + ' ' + price.value.currencyCode;
+        if (price.discounted) {
+          result += this.getDiscount(price.discounted.value);
+        }
+      }
+    });
+    if (result === '') {
+      prices.forEach((price) => {
+        if (price.country === 'USD') {
+          result =
+            ((price.value.centAmount / 100) * +this.inputQuantity.getValue()).toString() +
+            ' ' +
+            price.value.currencyCode;
+          if (price.discounted) {
+            result += this.getDiscount(price.discounted.value);
+          }
+        }
+      });
+    }
+
+    return result;
+  }
+
+  getDiscount(discount: PriceValue): string {
+    return (
+      '<span id="discounted__span">' +
+      ((discount.centAmount / 100) * +this.inputQuantity.getValue()).toString() +
+      ' ' +
+      discount.currencyCode +
+      '</span>'
+    );
   }
 }
