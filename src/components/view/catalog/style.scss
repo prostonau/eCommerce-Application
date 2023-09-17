@@ -28,6 +28,26 @@
     -4px -4px 10px #444d3a;
   transition: all 0.5s ease-in-out;
 
+  .card__button {
+    width: 100px;
+    margin-inline: 5px;
+    margin: 0 auto;
+    height: 20px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 1rem;
+    border-radius: 6px;
+    background-color: #266128;
+    color: #daffaa;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: opacity .2s;
+
+    &:disabled {
+      background-color: #ec6c03;
+    }
+  }
+
   &:hover {
     box-shadow:
       4px 4px 10px #ec6c03,
