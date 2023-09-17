@@ -52,7 +52,6 @@ class App {
     const loader = document.createElement('div') as HTMLDivElement;
     loader.style.display = 'none';
     loader.classList.add('loader777');
-    loader.style.display = 'block';
     this.container.append(loader);
   };
 
