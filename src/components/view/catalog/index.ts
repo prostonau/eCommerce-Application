@@ -137,6 +137,12 @@ class CatalogPage extends Page {
   }
 
   async generateProducts(): Promise<void> {
+    const loader = document.querySelector('.loader777') as HTMLDivElement;
+    loader.style.display = 'block'; // показать загрузчик
+    const catalogList = document.querySelector('.catalog__list') as HTMLDivElement;
+    if (catalogList) {
+      catalogList.style.display = 'none';
+    }
     const products = await this.getProducts();
     this.productList.innerHTML = '';
     let flag = true;
@@ -161,6 +167,10 @@ class CatalogPage extends Page {
           flag = false;
         }
       });
+    }
+    loader.style.display = 'none';
+    if (catalogList) {
+      catalogList.style.display = 'flex';
     }
   }
 

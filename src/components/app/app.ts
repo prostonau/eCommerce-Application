@@ -48,7 +48,15 @@ class App {
     });
   }
 
+  addLoader = () => {
+    const loader = document.createElement('div') as HTMLDivElement;
+    loader.classList.add('loader777');
+    loader.style.display = 'block';
+    this.container.append(loader);
+  };
+
   public async start(): Promise<void> {
+    this.addLoader();
     await this.setToken();
     console.log('Start eCommerce-Application...');
     this.enableRouteChange();
