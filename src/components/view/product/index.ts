@@ -176,7 +176,7 @@ class ProductPage extends Page {
     buttonsContainer.classList.add('product-buttons-container');
     buttonsContainer.append(this.createAddToCartButton());
     buttonsContainer.append(this.createRemoveFromCartButton());
-    buttonsContainer.append(this.createCheckCartInConsoleButton());
+    // buttonsContainer.append(this.createCheckCartInConsoleButton());
     return buttonsContainer;
   };
 
