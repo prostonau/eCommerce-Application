@@ -178,6 +178,52 @@ class APICartNau extends AppAPI {
       .catch((error) => console.error(error));
   };
 
+  static addProductsToCart = (
+    cartId: string,
+    BEARER_TOKEN: string,
+    products: { action: string; productId: string; quantity: number }[]
+  ) => {
+    let versionId = this.getCartVersionId(); //localStorage.getItem('cartVersionId') ? localStorage.getItem('cartVersionId') : 0;
+    console.log('versionId = ', versionId);
+    if (versionId === null) versionId = '0';
+
+    const data = {
+      version: Number(versionId),
+      actions: products,
+    };
+
+    const options = {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${BEARER_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+
+    return fetch(`${this.apiUrl}/${this.projectKey}/carts/${cartId}`, options)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('addProductToCart = ', data);
+        console.log('${this.returnPrefixForCartVersion() = ', this.returnPrefixForCartVersion());
+        localStorage.setItem(`${this.returnPrefixForCartVersion()}VersionId`, data.version);
+
+        return data;
+      })
+      .catch((error) => console.error(error));
+  };
+
+  static async duplicateCart(token: string) {
+    const oldCart = await APICartNau.getCartCustomersCart(localStorage.getItem('anonymousToken') || '', 'cartAnonimus');
+    const newCart = await APICartNau.getCartCustomersCart(localStorage.getItem('token') || '', 'cartAnonimus');
+    if (oldCart && oldCart.lineItems.length > 0 && newCart) {
+      const items = oldCart.lineItems.map((item) => {
+        return { action: 'addLineItem', productId: item.productId, quantity: item.quantity };
+      });
+      APICartNau.addProductsToCart(newCart.id, token, items);
+    }
+  }
+
   static addDiscountCode = (cartId: string, BEARER_TOKEN: string, discount: string) => {
     let versionId = this.getCartVersionId(); //localStorage.getItem('cartVersionId') ? localStorage.getItem('cartVersionId') : 0;
     console.log('versionId = ', versionId);

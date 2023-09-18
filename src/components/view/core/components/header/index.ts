@@ -1,5 +1,6 @@
 import Component from '../../templates/components';
 import { PageIds } from '../../../../controller/controller';
+import APICartNau from '../../../../controller/apiCartNau';
 
 const Buttons = [
   {
@@ -117,8 +118,10 @@ class Header extends Component {
     }
 
     const logout = document.querySelector('.logout');
-    logout?.addEventListener('click', () => {
+    logout?.addEventListener('click', async () => {
       localStorage.clear();
+      await APICartNau.getTokenForAnonymous();
+      await APICartNau.createCart(localStorage.getItem('anonymousToken') || '', 'cartAnonimus');
       this.renderDefaultMenu();
     });
   }
