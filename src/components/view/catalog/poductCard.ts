@@ -132,9 +132,7 @@ export class ProductCard {
   }
 
   getDiscount(discount: PriceValue): string {
-    return (
-      '<span id="discounted__span">' + (discount.centAmount / 100).toString() + ' ' + discount.currencyCode + '</span>'
-    );
+    return '<span>' + (discount.centAmount / 100).toString() + ' ' + discount.currencyCode + '</span>';
   }
 
   addAddtoCartEventListener = (button: HTMLButtonElement) => {

@@ -130,7 +130,7 @@ export class CartPage extends Page {
         this.productCartAside.classList.remove('asside__hidden');
         const assideTitle = document.createElement('h3');
         assideTitle.classList.add('asside__title');
-        assideTitle.innerHTML = `Total price: ${(cart.totalPrice.centAmount / 100).toString()} USD`;
+        this.updateTotalPrice(cart, assideTitle);
 
         const assideText = document.createElement('p');
         assideText.classList.add('asside__text');
@@ -179,7 +179,19 @@ export class CartPage extends Page {
   }
 
   updateTotalPrice(cart: CartResponce, header: HTMLElement) {
-    header.innerHTML = `Total price: ${(cart.totalPrice.centAmount / 100).toString()} USD`;
+    const discount = cart.lineItems.reduce((acc, item) => {
+      acc += (item.price.value.centAmount / 100) * item.quantity;
+      return acc;
+    }, 0);
+    if (discount !== cart.totalPrice.centAmount / 100) {
+      header.innerHTML = `Price: ${discount} USD<br><span id>Total price: ${(
+        cart.totalPrice.centAmount / 100
+      ).toString()} USD</span>`;
+      header.classList.add('discounted');
+    } else {
+      header.innerHTML = `Total price: ${(cart.totalPrice.centAmount / 100).toString()} USD`;
+      header.classList.remove('discounted');
+    }
   }
 
   updatePrice(productCartCard: ProductCardInCart) {

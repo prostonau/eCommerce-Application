@@ -138,6 +138,17 @@
       4px 4px 10px #3f4636,
       -4px -4px 10px #444d3a;
   }
+
+  .discounted {
+    color: red;
+    text-decoration: line-through;
+    span {
+      margin: 0;
+      display: inline-block;
+      text-decoration: none;
+      color: #daffaa;
+    }
+  }
 }
 
 @keyframes hide {
