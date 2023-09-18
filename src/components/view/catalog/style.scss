@@ -113,10 +113,6 @@
   &__description_price {
     margin: 5px auto;
   }
-
-  .card__price--discounted {
-    color: red;
-  }
 }
 
 .card__img {
@@ -132,8 +128,9 @@
 }
 
 .card__price--discounted {
+  color: red;
   text-decoration: line-through;
-  #discounted__span {
+  span {
     display: inline-block;
     text-decoration: none;
     margin-left: 10px;

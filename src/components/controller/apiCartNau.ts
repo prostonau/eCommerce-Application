@@ -178,6 +178,45 @@ class APICartNau extends AppAPI {
       .catch((error) => console.error(error));
   };
 
+  static addDiscountCode = (cartId: string, BEARER_TOKEN: string, discount: string) => {
+    let versionId = this.getCartVersionId(); //localStorage.getItem('cartVersionId') ? localStorage.getItem('cartVersionId') : 0;
+    console.log('versionId = ', versionId);
+    if (versionId === null) versionId = '0';
+
+    const data = {
+      version: Number(versionId),
+      actions: [
+        {
+          action: 'addDiscountCode',
+          code: discount,
+        },
+      ],
+    };
+
+    const options = {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${BEARER_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+
+    return fetch(`${this.apiUrl}/${this.projectKey}/carts/${cartId}`, options)
+      .then((response) => response.json())
+      .then((data: CartResponce) => {
+        console.log('applyCode = ', data);
+        if (!data.statusCode) {
+          localStorage.setItem(`${this.returnPrefixForCartVersion()}VersionId`, data.version.toString());
+          APICartNau.showNotification(`Code ${discount} sucsessfuly applied`);
+          return data;
+        } else {
+          APICartNau.showNotification('Invalid code');
+        }
+      })
+      .catch((error) => console.error(error));
+  };
+
   static updateProductQuantityInCart = (cartId: string, BEARER_TOKEN: string, lineItemId: string, quantity: number) => {
     let versionId = this.getCartVersionId(); //localStorage.getItem('cartVersionId') ? localStorage.getItem('cartVersionId') : 0;
     console.log('versionId = ', versionId);
@@ -214,21 +253,32 @@ class APICartNau extends AppAPI {
       .catch((error) => console.error(error));
   };
 
-  static removeLineItemFromCart = (cartId: string, BEARER_TOKEN: string, lineItemId: string) => {
+  static removeLineItemFromCart = (
+    cartId: string,
+    BEARER_TOKEN: string,
+    lineItemId: string | { action: string; lineItemId: string }[]
+  ) => {
     let versionId = this.getCartVersionId(); //localStorage.getItem('cartVersionId') ? localStorage.getItem('cartVersionId') : 0;
     console.log('versionId = ', versionId);
     if (versionId === null) versionId = '0';
     if (!lineItemId) lineItemId = '';
-
-    const data = {
-      version: Number(versionId),
-      actions: [
-        {
-          action: 'removeLineItem',
-          lineItemId: lineItemId,
-        },
-      ],
-    };
+    let data = {};
+    if (typeof lineItemId === 'string') {
+      data = {
+        version: Number(versionId),
+        actions: [
+          {
+            action: 'removeLineItem',
+            lineItemId: lineItemId,
+          },
+        ],
+      };
+    } else {
+      data = {
+        version: Number(versionId),
+        actions: lineItemId,
+      };
+    }
 
     const options = {
       method: 'POST',
