@@ -2,6 +2,8 @@
 // import { Customer } from '../../types/index';
 import { CartResponce, ProductInCart } from '../../types';
 import AppAPI from './api';
+import Config from './../../app.config';
+const config = new Config();
 
 class APICartNau extends AppAPI {
   constructor() {
@@ -11,13 +13,13 @@ class APICartNau extends AppAPI {
 
   static cartVersion = 0;
   static cartId = '';
-  static bathUrl = 'europe-west1.gcp.commercetools.com';
-  static authUrl = `https://auth.${APICartNau.bathUrl}`;
-  static apiUrl = `https://api.${APICartNau.bathUrl}`;
-  static projectKey = '611a116e-87f8-43a5-9c07-959851c6dff3';
-  static secret = 'wiWXgK9Z2y_K8rx0FYLg1N-r';
-  static scope = 'i9z0351m49c9fr3YGHU_CsVHk9Eh0hyP';
-  static store = 'cycklesStoreeCommerceRSSchool';
+  static bathUrl = config.bathUrl;
+  static authUrl = config.authUrl;
+  static apiUrl = config.apiUrl;
+  static projectKey = config.projectKey;
+  static secret = config.secret;
+  static scope = config.scope;
+  static store = config.store;
 
   static getTokenForAnonymous = () => {
     return new Promise((resolve, reject) => {
