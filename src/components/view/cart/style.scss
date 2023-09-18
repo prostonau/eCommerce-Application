@@ -43,7 +43,7 @@
     display: flex;
   }
 
-  .quantity__select {
+  .quantity__select, .asside__code-input {
     max-width: 40px;
     text-align: center;
     appearance: textfield;
@@ -61,7 +61,11 @@
       inset -2px -2px 4px #f9f9f9;
   }
 
-  .quantity__select_button {
+  .asside__code-input {
+    max-width: 100px;
+  }
+
+  .quantity__select_button, .asside__button, .asside__button-clear {
     font-weight: 800;
     width: 20px;
     margin-inline: 5px;
@@ -78,6 +82,23 @@
     transition: opacity .2s;
   }
 
+  .asside__button, .asside__button-clear {
+    padding: 0 5px;
+    width: auto;
+  }
+
+  .asside__button-clear {
+    margin-top: 25px;
+    background-color: #ec6c03;
+    margin: 25px 0 0;
+  }
+
+  .asside__text, .support__text {
+    margin-top: 25px;
+    font-weight: 700;
+    font-size: 1rem;
+  }
+
   .card {
     flex-basis: 100%;
     width: 95%;
@@ -86,12 +107,6 @@
 
   .card__img {
     height: 240px;
-  }
-
-  .cart__asside {
-    flex-basis: 30%;
-    margin: 15px 0;
-    padding: 5px;
   }
 
   #removed {
@@ -109,10 +124,19 @@
   }
 
   .cart__asside {
+    flex-basis: 30%;
+    margin: 15px 5px;
+    padding: 5px;
     color: #daffaa;
     font-family: 'Montserrat', sans-serif;
     font-weight: 800;
     font-size: 1.2rem;
+    border-radius: 5px;
+    background-color: #121e13;
+    text-decoration: none;
+    box-shadow:
+      4px 4px 10px #3f4636,
+      -4px -4px 10px #444d3a;
   }
 }
 

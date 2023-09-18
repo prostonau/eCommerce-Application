@@ -4,6 +4,8 @@ import { ApiCatalog } from '../../controller/apiCatalog';
 import Page from '../core/templates/page';
 import { ProductCardInCart } from './productCardinCart';
 import { EventDelegator } from '../../features/eventDelegator';
+import InputBox from '../core/templates/input';
+import { CartResponce } from '../../../types';
 
 export class CartPage extends Page {
   static TextObject = {
@@ -126,9 +128,58 @@ export class CartPage extends Page {
         this.productCartAside.classList.add('asside__hidden');
       } else {
         this.productCartAside.classList.remove('asside__hidden');
-        this.productCartAside.innerHTML = `Total price: ${(cart.totalPrice.centAmount / 100).toString()} USD`;
+        const assideTitle = document.createElement('h3');
+        assideTitle.classList.add('asside__title');
+        assideTitle.innerHTML = `Total price: ${(cart.totalPrice.centAmount / 100).toString()} USD`;
+
+        const assideText = document.createElement('p');
+        assideText.classList.add('asside__text');
+        assideText.innerHTML = `Have a discount code?`;
+
+        const assideCodeForm = document.createElement('form');
+
+        const assideInputCode = new InputBox('input', 'asside__code-input', 'text', '', 'MAXSCORE', false);
+        const assideCodeButton = document.createElement('button');
+        assideCodeButton.classList.add('asside__button');
+        assideCodeButton.innerText = 'Apply Code';
+
+        assideCodeForm.append(assideInputCode.render(), assideCodeButton);
+
+        EventDelegator.addDelegatedListener('click', assideCodeButton, async (ev) => {
+          ev?.preventDefault();
+          const cart = await APICartNau.addDiscountCode(this.cartId, this.token, assideInputCode.getValue());
+          if (cart) {
+            this.updateTotalPrice(cart, assideTitle);
+          }
+        });
+
+        const assideSuportText = document.createElement('p');
+        assideSuportText.classList.add('support__text');
+        assideSuportText.innerHTML = `Codes for testing: <br> MAXSCORE, TEST`;
+
+        const assideClearButton = document.createElement('button');
+        assideClearButton.classList.add('asside__button-clear');
+        assideClearButton.innerText = 'Clear Cart';
+
+        EventDelegator.addDelegatedListener('click', assideClearButton, async () => {
+          let cart = await APICartNau.getCartbyCartId(this.cartId, this.token);
+          if (cart && cart.lineItems.length > 0) {
+            const items = cart.lineItems.map((item) => {
+              return { action: 'removeLineItem', lineItemId: item.id };
+            });
+            cart = await APICartNau.removeLineItemFromCart(this.cartId, this.token, items);
+            this.generateAssideBar();
+            this.renderEmptyCart();
+          }
+        });
+
+        this.productCartAside.append(assideTitle, assideText, assideCodeForm, assideSuportText, assideClearButton);
       }
     }
+  }
+
+  updateTotalPrice(cart: CartResponce, header: HTMLElement) {
+    header.innerHTML = `Total price: ${(cart.totalPrice.centAmount / 100).toString()} USD`;
   }
 
   updatePrice(productCartCard: ProductCardInCart) {
