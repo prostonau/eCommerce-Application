@@ -1,16 +1,7 @@
-// import AppLoader from './appLoader';
-// import { RawSourceData } from '../../types/index';
-// import { Level } from '../../types/index';
-// import { TrackData } from '../../types/index';
-// import { WinnerData } from '../../types/index';
-// import { engineStart } from '../../types/index';
-// import { driveMode } from '../../types/index';
-
 import { Actions, ClientCredentialsFlowResponse } from '../../types/index';
 import { Customer } from '../../types/index';
-
-// type GetSourcesCallback = (data: RawSourceData) => void;
-// type GetNewsCallback = (data: RawSourceNews) => void;
+import Config from './../../app.config';
+const config = new Config();
 
 class AppAPI {
   bathUrl?: string = '';
@@ -21,13 +12,13 @@ class AppAPI {
   scope: string = '';
   store: string;
   constructor() {
-    this.bathUrl = 'europe-west1.gcp.commercetools.com';
-    this.authUrl = `https://auth.${this.bathUrl}`;
-    this.apiUrl = `https://api.${this.bathUrl}`;
-    this.projectKey = '611a116e-87f8-43a5-9c07-959851c6dff3';
-    this.secret = 'wiWXgK9Z2y_K8rx0FYLg1N-r';
-    this.scope = 'i9z0351m49c9fr3YGHU_CsVHk9Eh0hyP';
-    this.store = 'cycklesStoreeCommerceRSSchool';
+    this.bathUrl = config.bathUrl;
+    this.authUrl = config.authUrl;
+    this.apiUrl = config.apiUrl;
+    this.projectKey = config.projectKey;
+    this.secret = config.secret;
+    this.scope = config.scope;
+    this.store = config.store;
   }
 
   // https://docs.commercetools.com/api/authorization#client-credentials-flow

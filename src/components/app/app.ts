@@ -5,8 +5,6 @@ import { AppView } from '../view/appView';
 import { ApiCatalog } from '../controller/apiCatalog';
 import APICartNau from '../controller/apiCartNau';
 import { ClientCredentialsFlowResponse } from '../../types';
-// import { lineInCart } from '../../types';
-// import { lineInCart } from '../../types';
 
 class App {
   controller: AppController;
