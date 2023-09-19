@@ -30,5 +30,4 @@ class RegistrationPage extends Page {
     return this.container;
   }
 }
-
 export default RegistrationPage;

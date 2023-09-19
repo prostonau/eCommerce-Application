@@ -7,7 +7,7 @@ class CheckBox extends Component {
     if (this.container instanceof HTMLInputElement) {
       this.container.type = 'checkbox';
       this.container.checked = checked;
-      this.container.autocomplete = 'true';
+      this.container.autocomplete = '';
     }
   }
 

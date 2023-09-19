@@ -28,6 +28,26 @@
     -4px -4px 10px #444d3a;
   transition: all 0.5s ease-in-out;
 
+  .card__button {
+    width: 100px;
+    margin-inline: 5px;
+    margin: 0 auto;
+    height: 20px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 1rem;
+    border-radius: 6px;
+    background-color: #266128;
+    color: #daffaa;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: opacity .2s;
+
+    &:disabled {
+      background-color: #ec6c03;
+    }
+  }
+
   &:hover {
     box-shadow:
       4px 4px 10px #ec6c03,
@@ -93,10 +113,6 @@
   &__description_price {
     margin: 5px auto;
   }
-
-  .card__price--discounted {
-    color: red;
-  }
 }
 
 .card__img {
@@ -112,8 +128,9 @@
 }
 
 .card__price--discounted {
+  color: red;
   text-decoration: line-through;
-  #discounted__span {
+  span {
     display: inline-block;
     text-decoration: none;
     margin-left: 10px;
@@ -328,3 +345,53 @@ h3.category__current:hover {
     }
   }
 }
+
+.pagination__container_wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.pagination__container{
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  justify-content: center;  
+}
+
+.paggination__button {
+    margin: 10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;    
+}
+
+.paggination__button:hover {
+  background-color: lightgreen;
+}
+
+.actvie_pag_button{
+  background-color: lightcoral;
+}
+
+.loader777 {
+  border: 16px solid #f3f3f3; 
+  border-top: 16px solid #3498db;
+  border-radius: 50%; 
+  width: 120px; 
+  height: 120px;
+  animation: spin 2s linear infinite; 
+  margin: auto;   
+  z-index: 99;
+  position: fixed; /* Фиксированная позиция элемента */
+  top: 50%; /* Расположение элемента в вертикальной плоскости по середине экрана */
+  left: 50%; /* Расположение элемента в горизонтальной плоскости по середине экрана */
+  transform: translate(-50%, -50%); /* Центрирование элемента относительно его размеров */
+}
+
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+

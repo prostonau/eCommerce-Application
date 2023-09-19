@@ -7,7 +7,9 @@ import ProductPage from '../view/product/index';
 import ProfilePage from '../view/profile/index';
 import Header from '../view/core/components/header';
 import ErrorPage from '../view/error';
+import AboutUsPage from '../view/about_us';
 import { errorTypes } from '../view/error';
+import { CartPage } from '../view/cart';
 
 export const enum PageIds {
   MainPage = 'main-page',
@@ -17,6 +19,8 @@ export const enum PageIds {
   ProductPage = 'product',
   ProfilePage = 'profile',
   LogOutPage = 'logout-page',
+  AboutUsPage = 'about-us-page',
+  CartPage = 'cart-page',
 }
 
 class AppController {
@@ -72,6 +76,8 @@ class AppController {
       page = new MainPage(PageIds.MainPage);
     } else if (idPage === PageIds.CatalogPage) {
       page = new CatalogPage(PageIds.CatalogPage);
+    } else if (idPage === PageIds.AboutUsPage) {
+      page = new AboutUsPage(PageIds.AboutUsPage);
     } else if (idPage.includes(PageIds.ProductPage)) {
       page = new ProductPage(PageIds.ProductPage, this.getProductId(idPage));
     } else if (idPage === PageIds.ProfilePage) {
@@ -80,6 +86,8 @@ class AppController {
       } else {
         window.location.hash = PageIds.MainPage;
       }
+    } else if (idPage === PageIds.CartPage) {
+      page = new CartPage(PageIds.CatalogPage);
     } else {
       page = new ErrorPage(idPage, errorTypes.Error_404);
     }

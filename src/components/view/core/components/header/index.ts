@@ -1,5 +1,6 @@
 import Component from '../../templates/components';
 import { PageIds } from '../../../../controller/controller';
+import APICartNau from '../../../../controller/apiCartNau';
 
 const Buttons = [
   {
@@ -26,6 +27,14 @@ const Buttons = [
     id: PageIds.LogOutPage,
     text: 'LogOut',
   },
+  {
+    id: PageIds.AboutUsPage,
+    text: 'About us',
+  },
+  {
+    id: PageIds.CartPage,
+    text: 'Cart page',
+  },
 ];
 
 class Header extends Component {
@@ -35,30 +44,48 @@ class Header extends Component {
 
   renderPageButtons() {
     const pageButtons = document.createElement('div');
+    pageButtons.classList.add('header-list');
     Buttons.forEach((button) => {
-      if (button.id !== 'logout-page' && button.id !== 'profile') {
+      if (
+        button.id === PageIds.CatalogPage ||
+        button.id === PageIds.MainPage ||
+        button.id === PageIds.LoginPage ||
+        button.id === PageIds.RegistrationPage ||
+        button.id === PageIds.AboutUsPage
+      ) {
         const buttonHTML = document.createElement('a');
+        buttonHTML.classList.add('header-item');
         buttonHTML.href = `#${button.id}`;
         buttonHTML.innerHTML = button.text;
         pageButtons.append(buttonHTML);
-        //console.log('pageButtons = ', pageButtons);
       }
+      if (button.id === PageIds.CartPage) {
+        pageButtons.append(this.renderCartIcon(button));
+      }
+      /* if (button.id !== 'logout-page' && button.id !== 'profile') {
+        const buttonHTML = document.createElement('a');
+        buttonHTML.classList.add('header-item');
+        buttonHTML.href = `#${button.id}`;
+        buttonHTML.innerHTML = button.text;
+        pageButtons.append(buttonHTML);
+      } */
     });
     this.container.append(pageButtons);
   }
 
   renderPageButtonsForMainPage() {
     const pageButtons = document.createElement('div');
+    pageButtons.classList.add('header-list');
     Buttons.forEach((button) => {
       if (button.id !== PageIds.LogOutPage) {
         if (button.id !== PageIds.ProfilePage) {
           const div = document.createElement('div');
           const buttonHTML = document.createElement('a');
+          buttonHTML.classList.add('header-item');
           buttonHTML.href = `#${button.id}`;
           buttonHTML.innerHTML = button.text;
           div.append(buttonHTML);
           pageButtons.append(div);
-          //console.log('pageButtons = ', pageButtons);
         }
       }
     });
@@ -67,25 +94,60 @@ class Header extends Component {
 
   renderPageButtonsForLogOutMenu() {
     const pageButtons = document.createElement('div');
+    pageButtons.classList.add('header-list');
     Buttons.forEach((button) => {
       if (
         button.id === PageIds.CatalogPage ||
-        button.id === 'main-page' ||
-        button.id === 'logout-page' ||
-        button.id === PageIds.ProfilePage
+        button.id === PageIds.MainPage ||
+        button.id === PageIds.LogOutPage ||
+        button.id === PageIds.ProfilePage ||
+        button.id === PageIds.AboutUsPage
       ) {
         const buttonHTML = document.createElement('a');
+        buttonHTML.classList.add('header-item');
         buttonHTML.href = `#${button.id}`;
         buttonHTML.innerHTML = button.text;
         if (button.id === 'logout-page') {
-          buttonHTML.className = 'logout';
+          buttonHTML.classList.add('logout', 'header-item');
           buttonHTML.href = `#${PageIds.LoginPage}`;
         }
         pageButtons.append(buttonHTML);
       }
-      // console.log('pageButtons = ', pageButtons);
+      if (button.id === PageIds.CartPage) {
+        pageButtons.append(this.renderCartIcon(button));
+      }
     });
     this.container.append(pageButtons);
+  }
+
+  renderCartIcon(butt: { id: PageIds; text: string }) {
+    const fragment = document.createDocumentFragment();
+    const buttonHTML = document.createElement('a');
+    buttonHTML.classList.add('header-cart');
+    buttonHTML.href = `#${butt.id}`;
+
+    const chariot = document.createElement('img');
+    chariot.classList.add('header-cart__image');
+    chariot.alt = 'chariot';
+    chariot.src = './images/icons8-cart-64.png';
+
+    buttonHTML.append(chariot);
+
+    const cartId = APICartNau.getCartId();
+    const token = APICartNau.getToken();
+
+    if (cartId && token) {
+      APICartNau.getCartbyCartId(cartId, token).then((cartResp) => {
+        const prodCounter = document.createElement('span');
+        prodCounter.classList.add('header-cart__quantity');
+        if (cartResp?.lineItems) {
+          prodCounter.textContent = APICartNau.cartCounter(cartResp?.lineItems).toString();
+        }
+        buttonHTML.append(prodCounter);
+      });
+    }
+    fragment.append(buttonHTML);
+    return fragment;
   }
 
   render() {
@@ -107,8 +169,10 @@ class Header extends Component {
     }
 
     const logout = document.querySelector('.logout');
-    logout?.addEventListener('click', () => {
+    logout?.addEventListener('click', async () => {
       localStorage.clear();
+      await APICartNau.getTokenForAnonymous();
+      await APICartNau.createCart(localStorage.getItem('anonymousToken') || '', 'cartAnonimus');
       this.renderDefaultMenu();
     });
   }

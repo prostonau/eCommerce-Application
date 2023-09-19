@@ -20,4 +20,4 @@ final task | RSS JavaScript/Front-end 2023Q1
 ## Scripts
 1. Eslint: $ npm run lint
 2. Prettier: $ npm run format
-3. Test: $ npm run test
+3. Test: $ npm run test 
