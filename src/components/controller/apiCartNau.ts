@@ -174,7 +174,8 @@ class APICartNau extends AppAPI {
         console.log('addProductToCart = ', data);
         console.log('${this.returnPrefixForCartVersion() = ', this.returnPrefixForCartVersion());
         localStorage.setItem(`${this.returnPrefixForCartVersion()}VersionId`, data.version);
-
+        const counterEl = document.querySelector('.header-cart__quantity') as HTMLSpanElement;
+        counterEl.textContent = this.cartCounter(data.lineItems).toString();
         return data;
       })
       .catch((error) => console.error(error));
@@ -296,6 +297,8 @@ class APICartNau extends AppAPI {
       .then((data) => {
         console.log('addProductToCart = ', data);
         localStorage.setItem(`${this.returnPrefixForCartVersion()}VersionId`, data.version);
+        const counterEl = document.querySelector('.header-cart__quantity') as HTMLSpanElement;
+        counterEl.textContent = this.cartCounter(data.lineItems).toString();
         return data;
       })
       .catch((error) => console.error(error));
@@ -342,6 +345,8 @@ class APICartNau extends AppAPI {
       .then((data) => {
         console.log('addProductToCart = ', data);
         localStorage.setItem(`${this.returnPrefixForCartVersion()}VersionId`, data.version);
+        const counterEl = document.querySelector('.header-cart__quantity') as HTMLSpanElement;
+        counterEl.textContent = this.cartCounter(data.lineItems).toString();
         return data;
       })
       .catch((error) => console.error(error));
@@ -457,6 +462,14 @@ class APICartNau extends AppAPI {
     if (this.checkLogin()) return 'cart';
     else return 'cartAnonimus';
   };
+
+  static cartCounter(items: ProductInCart[]) {
+    let quantityInCart = 0;
+    items.forEach((prod) => {
+      quantityInCart += prod.quantity;
+    });
+    return quantityInCart;
+  }
 
   static showNotification(text: string, top: boolean = false) {
     // Создаем элемент для уведомления
